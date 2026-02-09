@@ -1,0 +1,665 @@
+/* =========================================
+   1. GERAL E RESET
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-color: #0f172a; /* Fundo base (segurança) */
+}
+
+/* Contentor Principal para Login e Layouts Divididos */
+.main-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+/* =========================================
+   2. PÁGINA DE LOGIN E REGISTO
+   ========================================= */
+
+/* Lado Esquerdo (Formulário) */
+.login-side {
+    width: 40%;
+    background-color: #0f172a;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.login-content {
+    width: 100%;
+    max-width: 400px;
+}
+
+.brand {
+    margin-bottom: 40px;
+}
+
+.brand h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #f8fafc;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+/* Inputs e Labels */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    color: white;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #3b82f6;
+}
+
+/* Links e Checkbox */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-bottom: 30px;
+    color: #94a3b8;
+}
+
+.actions a {
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+/* Botão Principal */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: block; /* Garante que links parecem botões */
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-login:hover {
+    background-color: #1d4ed8;
+}
+
+/* Rodapé Login */
+.footer-logos {
+    margin-top: 60px;
+    border-top: 1px solid #334155;
+    padding-top: 20px;
+    font-size: 12px;
+    color: #64748b;
+    text-align: center;
+}
+
+.logos-placeholder {
+    margin-top: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Lado Direito (Imagem) */
+.image-side {
+    width: 60%;
+    background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop'); 
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.image-side::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.4);
+}
+
+@media (max-width: 768px) {
+    .login-side { width: 100%; padding: 20px; }
+    .image-side { display: none; }
+}
+
+/* Área de Registo */
+.register-area {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #1e293b;
+    text-align: center;
+}
+
+.register-area p {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 12px;
+}
+
+.btn-outline {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    border-color: #60a5fa;
+    color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.05);
+}
+
+/* =========================================
+   3. ELEMENTOS DE FORMULÁRIO (Selects/Textareas)
+   ========================================= */
+select, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    color: white;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+select:focus, textarea:focus {
+    border-color: #3b82f6;
+}
+
+select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23cbd5e1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-link a {
+    color: #94a3b8;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-link a:hover {
+    color: #ffffff;
+}
+
+/* =========================================
+   4. DASHBOARD (ESTRUTURA E ESTILO)
+   ========================================= */
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    background-color: #f1f5f9; /* Fundo cinza claro para o conteúdo */
+}
+
+/* --- Menu Lateral (Sidebar) --- */
+.sidebar {
+    width: 260px;
+    background-color: #0f172a; /* Azul escuro */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex-shrink: 0;
+}
+
+.sidebar-brand h3 {
+    font-size: 18px;
+    margin-bottom: 40px;
+    padding-left: 10px;
+    color: #f8fafc;
+}
+
+.sidebar-menu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Estilo dos Botões do Menu */
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    color: #94a3b8; /* Cor cinza inativo */
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.menu-item i {
+    font-size: 20px;
+}
+
+/* Hover e Ativo no Menu */
+.menu-item:hover, .menu-item.active {
+    background-color: #1e293b;
+    color: #60a5fa; /* Azul claro */
+}
+
+.menu-item.logout:hover {
+    background-color: #ef4444; /* Vermelho ao sair */
+    color: white;
+}
+
+/* --- Área Principal --- */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Barra de Topo Branca */
+.top-bar {
+    background-color: white;
+    padding: 20px 40px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-name {
+    display: block;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.user-role {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.content-area {
+    padding: 40px;
+}
+
+.content-area h1 {
+    font-size: 24px;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.section-subtitle {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* =========================================
+   5. TABELAS (COORDENADOR)
+   ========================================= */
+
+.table-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    overflow-x: auto;
+}
+
+.status-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+}
+
+.status-table th {
+    padding: 16px;
+    background-color: #f8fafc;
+    color: #64748b;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.status-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+.avatar-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: #e0e7ff;
+    color: #4338ca;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge.red {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.badge.green {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.badge.yellow {
+    background-color: #fefce8;
+    color: #ca8a04;
+    border: 1px solid #fef08a;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 18px;
+    transition: color 0.2s;
+}
+
+.btn-icon:hover {
+    color: #2563eb;
+}
+
+.text-danger {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+/* =========================================
+   6. CARTÕES (FORMADOR - GERAL)
+   ========================================= */
+/* Adicionado caso uses o dashboard de formador */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.card-header h4 {
+    color: #1e293b;
+    font-size: 18px;
+}
+
+.tag {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.tag.completed {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+.card-body {
+    margin-bottom: 24px;
+}
+
+.card-body p {
+    color: #475569;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.card-body .turma-info {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.btn-card {
+    width: 100%;
+    padding: 10px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-card:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-card.outline {
+    background-color: transparent;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+}
+
+.btn-card.outline:hover {
+    background-color: #f8fafc;
+    color: #334155;
+}
+/* --- LAYOUT DE GRELHA (DASHBOARD AVANÇADO) --- */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* A tabela ocupa 2 partes, o calendário 1 parte */
+    gap: 24px;
+    margin-top: 20px;
+}
+
+/* Ajuste para o cabeçalho ficar lado a lado com o botão */
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 20px;
+}
+
+/* Estilo do Cartão Branco (Base para tudo) */
+.section-card, .calendar-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    height: 100%; /* Garante que esticam à mesma altura */
+}
+
+.card-header-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-header-simple h3, .widget-header h3 {
+    font-size: 16px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* --- WIDGET DE CALENDÁRIO --- */
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Link pequeno "Gerir Agenda" */
+.btn-link-sm {
+    font-size: 12px;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-link-sm:hover {
+    text-decoration: underline;
+}
+
+/* Lista de Eventos */
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* A caixinha da data (Quadrado) */
+.date-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    color: #64748b;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.date-box .day { font-size: 16px; color: #1e293b; line-height: 1; }
+.date-box .month { font-size: 9px; text-transform: uppercase; margin-top: 2px; }
+
+/* Cores diferentes para tipos de evento */
+.date-box.blue { background-color: #eff6ff; color: #2563eb; }
+.date-box.blue .day { color: #2563eb; }
+
+.date-box.red { background-color: #fef2f2; color: #dc2626; }
+.date-box.red .day { color: #dc2626; }
+
+/* Detalhes do texto do evento */
+.event-details h4 {
+    font-size: 14px;
+    color: #334155;
+    margin-bottom: 2px;
+}
+
+.event-details p {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* Responsividade: Se o ecrã for pequeno, mete uma coluna debaixo da outra */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* Uma coluna apenas */
+    }
+}
