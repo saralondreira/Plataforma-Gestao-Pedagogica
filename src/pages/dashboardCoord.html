@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordenador - Gestão Pedagógica</title>
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h3>Gestão Pedagógica</h3>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active">
+                    <i class="ph ph-chart-pie-slice"></i>
+                    <span>Visão Global</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="ph ph-users-three"></i>
+                    <span>Formadores</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="ph ph-files"></i>
+                    <span>Relatórios</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="login.html" class="menu-item logout">
+                    <i class="ph ph-sign-out"></i>
+                    <span>Terminar Sessão</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="top-bar">
+                <div class="user-info">
+                    <span class="user-name">Olá, <strong>Dra. Helena</strong></span>
+                    <span class="user-role">Coordenadora</span>
+                </div>
+            </header>
+
+            <div class="content-area">
+    
+    <div class="header-flex">
+        <div>
+            <h1>Painel de Controlo</h1>
+            <p class="section-subtitle">Visão geral da atividade pedagógica.</p>
+        </div>
+        <button class="btn-card" style="width: auto;">+ Novo Aviso</button>
+    </div>
+
+    <div class="dashboard-grid">
+        
+        <div class="main-column">
+            <div class="section-card">
+                <div class="card-header-simple">
+                    <h3>Documentação em Falta</h3>
+                    <span class="badge red">3 Críticos</span>
+                </div>
+                
+                <div class="table-container-clean">
+                    <table class="status-table">
+                        <thead>
+                            <tr>
+                                <th>Formador</th>
+                                <th>Documento</th>
+                                <th>Prazo</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div class="avatar-circle">AS</div> A. Silva</td>
+                                <td>Pauta (0792)</td>
+                                <td class="text-danger">Ontem</td>
+                                <td><span class="badge red">Em Falta</span></td>
+                                <td><button class="btn-icon"><i class="ph ph-bell-ringing"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><div class="avatar-circle">JP</div> J. Pinto</td>
+                                <td>Sumários</td>
+                                <td>Hoje</td>
+                                <td><span class="badge green">Entregue</span></td>
+                                <td><button class="btn-icon"><i class="ph ph-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><div class="avatar-circle">MR</div> M. Reis</td>
+                                <td>Cronograma</td>
+                                <td>Amanhã</td>
+                                <td><span class="badge yellow">Pendente</span></td>
+                                <td><button class="btn-icon"><i class="ph ph-envelope"></i></button></td>
+                            </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column">
+            <div class="calendar-widget">
+                <div class="widget-header">
+                    <h3>Próximos Eventos</h3>
+                    <a href="calendario.html" target="_blank" class="btn-link-sm">
+                        Gerir Agenda &rarr;
+                    </a>
+                </div>
+
+                <div class="events-list">
+                    
+                    <div class="event-item">
+                        <div class="date-box">
+                            <span class="day">12</span>
+                            <span class="month">DEZ</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>Reunião Pedagógica</h4>
+                            <p>Sala de Reuniões 1 • 14:30</p>
+                        </div>
+                    </div>
+
+                    <div class="event-item">
+                        <div class="date-box blue">
+                            <span class="day">15</span>
+                            <span class="month">DEZ</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>Fim do Módulo 0792</h4>
+                            <p>Turma T-2024-A</p>
+                        </div>
+                    </div>
+
+                    <div class="event-item">
+                        <div class="date-box red">
+                            <span class="day">20</span>
+                            <span class="month">DEZ</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>Entrega de Pautas</h4>
+                            <p>Prazo Limite • 23:59</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+        </main>
+    </div>
+
+</body>
+</html>
