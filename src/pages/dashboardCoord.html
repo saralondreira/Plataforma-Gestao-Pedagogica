@@ -7,36 +7,40 @@
     
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="dashboard-container">
         
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <h3>Gestão Pedagógica</h3>
+        <aside class="sidebar hoverable">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <i class="ph-fill ph-student"></i> </div>
+                <div class="logo-text">
+                    <h3>Gestão Pedagógica</h3>
+                </div>
             </div>
             
             <nav class="sidebar-menu">
-                <a href="#" class="menu-item active">
+                <a href="#" class="menu-item active" title="Visão Global">
                     <i class="ph ph-chart-pie-slice"></i>
-                    <span>Visão Global</span>
+                    <span class="link-text">Visão Global</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" title="Formadores">
                     <i class="ph ph-users-three"></i>
-                    <span>Formadores</span>
+                    <span class="link-text">Formadores</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" title="Relatórios">
                     <i class="ph ph-files"></i>
-                    <span>Relatórios</span>
+                    <span class="link-text">Relatórios</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <a href="login.html" class="menu-item logout">
+                <a href="login.html" class="menu-item logout" title="Sair">
                     <i class="ph ph-sign-out"></i>
-                    <span>Terminar Sessão</span>
+                    <span class="link-text">Terminar Sessão</span>
                 </a>
             </div>
         </aside>
@@ -52,112 +56,107 @@
 
             <div class="content-area">
     
-    <div class="header-flex">
-        <div>
-            <h1>Painel de Controlo</h1>
-            <p class="section-subtitle">Visão geral da atividade pedagógica.</p>
-        </div>
-        <button class="btn-card" style="width: auto;">+ Novo Aviso</button>
-    </div>
-
-    <div class="dashboard-grid">
-        
-        <div class="main-column">
-            <div class="section-card">
-                <div class="card-header-simple">
-                    <h3>Documentação em Falta</h3>
-                    <span class="badge red">3 Críticos</span>
-                </div>
-                
-                <div class="table-container-clean">
-                    <table class="status-table">
-                        <thead>
-                            <tr>
-                                <th>Formador</th>
-                                <th>Documento</th>
-                                <th>Prazo</th>
-                                <th>Estado</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><div class="avatar-circle">AS</div> A. Silva</td>
-                                <td>Pauta (0792)</td>
-                                <td class="text-danger">Ontem</td>
-                                <td><span class="badge red">Em Falta</span></td>
-                                <td><button class="btn-icon"><i class="ph ph-bell-ringing"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><div class="avatar-circle">JP</div> J. Pinto</td>
-                                <td>Sumários</td>
-                                <td>Hoje</td>
-                                <td><span class="badge green">Entregue</span></td>
-                                <td><button class="btn-icon"><i class="ph ph-eye"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><div class="avatar-circle">MR</div> M. Reis</td>
-                                <td>Cronograma</td>
-                                <td>Amanhã</td>
-                                <td><span class="badge yellow">Pendente</span></td>
-                                <td><button class="btn-icon"><i class="ph ph-envelope"></i></button></td>
-                            </tr>
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="side-column">
-            <div class="calendar-widget">
-                <div class="widget-header">
-                    <h3>Próximos Eventos</h3>
-                    <a href="calendario.html" target="_blank" class="btn-link-sm">
-                        Gerir Agenda &rarr;
-                    </a>
+                <div class="header-flex">
+                    <div>
+                        <h1>Painel de Controlo</h1>
+                        <p class="section-subtitle">Visão geral da atividade pedagógica.</p>
+                    </div>
+                    <button class="btn-card" style="width: auto;">+ Novo Aviso</button>
                 </div>
 
-                <div class="events-list">
+                <div class="dashboard-grid">
                     
-                    <div class="event-item">
-                        <div class="date-box">
-                            <span class="day">12</span>
-                            <span class="month">DEZ</span>
-                        </div>
-                        <div class="event-details">
-                            <h4>Reunião Pedagógica</h4>
-                            <p>Sala de Reuniões 1 • 14:30</p>
+                    <div class="main-column">
+                        <div class="section-card">
+                            <div class="card-header-simple">
+                                <h3>Documentação em Falta</h3>
+                                <span class="badge red">3 Críticos</span>
+                            </div>
+                            
+                            <div class="table-container-clean">
+                                <table class="status-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Formador</th>
+                                            <th>Turma / UFCD</th> <th>Documento</th>
+                                            <th>Prazo</th> <th>Data Limite</th> <th>Estado</th>
+                                            <th>Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><div class="avatar-circle">AS</div> A. Silva</td>
+                                            <td>T-2024-A (0792)</td>
+                                            <td>Pauta de Avaliação</td>
+                                            <td class="text-danger">Ontem</td>
+                                            <td><strong>11 Dez</strong></td> <td><span class="badge red">Em Falta</span></td>
+                                            <td><button class="btn-icon"><i class="ph ph-bell-ringing"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="avatar-circle">JP</div> J. Pinto</td>
+                                            <td>T-2024-B (5440)</td>
+                                            <td>Sumários</td>
+                                            <td>Hoje</td>
+                                            <td><strong>12 Dez</strong></td> <td><span class="badge green">Entregue</span></td>
+                                            <td><button class="btn-icon"><i class="ph ph-eye"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="avatar-circle">MR</div> M. Reis</td>
+                                            <td>T-2024-A (0792)</td>
+                                            <td>Cronograma</td>
+                                            <td>Amanhã</td>
+                                            <td><strong>13 Dez</strong></td> <td><span class="badge yellow">Pendente</span></td>
+                                            <td><button class="btn-icon"><i class="ph ph-envelope"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="event-item">
-                        <div class="date-box blue">
-                            <span class="day">15</span>
-                            <span class="month">DEZ</span>
-                        </div>
-                        <div class="event-details">
-                            <h4>Fim do Módulo 0792</h4>
-                            <p>Turma T-2024-A</p>
-                        </div>
-                    </div>
+                    <div class="side-column">
+                        <div class="calendar-widget">
+                            <div class="widget-header">
+                                <h3>Agenda</h3> <a href="calendario.html" target="_blank" class="btn-link-sm">Ver tudo</a>
+                            </div>
 
-                    <div class="event-item">
-                        <div class="date-box red">
-                            <span class="day">20</span>
-                            <span class="month">DEZ</span>
+                            <div class="events-list">
+                                <div class="event-item">
+                                    <div class="date-box">
+                                        <span class="day">12</span>
+                                        <span class="month">DEZ</span>
+                                    </div>
+                                    <div class="event-details">
+                                        <h4>Reunião Ped.</h4>
+                                        <p>14:30 • Sala 1</p>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="date-box blue">
+                                        <span class="day">15</span>
+                                        <span class="month">DEZ</span>
+                                    </div>
+                                    <div class="event-details">
+                                        <h4>Fim Módulo</h4>
+                                        <p>T-2024-A</p>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="date-box red">
+                                        <span class="day">20</span>
+                                        <span class="month">DEZ</span>
+                                    </div>
+                                    <div class="event-details">
+                                        <h4>Pautas</h4>
+                                        <p>Prazo 23:59</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="event-details">
-                            <h4>Entrega de Pautas</h4>
-                            <p>Prazo Limite • 23:59</p>
-                        </div>
-                    </div>
+                    </div> 
 
                 </div>
-            </div>
-        </div>
-
-    </div>
-</div>
+            </div> 
         </main>
     </div>
 
