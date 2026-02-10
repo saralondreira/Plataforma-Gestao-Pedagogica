@@ -69,49 +69,60 @@
                     
                     <div class="main-column">
                         <div class="section-card">
-                            <div class="card-header-simple">
-                                <h3>Documentação em Falta</h3>
-                                <span class="badge red">3 Críticos</span>
-                            </div>
-                            
-                            <div class="table-container-clean">
-                                <table class="status-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Formador</th>
-                                            <th>Turma / UFCD</th> <th>Documento</th>
-                                            <th>Prazo</th> <th>Data Limite</th> <th>Estado</th>
-                                            <th>Ação</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><div class="avatar-circle">AS</div> A. Silva</td>
-                                            <td>T-2024-A (0792)</td>
-                                            <td>Pauta de Avaliação</td>
-                                            <td class="text-danger">Ontem</td>
-                                            <td><strong>11 Dez</strong></td> <td><span class="badge red">Em Falta</span></td>
-                                            <td><button class="btn-icon"><i class="ph ph-bell-ringing"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><div class="avatar-circle">JP</div> J. Pinto</td>
-                                            <td>T-2024-B (5440)</td>
-                                            <td>Sumários</td>
-                                            <td>Hoje</td>
-                                            <td><strong>12 Dez</strong></td> <td><span class="badge green">Entregue</span></td>
-                                            <td><button class="btn-icon"><i class="ph ph-eye"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><div class="avatar-circle">MR</div> M. Reis</td>
-                                            <td>T-2024-A (0792)</td>
-                                            <td>Cronograma</td>
-                                            <td>Amanhã</td>
-                                            <td><strong>13 Dez</strong></td> <td><span class="badge yellow">Pendente</span></td>
-                                            <td><button class="btn-icon"><i class="ph ph-envelope"></i></button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                           <div class="card-header-simple">
+    <h3>Documentação em Falta</h3>
+    <select id="filtro-prazos" class="badge gray">
+        <option value="critico">0 CRÍTICOS</option>
+        <option value="hoje">0 HOJE</option>
+        <option value="pendente">0 PENDENTES</option>
+        <option value="todos" selected>TODOS (0)</option>
+    </select>
+</div>
+
+<div class="table-container-clean">
+    <table class="status-table">
+        <thead>
+            <tr>
+                <th>Formador</th>
+                <th>Turma / UFCD</th>
+                <th>Documento</th>
+                <th>Prazo</th>
+                <th>Data Limite</th>
+                <th>Estado</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><div class="avatar-circle">AS</div> A. Silva</td>
+                <td>T-2024-A (0792)</td>
+                <td>Pauta de Avaliação</td>
+                <td class="calculo-prazo" data-prazo="2024-12-11"></td>
+                <td><strong>11 Dez</strong></td> 
+                <td><span class="badge red">Em Falta</span></td>
+                <td><button class="btn-icon" title="Enviar Alerta"><i class="ph ph-bell-ringing"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="avatar-circle">JP</div> J. Pinto</td>
+                <td>T-2024-B (5440)</td>
+                <td>Sumários</td>
+                <td class="calculo-prazo" data-prazo="2026-02-10"></td>
+                <td><strong>10 Fev</strong></td> 
+                <td><span class="badge green">Entregue</span></td>
+                <td><button class="btn-icon" title="Consultar Documentos"><i class="ph ph-eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="avatar-circle">MR</div> M. Reis</td>
+                <td>T-2024-A (0792)</td>
+                <td>Cronograma</td>
+                <td class="calculo-prazo" data-prazo="2026-02-11"></td>
+                <td><strong>11 Fev</strong></td> 
+                <td><span class="badge yellow">Pendente</span></td>
+                <td><button class="btn-icon" title="Enviar Mensagem"><i class="ph ph-envelope"></i></button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
                         </div>
                     </div>
 

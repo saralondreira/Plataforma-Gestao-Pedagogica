@@ -24,7 +24,6 @@ body {
    2. PÁGINA DE LOGIN E REGISTO
    ========================================= */
 
-/* Lado Esquerdo (Formulário) */
 .login-side {
     width: 40%;
     background-color: #0f172a;
@@ -57,7 +56,6 @@ body {
     color: #94a3b8;
 }
 
-/* Inputs e Labels */
 .input-group {
     margin-bottom: 20px;
 }
@@ -84,7 +82,6 @@ body {
     border-color: #3b82f6;
 }
 
-/* Links e Ações */
 .actions {
     display: flex;
     justify-content: space-between;
@@ -103,7 +100,6 @@ body {
     text-decoration: underline;
 }
 
-/* Botão Principal */
 .btn-login {
     width: 100%;
     padding: 14px;
@@ -124,7 +120,6 @@ body {
     background-color: #1d4ed8;
 }
 
-/* Rodapé Login */
 .footer-logos {
     margin-top: 60px;
     border-top: 1px solid #334155;
@@ -140,7 +135,6 @@ body {
     letter-spacing: 1px;
 }
 
-/* Lado Direito (Imagem) */
 .image-side {
     width: 60%;
     background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop'); 
@@ -164,7 +158,6 @@ body {
     .image-side { display: none; }
 }
 
-/* Área de Registo */
 .register-area {
     margin-top: 30px;
     padding-top: 25px;
@@ -199,7 +192,7 @@ body {
 }
 
 /* =========================================
-   3. ELEMENTOS DE FORMULÁRIO (Selects/Textareas)
+   3. ELEMENTOS DE FORMULÁRIO
    ========================================= */
 select, textarea {
     width: 100%;
@@ -248,9 +241,8 @@ textarea {
 }
 
 /* =========================================
-   4. DASHBOARD E SIDEBAR (AGORA FIXA)
+   4. DASHBOARD E SIDEBAR
    ========================================= */
-
 .dashboard-container {
     display: flex;
     height: 100vh;
@@ -258,9 +250,8 @@ textarea {
     background-color: #f1f5f9;
 }
 
-/* --- SIDEBAR FIXA (ESTÁTICA) --- */
 .sidebar {
-    width: 260px; /* Largura fixa e robusta */
+    width: 260px;
     background-color: #0f172a;
     color: white;
     display: flex;
@@ -269,7 +260,6 @@ textarea {
     flex-shrink: 0;
 }
 
-/* Cabeçalho da Sidebar (Logo) */
 .sidebar-header {
     display: flex;
     align-items: center;
@@ -287,7 +277,6 @@ textarea {
     color: #f8fafc;
 }
 
-/* Menu e Itens */
 .sidebar-menu {
     flex: 1;
     display: flex;
@@ -311,10 +300,8 @@ textarea {
     font-size: 20px;
 }
 
-/* O texto aparece sempre (sem animações) */
 .link-text {
     opacity: 1;
-    transform: none;
 }
 
 .menu-item:hover, .menu-item.active {
@@ -327,7 +314,6 @@ textarea {
     color: white;
 }
 
-/* --- Área Principal --- */
 .main-content {
     flex: 1;
     overflow-y: auto;
@@ -376,12 +362,10 @@ textarea {
 }
 
 /* =========================================
-   5. LAYOUT DE GRELHA (MANTIDO)
+   5. LAYOUT DE GRELHA
    ========================================= */
-
 .dashboard-grid {
     display: grid;
-    /* Mantém a proporção que gostaste: Tabela larga, Agenda estreita */
     grid-template-columns: 3.5fr 1fr; 
     gap: 24px;
     margin-top: 20px;
@@ -394,7 +378,6 @@ textarea {
     margin-bottom: 20px;
 }
 
-/* Cartões Brancos */
 .section-card, .calendar-widget {
     background: white;
     border-radius: 12px;
@@ -409,19 +392,23 @@ textarea {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    height: 40px;
 }
 
 .card-header-simple h3, .widget-header h3 {
     font-size: 16px;
     color: #1e293b;
     font-weight: 600;
+    margin: 0;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* =========================================
-   6. TABELAS
+   6. TABELAS E BADGES
    ========================================= */
-
-.table-container, .table-container-clean {
+.table-container-clean {
     width: 100%;
     overflow-x: auto;
     background: white;
@@ -475,46 +462,65 @@ textarea {
     text-transform: uppercase;
 }
 
-.badge.red {
-    background-color: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
+.badge.red { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.badge.green { background-color: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.badge.yellow { background-color: #fefce8; color: #ca8a04; border: 1px solid #fef08a; }
+
+/* =========================================
+   7. AJUSTES DO FILTRO (BADGE SELECT)
+   ========================================= */
+select#filtro-prazos.badge {
+    width: fit-content; 
+    min-width: 160px; 
+    height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: center;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    font-weight: 600;
 }
 
-.badge.green {
-    background-color: #f0fdf4;
-    color: #16a34a;
-    border: 1px solid #bbf7d0;
-}
+#filtro-prazos option { background-color: #ffffff; color: #1e293b; }
+#filtro-prazos option[value="critico"] { color: #dc2626; }  /* Vermelho */
+#filtro-prazos option[value="hoje"] { color: #ca8a04; }     /* Amarelo */
+#filtro-prazos option[value="pendente"] { color: #2563eb; } /* Azul */
 
-.badge.yellow {
-    background-color: #fefce8;
-    color: #ca8a04;
-    border: 1px solid #fef08a;
-}
+/* Cores dinâmicas para o botão filtro (JS) */
+select#filtro-prazos.badge.red { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
+select#filtro-prazos.badge.yellow { background-color: #fefce8; color: #ca8a04; border-color: #fef08a; }
+select#filtro-prazos.badge.blue { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+select#filtro-prazos.badge.gray { background-color: #f8fafc; color: #64748b; border-color: #e2e8f0; }
 
+select#filtro-prazos:hover { filter: brightness(0.95); }
+
+/* =========================================
+   8. ÍCONES DE AÇÃO E HOVER DINÂMICO
+   ========================================= */
 .btn-icon {
     background: none;
     border: none;
     cursor: pointer;
     color: #64748b;
     font-size: 18px;
-    transition: color 0.2s;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn-icon:hover {
-    color: #2563eb;
-}
-
-.text-danger {
-    color: #dc2626;
-    font-weight: bold;
-}
+/* Hover muda de cor conforme o estado da linha atribuído pelo JS */
+tr[data-estado="critico"] .btn-icon:hover { color: #dc2626; transform: scale(1.2); }
+tr[data-estado="hoje"] .btn-icon:hover { color: #ca8a04; transform: scale(1.2); }
+tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.2); }
 
 /* =========================================
-   7. WIDGET DE CALENDÁRIO COMPACTO
+   9. CALENDÁRIO E EXTRAS
    ========================================= */
-
 .widget-header {
     display: flex;
     justify-content: space-between;
@@ -531,9 +537,7 @@ textarea {
     font-weight: 600;
 }
 
-.btn-link-sm:hover {
-    text-decoration: underline;
-}
+.btn-link-sm:hover { text-decoration: underline; }
 
 .events-list {
     display: flex;
@@ -565,22 +569,11 @@ textarea {
 .date-box .month { font-size: 9px; text-transform: uppercase; margin-top: 2px; }
 
 .date-box.blue { background-color: #eff6ff; color: #2563eb; }
-.date-box.blue .day { color: #2563eb; }
 .date-box.red { background-color: #fef2f2; color: #dc2626; }
-.date-box.red .day { color: #dc2626; }
 
-.event-details h4 {
-    font-size: 13px;
-    color: #334155;
-    margin-bottom: 2px;
-}
+.event-details h4 { font-size: 13px; color: #334155; margin-bottom: 2px; }
+.event-details p { font-size: 11px; color: #94a3b8; }
 
-.event-details p {
-    font-size: 11px;
-    color: #94a3b8;
-}
-
-/* Botões genéricos */
 .btn-card {
     padding: 10px 16px;
     background-color: #2563eb;
@@ -593,29 +586,11 @@ textarea {
     font-size: 14px;
 }
 
-.btn-card:hover {
-    background-color: #1d4ed8;
-}
+.btn-card:hover { background-color: #1d4ed8; }
 
-/* Responsividade */
 @media (max-width: 1024px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    .sidebar {
-        width: 80px; /* Em tablets a sidebar fica pequena para poupar espaço */
-        padding: 20px 10px;
-    }
-    .link-text, .logo-text h3 {
-        display: none;
-    }
-    .sidebar-header {
-        justify-content: center;
-    }
-    .menu-item {
-        justify-content: center;
-    }
-    .menu-item i {
-        margin: 0;
-    }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .sidebar { width: 80px; padding: 20px 10px; }
+    .link-text, .logo-text h3 { display: none; }
+    .sidebar-header, .menu-item { justify-content: center; }
 }
