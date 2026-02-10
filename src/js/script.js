@@ -1,89 +1,166 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // ======================================================
-    //              GESTÃO DE PRAZOS E DATAS
+    // 1. VALIDAÇÃO DE FORMULÁRIOS (EMAIL E REQUIRED)
     // ======================================================
-
-    // Função auxiliar para calcular a diferença
-    function calcularDias(dataAlvo) {
-        const hoje = new Date();
-        const prazo = new Date(dataAlvo);
-
-        // "Zerar" as horas para comparar apenas as datas (dia/mês/ano)
-        hoje.setHours(0, 0, 0, 0);
-        prazo.setHours(0, 0, 0, 0);
-
-        // Calcular a diferença em milissegundos
-        const diferencaTempo = prazo - hoje;
-        // Converter para dias e arredondar
-        const diferencaDias = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
-
-        return diferencaDias;
-    }
-
-    // Função principal que atualiza o visual
-    function atualizarPrazos() {
-        const elementos = document.querySelectorAll('.calculo-prazo');
-
-        elementos.forEach(el => {
-            const dataPrazo = el.getAttribute('data-prazo');
-            
-            if (!dataPrazo) return; // Se não tiver data, salta este elemento
-
-            const dias = calcularDias(dataPrazo);
-
-            if (dias === -1) {
-                el.innerText = "Ontem";
-                el.style.color = "#dc2626"; // Vermelho
-            } 
-            else if (dias === 0) {
-                el.innerText = "Hoje";
-                el.style.color = "#d97706"; // Laranja
-            } 
-            else if (dias === 1) {
-                el.innerText = "Amanhã";
-                el.style.color = "#2563eb"; // Azul
-            } 
-            else if (dias < -1) {
-                el.innerText = `Há ${Math.abs(dias)} dias`;
-                el.style.color = "#dc2626"; // Vermelho
-            } 
-            else if (dias > 1) {
-                el.innerText = `Daqui a ${dias} dias`;
-                el.style.color = "#64748b"; // Cinzento
-            }
-        });
-    }
-    atualizarPrazos();
-
-
-    // ======================================================
-    // PARTE 2: VALIDAÇÃO DE FORMULÁRIOS (EMAIL E REQUIRED)
-    // ======================================================
-
     const camposFormulario = document.querySelectorAll('input');
 
     camposFormulario.forEach(campo => {
-        
         campo.addEventListener('invalid', function(e) {
-            // 1. Campo Vazio
             if (e.target.validity.valueMissing) {
                 e.target.setCustomValidity('Por favor, preencha este campo.');
             } 
-            // 2. Falta o @ (erro de tipo)
             else if (e.target.validity.typeMismatch) {
                 e.target.setCustomValidity('O email precisa de incluir um "@".');
             }
-            // 3. Erro de Padrão (Regex) - caso tenhas adicionado o pattern no HTML
             else if (e.target.validity.patternMismatch) {
                 e.target.setCustomValidity('Por favor, insira um domínio válido (ex: .pt).');
             }
         });
 
-        // Limpar o erro quando a pessoa começa a escrever
         campo.addEventListener('input', function(e) {
             e.target.setCustomValidity('');
         });
     });
 
+    // ======================================================
+    // 2. GESTÃO DE PRAZOS E DATAS
+    // ======================================================
+    function calcularDias(dataAlvo) {
+        const hoje = new Date();
+        const prazo = new Date(dataAlvo);
+
+        hoje.setHours(0, 0, 0, 0);
+        prazo.setHours(0, 0, 0, 0);
+
+        const diferencaTempo = prazo - hoje;
+        const diferencaDias = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
+
+        return diferencaDias;
+    }
+
+    function atualizarPrazos() {
+        const elementos = document.querySelectorAll('.calculo-prazo');
+
+        elementos.forEach(el => {
+            const dataPrazo = el.getAttribute('data-prazo');
+            if (!dataPrazo) return;
+
+            const dias = calcularDias(dataPrazo);
+
+            if (dias === -1) {
+                el.innerText = "Ontem";
+                el.style.color = "#dc2626";
+            } 
+            else if (dias === 0) {
+                el.innerText = "Hoje";
+                el.style.color = "#d97706";
+            } 
+            else if (dias === 1) {
+                el.innerText = "Amanhã";
+                el.style.color = "#2563eb";
+            } 
+            else if (dias < -1) {
+                el.innerText = `Há ${Math.abs(dias)} dias`;
+                el.style.color = "#dc2626";
+            } 
+            else if (dias > 1) {
+                el.innerText = `Daqui a ${dias} dias`;
+                el.style.color = "#64748b";
+            }
+        });
+    }
+
+    // ======================================================
+    // 3. FILTRO AUTOMÁTICO (BADGE SELECIONÁVEL)
+    // ======================================================
+    function configurarFiltroAutomatico() {
+        const filtro = document.getElementById('filtro-prazos');
+        const linhas = document.querySelectorAll('.status-table tbody tr');
+        
+        if (!filtro) return;
+
+        let contadores = { critico: 0, hoje: 0, pendente: 0, todos: 0 };
+
+        linhas.forEach(linha => {
+            const elementoPrazo = linha.querySelector('.calculo-prazo');
+            if (!elementoPrazo) return;
+
+            const data = elementoPrazo.getAttribute('data-prazo');
+            const dias = calcularDias(data);
+            contadores.todos++;
+
+            if (dias < 0) {
+                contadores.critico++;
+                linha.setAttribute('data-estado', 'critico');
+            } else if (dias === 0) {
+                contadores.hoje++;
+                linha.setAttribute('data-estado', 'hoje');
+            } else {
+                contadores.pendente++;
+                linha.setAttribute('data-estado', 'pendente');
+            }
+        });
+
+        if (filtro.options.length >= 4) {
+            filtro.options[0].text = `${contadores.critico} Críticos`;
+            filtro.options[1].text = `${contadores.hoje} Hoje`;
+            filtro.options[2].text = `${contadores.pendente} Pendentes`;
+            filtro.options[3].text = `Todos (${contadores.todos})`;
+        }
+
+        filtro.addEventListener('change', function() {
+    this.classList.remove('red', 'yellow', 'blue', 'gray');
+    
+    if (this.value === 'critico') {
+        this.classList.add('red');
+    } else if (this.value === 'hoje') {
+        this.classList.add('yellow');
+    } else if (this.value === 'pendente') {
+        this.classList.add('blue');
+    } else {
+        this.classList.add('gray');
+    }
+
+    linhas.forEach(l => {
+        l.style.display = (this.value === 'todos' || l.getAttribute('data-estado') === this.value) ? '' : 'none';
+    });
 });
+    }
+
+    atualizarPrazos();
+    configurarFiltroAutomatico();
+
+});
+
+function configurarAcoesBotoes() {
+    const botoesAcao = document.querySelectorAll('.btn-icon');
+
+    botoesAcao.forEach(botao => {
+        botao.addEventListener('click', function() {
+            const acao = this.getAttribute('title');
+            const linha = this.closest('tr');
+            const colunas = linha.querySelectorAll('td');
+
+            const nomeCompleto = colunas[0].innerText.replace(/^[A-Z]{2}\s/, '').trim(); 
+            const documento = colunas[2].innerText;
+
+            if (acao === "Enviar Mensagem") {
+                const email = "exemplo@instituicao.pt";
+                const assunto = encodeURIComponent(`Documentação Pendente: ${documento}`);
+                const corpo = encodeURIComponent(`Olá ${nomeCompleto},\n\nVerificamos que o documento "${documento}" ainda não foi submetido. Poderia verificar a situação?\n\nCumprimentos,\nCoordenação.`);
+                
+                window.location.href = `mailto:${email}?subject=${assunto}&body=${corpo}`;
+            } 
+            else if (acao === "Enviar Alerta") {
+                alert(`Alerta de sistema enviado para ${nomeCompleto} sobre: ${documento}`);
+                this.style.color = "";
+             } 
+            else if (acao === "Consultar Documentos") {
+                alert(`A abrir visualização do documento: ${documento}`);
+            }
+        });
+    });
+}
+
+configurarAcoesBotoes();
