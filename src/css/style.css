@@ -464,6 +464,7 @@ textarea {
 
 .badge.red { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 .badge.green { background-color: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.badge.blue { background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
 .badge.yellow { background-color: #fefce8; color: #ca8a04; border: 1px solid #fef08a; }
 
 /* =========================================
