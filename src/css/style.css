@@ -10,10 +10,10 @@
 
 body {
     height: 100vh;
-    background-color: #0f172a; /* Fundo base (segurança) */
+    background-color: #0f172a; /* Fundo base */
 }
 
-/* Contentor Principal para Login e Layouts Divididos */
+/* Contentor Principal */
 .main-container {
     display: flex;
     height: 100%;
@@ -84,7 +84,7 @@ body {
     border-color: #3b82f6;
 }
 
-/* Links e Checkbox */
+/* Links e Ações */
 .actions {
     display: flex;
     justify-content: space-between;
@@ -115,7 +115,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s;
-    display: block; /* Garante que links parecem botões */
+    display: block;
     text-align: center;
     text-decoration: none;
 }
@@ -248,20 +248,20 @@ textarea {
 }
 
 /* =========================================
-   4. DASHBOARD (ESTRUTURA E ESTILO)
+   4. DASHBOARD E SIDEBAR (AGORA FIXA)
    ========================================= */
 
 .dashboard-container {
     display: flex;
     height: 100vh;
     width: 100%;
-    background-color: #f1f5f9; /* Fundo cinza claro para o conteúdo */
+    background-color: #f1f5f9;
 }
 
-/* --- Menu Lateral (Sidebar) --- */
+/* --- SIDEBAR FIXA (ESTÁTICA) --- */
 .sidebar {
-    width: 260px;
-    background-color: #0f172a; /* Azul escuro */
+    width: 260px; /* Largura fixa e robusta */
+    background-color: #0f172a;
     color: white;
     display: flex;
     flex-direction: column;
@@ -269,13 +269,25 @@ textarea {
     flex-shrink: 0;
 }
 
-.sidebar-brand h3 {
-    font-size: 18px;
+/* Cabeçalho da Sidebar (Logo) */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 40px;
-    padding-left: 10px;
+}
+
+.logo-icon i {
+    font-size: 32px;
+    color: #3b82f6;
+}
+
+.logo-text h3 {
+    font-size: 18px;
     color: #f8fafc;
 }
 
+/* Menu e Itens */
 .sidebar-menu {
     flex: 1;
     display: flex;
@@ -283,13 +295,12 @@ textarea {
     gap: 10px;
 }
 
-/* Estilo dos Botões do Menu */
 .menu-item {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px;
-    color: #94a3b8; /* Cor cinza inativo */
+    color: #94a3b8;
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s;
@@ -300,14 +311,19 @@ textarea {
     font-size: 20px;
 }
 
-/* Hover e Ativo no Menu */
+/* O texto aparece sempre (sem animações) */
+.link-text {
+    opacity: 1;
+    transform: none;
+}
+
 .menu-item:hover, .menu-item.active {
     background-color: #1e293b;
-    color: #60a5fa; /* Azul claro */
+    color: #60a5fa;
 }
 
 .menu-item.logout:hover {
-    background-color: #ef4444; /* Vermelho ao sair */
+    background-color: #ef4444;
     color: white;
 }
 
@@ -319,7 +335,6 @@ textarea {
     flex-direction: column;
 }
 
-/* Barra de Topo Branca */
 .top-bar {
     background-color: white;
     padding: 20px 40px;
@@ -361,16 +376,56 @@ textarea {
 }
 
 /* =========================================
-   5. TABELAS (COORDENADOR)
+   5. LAYOUT DE GRELHA (MANTIDO)
    ========================================= */
 
-.table-container {
+.dashboard-grid {
+    display: grid;
+    /* Mantém a proporção que gostaste: Tabela larga, Agenda estreita */
+    grid-template-columns: 3.5fr 1fr; 
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 20px;
+}
+
+/* Cartões Brancos */
+.section-card, .calendar-widget {
     background: white;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    height: 100%;
+}
+
+.card-header-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-header-simple h3, .widget-header h3 {
+    font-size: 16px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* =========================================
+   6. TABELAS
+   ========================================= */
+
+.table-container, .table-container-clean {
+    width: 100%;
     overflow-x: auto;
+    background: white;
+    border-radius: 8px;
 }
 
 .status-table {
@@ -381,10 +436,13 @@ textarea {
 }
 
 .status-table th {
-    padding: 16px;
+    padding: 12px 16px;
     background-color: #f8fafc;
     color: #64748b;
     font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     border-bottom: 2px solid #e2e8f0;
 }
 
@@ -392,6 +450,7 @@ textarea {
     padding: 16px;
     border-bottom: 1px solid #e2e8f0;
     color: #334155;
+    vertical-align: middle;
 }
 
 .avatar-circle {
@@ -453,138 +512,8 @@ textarea {
 }
 
 /* =========================================
-   6. CARTÕES (FORMADOR - GERAL)
+   7. WIDGET DE CALENDÁRIO COMPACTO
    ========================================= */
-/* Adicionado caso uses o dashboard de formador */
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-}
-
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.card-header h4 {
-    color: #1e293b;
-    font-size: 18px;
-}
-
-.tag {
-    font-size: 10px;
-    padding: 4px 8px;
-    border-radius: 20px;
-    font-weight: 600;
-    text-transform: uppercase;
-    background-color: #dbeafe;
-    color: #2563eb;
-}
-
-.tag.completed {
-    background-color: #f1f5f9;
-    color: #64748b;
-}
-
-.card-body {
-    margin-bottom: 24px;
-}
-
-.card-body p {
-    color: #475569;
-    font-size: 14px;
-    margin-bottom: 4px;
-}
-
-.card-body .turma-info {
-    color: #94a3b8;
-    font-size: 12px;
-}
-
-.btn-card {
-    width: 100%;
-    padding: 10px;
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.btn-card:hover {
-    background-color: #1d4ed8;
-}
-
-.btn-card.outline {
-    background-color: transparent;
-    border: 1px solid #cbd5e1;
-    color: #64748b;
-}
-
-.btn-card.outline:hover {
-    background-color: #f8fafc;
-    color: #334155;
-}
-/* --- LAYOUT DE GRELHA (DASHBOARD AVANÇADO) --- */
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr; /* A tabela ocupa 2 partes, o calendário 1 parte */
-    gap: 24px;
-    margin-top: 20px;
-}
-
-/* Ajuste para o cabeçalho ficar lado a lado com o botão */
-.header-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    margin-bottom: 20px;
-}
-
-/* Estilo do Cartão Branco (Base para tudo) */
-.section-card, .calendar-widget {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    height: 100%; /* Garante que esticam à mesma altura */
-}
-
-.card-header-simple {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.card-header-simple h3, .widget-header h3 {
-    font-size: 16px;
-    color: #1e293b;
-    font-weight: 600;
-}
-
-/* --- WIDGET DE CALENDÁRIO --- */
 
 .widget-header {
     display: flex;
@@ -595,7 +524,6 @@ textarea {
     border-bottom: 1px solid #f1f5f9;
 }
 
-/* Link pequeno "Gerir Agenda" */
 .btn-link-sm {
     font-size: 12px;
     color: #2563eb;
@@ -607,7 +535,6 @@ textarea {
     text-decoration: underline;
 }
 
-/* Lista de Eventos */
 .events-list {
     display: flex;
     flex-direction: column;
@@ -617,17 +544,16 @@ textarea {
 .event-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
-/* A caixinha da data (Quadrado) */
 .date-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     background-color: #f1f5f9;
     border-radius: 8px;
     color: #64748b;
@@ -635,31 +561,61 @@ textarea {
     flex-shrink: 0;
 }
 
-.date-box .day { font-size: 16px; color: #1e293b; line-height: 1; }
+.date-box .day { font-size: 14px; color: #1e293b; line-height: 1; }
 .date-box .month { font-size: 9px; text-transform: uppercase; margin-top: 2px; }
 
-/* Cores diferentes para tipos de evento */
 .date-box.blue { background-color: #eff6ff; color: #2563eb; }
 .date-box.blue .day { color: #2563eb; }
-
 .date-box.red { background-color: #fef2f2; color: #dc2626; }
 .date-box.red .day { color: #dc2626; }
 
-/* Detalhes do texto do evento */
 .event-details h4 {
-    font-size: 14px;
+    font-size: 13px;
     color: #334155;
     margin-bottom: 2px;
 }
 
 .event-details p {
-    font-size: 12px;
+    font-size: 11px;
     color: #94a3b8;
 }
 
-/* Responsividade: Se o ecrã for pequeno, mete uma coluna debaixo da outra */
+/* Botões genéricos */
+.btn-card {
+    padding: 10px 16px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+
+.btn-card:hover {
+    background-color: #1d4ed8;
+}
+
+/* Responsividade */
 @media (max-width: 1024px) {
     .dashboard-grid {
-        grid-template-columns: 1fr; /* Uma coluna apenas */
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        width: 80px; /* Em tablets a sidebar fica pequena para poupar espaço */
+        padding: 20px 10px;
+    }
+    .link-text, .logo-text h3 {
+        display: none;
+    }
+    .sidebar-header {
+        justify-content: center;
+    }
+    .menu-item {
+        justify-content: center;
+    }
+    .menu-item i {
+        margin: 0;
     }
 }
