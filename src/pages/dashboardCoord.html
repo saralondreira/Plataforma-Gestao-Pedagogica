@@ -1,53 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coordenador - Gestão Pedagógica</title>
-    
-    <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="../css/style.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="/js/script.js" defer></script>
+    <script src="../js/script.js" defer></script>
 </head>
+
 <body>
 
     <div class="dashboard-container">
-        
+
         <aside class="sidebar hoverable">
             <div class="sidebar-header">
-                <div class="logo-icon">
-                    <i class="ph-fill ph-student"></i> </div>
+                <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
                 <div class="logo-text">
                     <h3>Gestão Pedagógica</h3>
                 </div>
             </div>
-            
             <nav class="sidebar-menu">
-                <a href="#" class="menu-item active" title="Visão Global">
-                    <i class="ph ph-chart-pie-slice"></i>
-                    <span class="link-text">Visão Global</span>
-                </a>
-                <a href="#" class="menu-item" title="Formadores">
-                    <i class="ph ph-users-three"></i>
-                    <span class="link-text">Formadores</span>
-                </a>
-                <a href="#" class="menu-item" title="Relatórios">
-                    <i class="ph ph-files"></i>
-                    <span class="link-text">Relatórios</span>
-                </a>
+                <nav class="sidebar-menu">
+                    <a href="dashboardCoord.html" class="menu-item active"><i class="ph ph-chart-pie-slice"></i><span
+                            class="link-text">Visão Global</span></a>
+                    <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span
+                            class="link-text">Gestão Formadores</span></a>
+                    <a href="turmas.html" class="menu-item"><i class="ph ph-chalkboard-teacher"></i><span
+                            class="link-text">Gestão Turmas</span></a>
+                    <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
+                            class="link-text">Agenda</span></a>
+                </nav>
             </nav>
-
             <div class="sidebar-footer">
-                <a href="login.html" class="menu-item logout" title="Sair">
-                    <i class="ph ph-sign-out"></i>
-                    <span class="link-text">Terminar Sessão</span>
-                </a>
+                <a href="perfil.html" class="menu-item"><i class="ph ph-user"></i><span class="link-text">O Meu
+                        Perfil</span></a>
+                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
+                        class="link-text">Terminar Sessão</span></a>
             </div>
         </aside>
 
         <main class="main-content">
-            
+
             <header class="top-bar">
                 <div class="user-info">
                     <span class="user-name">Olá, <strong>Dra. Helena</strong></span>
@@ -56,7 +53,7 @@
             </header>
 
             <div class="content-area">
-    
+
                 <div class="header-flex">
                     <div>
                         <h1>Painel de Controlo</h1>
@@ -66,70 +63,80 @@
                 </div>
 
                 <div class="dashboard-grid">
-                    
+
                     <div class="main-column">
                         <div class="section-card">
-                           <div class="card-header-simple">
-    <h3>Documentação em Falta</h3>
-    <select id="filtro-prazos" class="badge gray">
-        <option value="critico">0 CRÍTICOS</option>
-        <option value="hoje">0 HOJE</option>
-        <option value="pendente">0 PENDENTES</option>
-        <option value="todos" selected>TODOS (0)</option>
-    </select>
-</div>
+                            <div class="card-header-simple">
+                                <h3>Documentação em Falta</h3>
+                                <select id="filtro-prazos" class="badge gray">
+                                    <option value="critico">0 CRÍTICOS</option>
+                                    <option value="hoje">0 HOJE</option>
+                                    <option value="pendente">0 PENDENTES</option>
+                                    <option value="todos" selected>TODOS (0)</option>
+                                </select>
+                            </div>
 
-<div class="table-container-clean">
-    <table class="status-table">
-        <thead>
-            <tr>
-                <th>Formador</th>
-                <th>Turma / UFCD</th>
-                <th>Documento</th>
-                <th>Prazo</th>
-                <th>Data Limite</th>
-                <th>Estado</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><div class="avatar-circle">AS</div> A. Silva</td>
-                <td>T-2024-A (0792)</td>
-                <td>Pauta de Avaliação</td>
-                <td class="calculo-prazo" data-prazo="2024-12-11"></td>
-                <td><strong>11 Dez</strong></td> 
-                <td><span class="badge red">Em Falta</span></td>
-                <td><button class="btn-icon" title="Enviar Alerta"><i class="ph ph-bell-ringing"></i></button></td>
-            </tr>
-            <tr>
-                <td><div class="avatar-circle">JP</div> J. Pinto</td>
-                <td>T-2024-B (5440)</td>
-                <td>Sumários</td>
-                <td class="calculo-prazo" data-prazo="2026-02-10"></td>
-                <td><strong>10 Fev</strong></td> 
-                <td><span class="badge green">Entregue</span></td>
-                <td><button class="btn-icon" title="Consultar Documentos"><i class="ph ph-eye"></i></button></td>
-            </tr>
-            <tr>
-                <td><div class="avatar-circle">MR</div> M. Reis</td>
-                <td>T-2024-A (0792)</td>
-                <td>Cronograma</td>
-                <td class="calculo-prazo" data-prazo="2026-02-11"></td>
-                <td><strong>11 Fev</strong></td> 
-                <td><span class="badge yellow">Pendente</span></td>
-                <td><button class="btn-icon" title="Enviar Mensagem"><i class="ph ph-envelope"></i></button></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                            <div class="table-container-clean">
+                                <table class="status-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Formador</th>
+                                            <th>Turma / UFCD</th>
+                                            <th>Documento</th>
+                                            <th>Prazo</th>
+                                            <th>Data Limite</th>
+                                            <th>Estado</th>
+                                            <th>Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="avatar-circle">AS</div> A. Silva
+                                            </td>
+                                            <td>T-2024-A (0792)</td>
+                                            <td>Pauta de Avaliação</td>
+                                            <td class="calculo-prazo" data-prazo="2024-12-11"></td>
+                                            <td><strong>11 Dez</strong></td>
+                                            <td><span class="badge red">Em Falta</span></td>
+                                            <td><button class="btn-icon" title="Enviar Alerta"><i
+                                                        class="ph ph-bell-ringing"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="avatar-circle">JP</div> J. Pinto
+                                            </td>
+                                            <td>T-2024-B (5440)</td>
+                                            <td>Sumários</td>
+                                            <td class="calculo-prazo" data-prazo="2026-02-10"></td>
+                                            <td><strong>10 Fev</strong></td>
+                                            <td><span class="badge green">Entregue</span></td>
+                                            <td><button class="btn-icon" title="Consultar Documentos"><i
+                                                        class="ph ph-eye"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="avatar-circle">MR</div> M. Reis
+                                            </td>
+                                            <td>T-2024-A (0792)</td>
+                                            <td>Cronograma</td>
+                                            <td class="calculo-prazo" data-prazo="2026-02-11"></td>
+                                            <td><strong>11 Fev</strong></td>
+                                            <td><span class="badge blue">Pendente</span></td>
+                                            <td><button class="btn-icon" title="Enviar Mensagem"><i
+                                                        class="ph ph-envelope"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
                     <div class="side-column">
                         <div class="calendar-widget">
                             <div class="widget-header">
-                                <h3>Agenda</h3> <a href="calendario.html" target="_blank" class="btn-link-sm">Ver tudo</a>
+                                <h3>Agenda</h3> <a href="calendario.html" target="_blank" class="btn-link-sm">Ver
+                                    tudo</a>
                             </div>
 
                             <div class="events-list">
@@ -165,12 +172,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
 
                 </div>
-            </div> 
+            </div>
         </main>
     </div>
 
 </body>
+
 </html>
