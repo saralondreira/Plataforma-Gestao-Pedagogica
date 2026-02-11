@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Gestão Pedagógica</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="../js/script.js" defer></script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar hoverable">
+            <div class="sidebar-header">
+                <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+                <div class="logo-text">
+                    <h3>Gestão Pedagógica</h3>
+                </div>
+            </div>
+            <nav class="sidebar-menu">
+                <nav class="sidebar-menu">
+                    <a href="dashboardCoord.html" class="menu-item"><i class="ph ph-chart-pie-slice"></i><span
+                            class="link-text">Visão Global</span></a>
+                    <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span
+                            class="link-text">Gestão Formadores</span></a>
+                    <a href="turmas.html" class="menu-item"><i class="ph ph-chalkboard-teacher"></i><span
+                            class="link-text">Gestão Turmas</span></a>
+                    <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
+                            class="link-text">Agenda</span></a>
+                </nav>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="perfil.html" class="menu-item active"><i class="ph ph-user"></i><span class="link-text">O Meu
+                        Perfil</span></a>
+                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
+                        class="link-text">Terminar Sessão</span></a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="user-info">
+                    <span class="user-name">Olá, <strong>Dra. Helena</strong></span>
+                    <span class="user-role">Coordenadora</span>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <h1>O Meu Perfil</h1>
+
+                <div class="section-card-profile" style="margin-bottom: 24px;">
+                    <div class="profile-header" style="display: flex; gap: 20px; align-items: center;">
+                        <div class="avatar-circle"
+                            style="width: 80px; height: 80px; font-size: 24px; background-color: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            SL</div>
+                        <div id="form-perfil">
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label>Fotografia de Perfil</label>
+                                <input type="file" id="foto" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="form-perfil">
+                    <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap: 24px;">
+
+                        <div class="section-card">
+                            <div class="card-header-simple">
+                                <h3>Dados Pessoais</h3>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="nome">Nome Completo</label>
+                                <input type="text" id="nome" name="nome" value="Helena Silva" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="contacto">Contacto Telefónico</label>
+                                <input type="tel" id="contacto" name="contacto" placeholder="9xx xxx xxx">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="email">Email Institucional</label>
+                                <input type="email" id="email" class="readonly-field" value="helena.coord@escola.pt"
+                                    readonly>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="linkedin">Link LinkedIn / Página Pessoal</label>
+                                <input type="url" id="linkedin" name="linkedin"
+                                    placeholder="https://linkedin.com/in/perfil">
+                            </div>
+                        </div>
+
+                        <div class="section-card">
+                            <div class="card-header-simple">
+                                <h3>Informação Profissional</h3>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Turmas (Sob Gestão / Atuais)</label>
+                                <textarea class="readonly-field" readonly rows="3"
+                                    style="resize: none;">T-2024-A (0792)&#10;T-2024-B (5440)</textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="competencias">Competências / Certificados</label>
+                                <textarea id="competencias" name="competencias" rows="4"
+                                    placeholder="Ex: Certificado CCP, Especialista em Gestão Formativa..."></textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="curriculo">Atualizar Currículo (PDF)</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <input type="file" id="curriculo" name="curriculo" accept=".pdf" style="flex: 1;">
+                                    <button type="button" class="btn-icon" title="Ver currículo atual"
+                                        style="font-size: 24px;">
+                                        <i class="ph ph-file-pdf"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                <div class="section-card-save">
+
+                    <button type="submit" class="btn-card" style="width: 30%; justify-content: center;">Guardar
+                        Alterações</button>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+
+</body>
+
+</html>

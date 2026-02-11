@@ -1,26 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     const camposFormulario = document.querySelectorAll('input');
     camposFormulario.forEach(campo => {
-        campo.addEventListener('invalid', function(e) {
+        campo.addEventListener('invalid', function (e) {
             if (e.target.validity.valueMissing) {
                 e.target.setCustomValidity('Por favor, preencha este campo.');
-            } 
+            }
             else if (e.target.validity.typeMismatch) {
                 e.target.setCustomValidity('O email precisa de incluir um "@".');
             }
-            // Nota: Para patternMismatch funcionar, o HTML precisa do atributo pattern
             else if (e.target.validity.patternMismatch) {
                 e.target.setCustomValidity('Por favor, insira um domínio válido (ex: .pt).');
             }
         });
 
-        campo.addEventListener('input', function(e) {
+        campo.addEventListener('input', function (e) {
             e.target.setCustomValidity('');
         });
     });
 
-    // 2. GESTÃO DE PRAZOS
     function calcularDias(dataAlvo) {
         const hoje = new Date();
         const prazo = new Date(dataAlvo);
@@ -31,34 +29,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function atualizarPrazos() {
-    const elementos = document.querySelectorAll('.calculo-prazo');
+        const elementos = document.querySelectorAll('.calculo-prazo');
+        elementos.forEach(el => {
+            const dataPrazo = el.getAttribute('data-prazo');
+            if (!dataPrazo) return;
 
-    elementos.forEach(el => {
-        const dataPrazo = el.getAttribute('data-prazo');
-        if (!dataPrazo) return;
+            const dias = calcularDias(dataPrazo);
 
-        const dias = calcularDias(dataPrazo);
+            if (dias < 0) {
+                el.innerText = dias === -1 ? "Ontem" : `Há ${Math.abs(dias)} dias`;
+                el.style.color = "#dc2626";
+            }
+            else if (dias === 0) {
+                el.innerText = "Hoje";
+                el.style.color = "#ca8a04";
+            }
+            else if (dias === 1) {
+                el.innerText = "Amanhã";
+                el.style.color = "#2563eb";
+            }
+            else {
+                el.innerText = `Daqui a ${dias} dias`;
+                el.style.color = "#64748b";
+            }
+        });
+    }
 
-        if (dias < 0) {
-            el.innerText = dias === -1 ? "Ontem" : `Há ${Math.abs(dias)} dias`;
-            el.style.color = "#dc2626"; // Vermelho (Crítico)
-        } 
-        else if (dias === 0) {
-            el.innerText = "Hoje";
-            el.style.color = "#ca8a04"; // Amarelo/Dourado (Hoje)
-        } 
-        else if (dias === 1) {
-            el.innerText = "Amanhã";
-            el.style.color = "#2563eb"; // Azul (Pendente/Próximo)
-        } 
-        else {
-            el.innerText = `Daqui a ${dias} dias`;
-            el.style.color = "#64748b"; // Cinzento (Dentro do prazo)
-        }
-    });
-}
-
-    // 3. FILTRO E AÇÕES (Unificados para evitar erros de execução)
     function configurarInterface() {
         const filtro = document.getElementById('filtro-prazos');
         const linhas = document.querySelectorAll('.status-table tbody tr');
@@ -83,10 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 linha.setAttribute('data-estado', 'pendente');
             }
 
-            // Configurar clique nos botões desta linha
             const botoes = linha.querySelectorAll('.btn-icon');
             botoes.forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const acao = this.getAttribute('title');
                     const colunas = linha.querySelectorAll('td');
                     const nome = colunas[0].innerText.replace(/^[A-Z]{2}\s/, '').trim();
@@ -107,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             filtro.options[2].text = `${contadores.pendente} Pendentes`;
             filtro.options[3].text = `Todos (${contadores.todos})`;
 
-            filtro.addEventListener('change', function() {
+            filtro.addEventListener('change', function () {
                 this.className = `badge ${this.value === 'critico' ? 'red' : this.value === 'hoje' ? 'yellow' : this.value === 'pendente' ? 'blue' : 'gray'}`;
                 linhas.forEach(l => {
                     l.style.display = (this.value === 'todos' || l.getAttribute('data-estado') === this.value) ? '' : 'none';
@@ -116,6 +111,93 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function ajustarCamposPorPerfil(cargoUtilizador) {
+        const camposDinamicos = document.querySelectorAll('.role-dependent');
+        camposDinamicos.forEach(campo => {
+            const atributoRole = campo.getAttribute('data-role');
+            if (!atributoRole) return;
+
+            const papeisPermitidos = atributoRole.split(' ');
+            campo.style.display = papeisPermitidos.includes(cargoUtilizador) ? 'block' : 'none';
+        });
+    }
+
     atualizarPrazos();
     configurarInterface();
-});
+
+function aplicarNomeGuardado() {
+    const nomeGuardado = localStorage.getItem('utilizadorNome');
+    if (nomeGuardado) {
+        const elementosNome = document.querySelectorAll('.user-name strong');
+        elementosNome.forEach(el => el.innerText = nomeGuardado);
+        
+        const inputNome = document.getElementById('nome');
+        if (inputNome && window.location.pathname.includes('perfil.html')) {
+            inputNome.value = nomeGuardado;
+        }
+    }
+}
+
+const formPerfil = document.getElementById('form-perfil');
+if (formPerfil) {
+    formPerfil.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const novoNome = document.getElementById('nome').value;
+        
+        if (novoNome.trim() !== "") {
+            localStorage.setItem('utilizadorNome', novoNome);
+            
+            aplicarNomeGuardado();
+            
+            alert('Perfil atualizado com sucesso!');
+        }
+    });
+}
+
+aplicarNomeGuardado();
+
+function gerarIniciais(nome) {
+    if (!nome) return "??";
+    const partes = nome.trim().split(" ");
+    if (partes.length === 1) return partes[0].charAt(0).toUpperCase();
+    return (partes[0].charAt(0) + partes[partes.length - 1].charAt(0)).toUpperCase();
+}
+
+function aplicarDadosUtilizador() {
+    const nomeGuardado = localStorage.getItem('utilizadorNome');
+    
+    if (nomeGuardado) {
+        const elementosNome = document.querySelectorAll('.user-name strong');
+        elementosNome.forEach(el => el.innerText = nomeGuardado);
+
+        const iniciais = gerarIniciais(nomeGuardado);
+        const avatares = document.querySelectorAll('.avatar-circle');
+        avatares.forEach(av => {
+            if (!av.closest('td')) {
+                av.innerText = iniciais;
+            }
+        });
+
+        const inputNome = document.getElementById('nome');
+        if (inputNome) inputNome.value = nomeGuardado;
+    }
+}
+
+const formPerfil = document.getElementById('form-perfil');
+if (formPerfil) {
+    formPerfil.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const novoNome = document.getElementById('nome').value;
+        if (novoNome.trim() !== "") {
+            localStorage.setItem('utilizadorNome', novoNome);
+            aplicarDadosUtilizador();
+            alert('Perfil e iniciais atualizados com sucesso!');
+        }
+    });
+}
+aplicarDadosUtilizador();
+
+
+}); 

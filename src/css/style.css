@@ -595,3 +595,64 @@ tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.
     .link-text, .logo-text h3 { display: none; }
     .sidebar-header, .menu-item { justify-content: center; }
 }
+
+/* =========================================
+   10. ELEMENTOS DO 'MEU PERFIL'
+   ========================================= */
+#form-perfil .input-group input,
+#form-perfil .input-group textarea,
+#form-perfil select {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;   
+    color: #1e293b;          
+}
+#form-perfil .input-group label {
+    color: #475569;             
+    font-weight: 600;
+}
+
+#form-perfil .input-group input:focus,
+#form-perfil .input-group textarea:focus {
+    background-color: #ffffff;
+    border-color: #3b82f6;      
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    color: #0f172a;
+}
+
+#form-perfil input[readonly],
+#form-perfil textarea[readonly] {
+    background-color: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+.readonly-field {
+    cursor: default !important; 
+    pointer-events: none;      
+    background-color: #1e293b; 
+    opacity: 0.8;       
+}
+
+.readonly-field:hover, .readonly-field:focus {
+    border-color: #334155 !important;
+    outline: none;
+}
+.section-card-profile {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.section-card-save {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;           
+    justify-content: center; 
+    align-items: center;      
+}
