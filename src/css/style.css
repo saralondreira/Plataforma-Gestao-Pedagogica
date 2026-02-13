@@ -10,7 +10,7 @@
 
 body {
     height: 100vh;
-    background-color: #0f172a; /* Fundo base */
+    background-color: #0f172a; 
 }
 
 /* Contentor Principal */
@@ -331,6 +331,8 @@ textarea {
 
 .user-info {
     text-align: right;
+    display: flex;
+    flex-direction: column;
 }
 
 .user-name {
@@ -655,4 +657,28 @@ tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.
     display: flex;           
     justify-content: center; 
     align-items: center;      
+}
+
+.user-profile-header{
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+/* =========================================
+   10. ELEMENTOS DA 'Agenda'
+   ========================================= */
+
+.dashboard-grid-agenda {
+    display: grid;
+    gap: 24px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.main-container-agenda {
+    height: 300px;
+    width: 100%;
 }

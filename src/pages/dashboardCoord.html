@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coordenador - Gestão Pedagógica</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="../js/script.js" defer></script>
+    <script src="/js/script.js" defer></script>
 </head>
 
 <body>
@@ -46,9 +46,12 @@
         <main class="main-content">
 
             <header class="top-bar">
-                <div class="user-info">
-                    <span class="user-name">Olá, <strong>Dra. Helena</strong></span>
-                    <span class="user-role">Coordenadora</span>
+                 <div class="user-profile-header">
+                    <div class="avatar-circle">??</div> 
+                    <div class="user-info">
+                        <span class="user-name">Olá, <strong>Utilizador</strong></span>
+                        <span class="user-role">Coordenadora</span>
+                    </div>
                 </div>
             </header>
 
@@ -60,10 +63,10 @@
                         <p class="section-subtitle">Visão geral da atividade pedagógica.</p>
                     </div>
                     <button class="btn-card" style="width: auto;">+ Novo Aviso</button>
+
                 </div>
 
                 <div class="dashboard-grid">
-
                     <div class="main-column">
                         <div class="section-card">
                             <div class="card-header-simple">
@@ -122,7 +125,7 @@
                                             <td>Cronograma</td>
                                             <td class="calculo-prazo" data-prazo="2026-02-11"></td>
                                             <td><strong>11 Fev</strong></td>
-                                            <td><span class="badge blue">Pendente</span></td>
+                                            <td><span class="badge yellow">Pendente</span></td>
                                             <td><button class="btn-icon" title="Enviar Mensagem"><i
                                                         class="ph ph-envelope"></i></button></td>
                                         </tr>
@@ -135,8 +138,8 @@
                     <div class="side-column">
                         <div class="calendar-widget">
                             <div class="widget-header">
-                                <h3>Agenda</h3> <a href="calendario.html" target="_blank" class="btn-link-sm">Ver
-                                    tudo</a>
+                                <h3>Agenda</h3> <a href="https://calendar.google.com/" target="_blank"
+                                    class="btn-link-sm">Ver tudo</a>
                             </div>
 
                             <div class="events-list">
