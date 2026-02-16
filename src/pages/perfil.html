@@ -16,27 +16,36 @@
     <div class="dashboard-container">
         <aside class="sidebar hoverable">
             <div class="sidebar-header">
-                <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
-                <div class="logo-text">
-                    <h3>Gestão Pedagógica</h3>
-                </div>
+                <a href="dashboardCoord.html"
+                    style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                    <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+                    <div class="logo-text">
+                        <h3>Gestão Pedagógica</h3>
+                    </div>
+                </a>
             </div>
             <nav class="sidebar-menu">
-                <a href="dashboardCoord.html" class="menu-item"><i class="ph ph-chart-pie-slice"></i><span class="link-text">Visão Global</span></a>
-                <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span class="link-text">Gestão Formadores</span></a>
-                <a href="turmas.html" class="menu-item"><i class="ph ph-chalkboard-teacher"></i><span class="link-text">Gestão Turmas</span></a>
-                <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span class="link-text">Agenda</span></a>
+                <a href="dashboardCoord.html" class="menu-item"><i class="ph ph-chart-pie-slice"></i><span
+                        class="link-text">Visão Global</span></a>
+                <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span
+                        class="link-text">Gestão Formadores</span></a>
+                <a href="turmas.html" class="menu-item"><i class="ph ph-chalkboard-teacher"></i><span
+                        class="link-text">Gestão Turmas</span></a>
+                <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
+                        class="link-text">Agenda</span></a>
             </nav>
             <div class="sidebar-footer">
-                <a href="perfil.html" class="menu-item active"><i class="ph ph-user"></i><span class="link-text">O Meu Perfil</span></a>
-                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span class="link-text">Terminar Sessão</span></a>
+                <a href="perfil.html" class="menu-item active"><i class="ph ph-user"></i><span class="link-text">O Meu
+                        Perfil</span></a>
+                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
+                        class="link-text">Terminar Sessão</span></a>
             </div>
         </aside>
 
         <main class="main-content">
             <header class="top-bar">
-                 <div class="user-profile-header">
-                    <div class="avatar-circle">??</div> 
+                <div class="user-profile-header">
+                    <div class="avatar-circle">??</div>
                     <div class="user-info">
                         <span class="user-name">Olá, <strong>Utilizador</strong></span>
                         <span class="user-role">Coordenadora</span>
@@ -48,10 +57,11 @@
                 <h1>O Meu Perfil</h1>
 
                 <form id="form-perfil">
-                    
+
                     <div class="section-card-profile" style="margin-bottom: 24px;">
                         <div class="profile-header" style="display: flex; gap: 20px; align-items: center;">
-                            <div class="avatar-circle main-avatar" style="width: 80px; height: 80px; font-size: 24px; background-color: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <div class="avatar-circle main-avatar"
+                                style="width: 80px; height: 80px; font-size: 24px; background-color: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                                 ??
                             </div>
                             <div class="input-group" style="margin-bottom: 0;">
@@ -76,11 +86,13 @@
                             </div>
                             <div class="input-group">
                                 <label for="email">Email Institucional</label>
-                                <input type="email" id="email" class="readonly-field" value="helena.coord@escola.pt" readonly>
+                                <input type="email" id="email" class="readonly-field" value="helena.coord@escola.pt"
+                                    readonly>
                             </div>
                             <div class="input-group">
                                 <label for="linkedin">LinkedIn / Página Pessoal</label>
-                                <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/perfil">
+                                <input type="url" id="linkedin" name="linkedin"
+                                    placeholder="https://linkedin.com/in/perfil">
                             </div>
                         </div>
 
@@ -90,24 +102,28 @@
                             </div>
                             <div class="input-group">
                                 <label>Turmas (Atuais)</label>
-                                <textarea class="readonly-field" readonly rows="3" style="resize: none;">T-2024-A (0792)&#10;T-2024-B (5440)</textarea>
+                                <textarea class="readonly-field" readonly rows="3"
+                                    style="resize: none;">T-2024-A (0792)&#10;T-2024-B (5440)</textarea>
                             </div>
                             <div class="input-group">
                                 <label for="competencias">Competências</label>
-                                <textarea id="competencias" name="competencias" rows="4" placeholder="Ex: Certificado CCP..."></textarea>
+                                <textarea id="competencias" name="competencias" rows="4"
+                                    placeholder="Ex: Certificado CCP..."></textarea>
                             </div>
                             <div class="input-group">
                                 <label for="curriculo">Currículo (PDF)</label>
                                 <div style="display: flex; gap: 10px; align-items: center;">
                                     <input type="file" id="curriculo" name="curriculo" accept=".pdf" style="flex: 1;">
-                                    <button type="button" class="btn-icon" title="Ver currículo atual"><i class="ph ph-file-pdf"></i></button>
+                                    <button type="button" class="btn-icon" title="Ver currículo atual"><i
+                                            class="ph ph-file-pdf"></i></button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="section-card-save" style="margin-top: 24px; display: flex; justify-content: center;">
-                        <button type="submit" class="btn-save" style="width: 30%; height: 45px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                        <button type="submit" class="btn-save"
+                            style="width: 30%; height: 45px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
                             Guardar Alterações
                         </button>
                     </div>
@@ -115,5 +131,9 @@
             </div>
         </main>
     </div>
+    <footer>
+        <p class="copy">&copy: 2026 - Programação web (frontend)</p>
+    </footer>
 </body>
+
 </html>

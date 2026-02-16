@@ -1,29 +1,24 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // --- 1. Inicialização ---
     inicializarValidacaoFormularios();
     atualizarPrazos();
     configurarInterfaceTabela();
     atualizarInterfaceUtilizador();
     configurarFormularioPerfil();
 
-    // --- 2. Gestão do Utilizador & Perfil ---
 
     function atualizarInterfaceUtilizador() {
         const nomeGuardado = localStorage.getItem('utilizadorNome');
         if (!nomeGuardado) return;
 
-        // Atualiza textos de boas-vindas
         document.querySelectorAll('.user-name strong').forEach(el => {
             el.innerText = nomeGuardado;
         });
 
-        // Atualiza avatares (evitando os da tabela)
         const iniciais = gerarIniciais(nomeGuardado);
         document.querySelectorAll('.avatar-circle').forEach(av => {
             if (!av.closest('td')) av.innerText = iniciais;
         });
 
-        // Preenche o input se estivermos na página de perfil
         const inputNome = document.getElementById('nome');
         if (inputNome) inputNome.value = nomeGuardado;
     }
@@ -46,6 +41,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const formLogin = document.getElementById('form-login');
+    if (formLogin) {
+        formLogin.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            window.location.href = "dashboardCoord.html";
+        });
+    }
+
     function gerarIniciais(nome) {
         const partes = nome.trim().split(/\s+/);
         if (partes.length === 0) return "??";
@@ -53,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return (partes[0].charAt(0) + partes[partes.length - 1].charAt(0)).toUpperCase();
     }
 
-    // --- 3. Lógica de Prazos e Tabela ---
 
     function calcularDias(dataAlvo) {
         const hoje = new Date();
@@ -69,11 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!data) return;
 
             const dias = calcularDias(data);
-            const configuracao = 
+            const configuracao =
                 dias < 0 ? { texto: dias === -1 ? "Ontem" : `Há ${Math.abs(dias)} dias`, cor: "#dc2626" } :
-                dias === 0 ? { texto: "Hoje", cor: "#ca8a04" } :
-                dias === 1 ? { texto: "Amanhã", cor: "#2563eb" } :
-                { texto: `Daqui a ${dias} dias`, cor: "#64748b" };
+                    dias === 0 ? { texto: "Hoje", cor: "#ca8a04" } :
+                        dias === 1 ? { texto: "Amanhã", cor: "#2563eb" } :
+                            { texto: `Daqui a ${dias} dias`, cor: "#64748b" };
 
             el.innerText = configuracao.texto;
             el.style.color = configuracao.cor;
@@ -81,38 +84,63 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function configurarInterfaceTabela() {
-        const filtro = document.getElementById('filtro-prazos');
-        const linhas = document.querySelectorAll('.status-table tbody tr');
-        let contadores = { critico: 0, hoje: 0, pendente: 0, todos: 0 };
+    const filtro = document.getElementById('filtro-prazos');
+    const linhas = document.querySelectorAll('.status-table tbody tr');
+    let contadores = { critico: 0, hoje: 0, pendente: 0, todos: 0 };
 
-        linhas.forEach(linha => {
-            const elPrazo = linha.querySelector('.calculo-prazo');
-            if (!elPrazo) return;
+    linhas.forEach(linha => {
+        const elPrazo = linha.querySelector('.calculo-prazo');
+        const badgeEstado = linha.querySelector('.badge'); 
+        if (!elPrazo || !badgeEstado) return;
 
-            const dias = calcularDias(elPrazo.getAttribute('data-prazo'));
-            const estado = dias < 0 ? 'critico' : dias === 0 ? 'hoje' : 'pendente';
-            
+        if (badgeEstado.innerText.trim().toLowerCase() === "entregue") {
+            elPrazo.innerText = "—";
+            linha.setAttribute('data-estado', 'entregue');
+            return;
+        }
+
+        const dias = calcularDias(elPrazo.getAttribute('data-prazo'));
+        
+        if (dias < 0) {
+            badgeEstado.innerText = "Em Falta";
+            badgeEstado.className = "badge red";
+            const estado = 'critico';
             contadores[estado]++;
-            contadores.todos++;
             linha.setAttribute('data-estado', estado);
+        } else if (dias === 0) {
+            const estado = 'hoje';
+            contadores[estado]++;
+            linha.setAttribute('data-estado', estado);
+        } else {
+            const estado = 'pendente';
+            contadores[estado]++;
+            linha.setAttribute('data-estado', estado);
+        }
 
-            linha.querySelectorAll('.btn-icon').forEach(btn => {
-                btn.onclick = () => processarAcao(btn, linha);
-            });
+        contadores.todos++;
+
+        linha.querySelectorAll('.btn-icon').forEach(btn => {
+            btn.onclick = () => processarAcao(btn, linha);
         });
+    });
 
-        if (filtro) atualizarDropdownFiltro(filtro, contadores, linhas);
-    }
+    if (filtro) atualizarDropdownFiltro(filtro, contadores, linhas);
+}
 
     function processarAcao(btn, linha) {
         const acao = btn.getAttribute('title');
         const colunas = linha.querySelectorAll('td');
+
         const nome = colunas[0].innerText.replace(/^[A-Z]{2}\s/, '').trim();
         const doc = colunas[2].innerText;
 
-        if (acao === "Enviar Mensagem") {
+        if (acao === "Enviar Mensagem" || acao === "Enviar Alerta") {
             window.location.href = `mailto:exemplo@instituicao.pt?subject=Pendente: ${doc}&body=Olá ${nome}, falta o documento ${doc}.`;
-        } else {
+        }
+        else if (acao === "Consultar Documentos") {
+            alert('A verificação ainda está em desenvolvimento.');
+        }
+        else {
             alert(`${acao} para ${nome}: ${doc}`);
         }
     }
@@ -137,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function inicializarValidacaoFormularios() {
         document.querySelectorAll('input').forEach(campo => {
             campo.addEventListener('invalid', (e) => {
-                e.target.setCustomValidity(''); 
+                e.target.setCustomValidity('');
                 if (e.target.validity.valueMissing) e.target.setCustomValidity('Por favor, preencha este campo.');
                 else if (e.target.validity.typeMismatch) e.target.setCustomValidity('O email precisa de incluir um "@".');
                 else if (e.target.validity.patternMismatch) e.target.setCustomValidity('Por favor, insira um domínio válido (ex: .pt).');

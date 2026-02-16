@@ -11,6 +11,7 @@
 body {
     height: 100vh;
     background-color: #0f172a; 
+    padding-bottom: 20px;
 }
 
 /* Contentor Principal */
@@ -18,6 +19,10 @@ body {
     display: flex;
     height: 100%;
     width: 100%;
+}
+
+footer {
+    padding: 10px 0;
 }
 
 /* =========================================
@@ -363,6 +368,18 @@ textarea {
     margin-bottom: 30px;
 }
 
+.sidebar-header a {
+    text-decoration: none;
+    display: flex;       
+    align-items: center; 
+    gap: 12px;           
+    color: inherit;        
+}
+
+.sidebar-header a:hover {
+    text-decoration: none;
+}
+
 /* =========================================
    5. LAYOUT DE GRELHA
    ========================================= */
@@ -493,7 +510,6 @@ select#filtro-prazos.badge {
 #filtro-prazos option[value="hoje"] { color: #ca8a04; }     /* Amarelo */
 #filtro-prazos option[value="pendente"] { color: #2563eb; } /* Azul */
 
-/* Cores dinâmicas para o botão filtro (JS) */
 select#filtro-prazos.badge.red { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
 select#filtro-prazos.badge.yellow { background-color: #fefce8; color: #ca8a04; border-color: #fef08a; }
 select#filtro-prazos.badge.blue { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
@@ -516,7 +532,6 @@ select#filtro-prazos:hover { filter: brightness(0.95); }
     justify-content: center;
 }
 
-/* Hover muda de cor conforme o estado da linha atribuído pelo JS */
 tr[data-estado="critico"] .btn-icon:hover { color: #dc2626; transform: scale(1.2); }
 tr[data-estado="hoje"] .btn-icon:hover { color: #ca8a04; transform: scale(1.2); }
 tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.2); }
@@ -534,18 +549,31 @@ tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.
 }
 
 .btn-link-sm {
-    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    background-color: #eff6ff; 
     color: #2563eb;
-    text-decoration: none;
+    border: 1px solid #bfdbfe; 
+    
+    padding: 6px 16px;
+    border-radius: 20px;    
+    
+    font-size: 11px;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    
+    transition: all 0.2s ease;
 }
 
-.btn-link-sm:hover { text-decoration: underline; }
-
-.events-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+.btn-link-sm:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #1e293b;
+    text-decoration: none;
 }
 
 .event-item {
@@ -682,3 +710,31 @@ tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.
     height: 300px;
     width: 100%;
 }
+
+.copy{
+color: white;
+text-align:center;
+font-size: small;
+margin-top: 10px;
+
+}
+
+.aviso { 
+    color: #ffffff !important;     
+    text-decoration: none !important; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2563eb;   
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.aviso:hover {
+    background-color: #1d4ed8;
+    color: #ffffff;
+    text-decoration: none;
+}
+
