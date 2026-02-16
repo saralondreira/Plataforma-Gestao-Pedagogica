@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +9,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <script src="../js/script.js" defer></script>
 </head>
+
 <body>
 
     <div class="main-container">
-        
+
         <div class="login-side">
             <div class="login-content">
-                
+
                 <div class="brand">
                     <h2>Pedido de Acesso</h2>
                     <p class="subtitle">Preencha os dados para validação pela coordenação.</p>
                 </div>
 
                 <form action="#" method="POST">
-                    
+
                     <div class="input-group">
                         <label for="nome">Nome Completo</label>
                         <input type="text" id="nome" name="nome" placeholder="O seu nome completo" required>
@@ -29,7 +31,9 @@
 
                     <div class="input-group">
                         <label for="email">Email Institucional</label>
-                        <input type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.pt$" placeholder="ex: exemplo@email.pt" required>                    </div>
+                        <input type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.pt$"
+                            placeholder="ex: exemplo@email.pt" required>
+                    </div>
 
                     <div class="input-group">
                         <label for="cargo">Função / Cargo</label>
@@ -44,11 +48,12 @@
 
                     <div class="input-group">
                         <label for="motivo">Motivo / Observações</label>
-                        <textarea id="motivo" name="motivo" rows="3" placeholder="Indique o curso ou módulo, se aplicável."></textarea>
+                        <textarea id="motivo" name="motivo" rows="3"
+                            placeholder="Indique o curso ou módulo, se aplicável."></textarea>
                     </div>
 
-                    <button type="submit" class="btn-login">Enviar Pedido</button>
-                    
+                    <button type="submit" class="btn-login"><a href="login.html">Enviar Pedido</a></button>
+
                     <div class="back-link">
                         <a href="login.html">← Voltar ao Login</a>
                     </div>
@@ -67,6 +72,9 @@
         <div class="image-side"></div>
 
     </div>
-
+    <footer>
+        <p class="copy">&copy: 2026 - Programação web (frontend)</p>
+    </footer>
 </body>
+
 </html>

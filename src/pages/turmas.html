@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Turmas</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="/js/script.js" defer></script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <aside class="sidebar hoverable">
+            <div class="sidebar-header">
+                <a href="dashboardCoord.html"
+                    style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                    <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+                    <div class="logo-text">
+                        <h3>Gestão Pedagógica</h3>
+                    </div>
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <nav class="sidebar-menu">
+                    <a href="dashboardCoord.html" class="menu-item"><i class="ph ph-chart-pie-slice"></i><span
+                            class="link-text">Visão Global</span></a>
+                    <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span
+                            class="link-text">Gestão Formadores</span></a>
+                    <a href="turmas.html" class="menu-item active"><i class="ph ph-chalkboard-teacher"></i><span
+                            class="link-text">Gestão Turmas</span></a>
+                    <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
+                            class="link-text">Agenda</span></a>
+                </nav>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="perfil.html" class="menu-item"><i class="ph ph-user"></i><span class="link-text">O Meu
+                        Perfil</span></a>
+                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
+                        class="link-text">Terminar Sessão</span></a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <header class="top-bar">
+                <div class="user-profile-header">
+                    <div class="avatar-circle">??</div>
+                    <div class="user-info">
+                        <span class="user-name">Olá, <strong>Utilizador</strong></span>
+                        <span class="user-role">Coordenadora</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+
+                <div class="header-flex">
+                    <div>
+                        <h1>Turmas</h1>
+                        <p class="section-subtitle">Gestão de Turmas</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid-agenda">
+                    <div class="main-container-agenda">
+                        <div class="section-card">
+                            <div class="card-header-simple">
+                                <h3>Gestão de Turmas em Desenvolvimento...</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p class="copy">&copy: 2026 - Programação web (frontend)</p>
+    </footer>
+</body>
+
+</html>
