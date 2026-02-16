@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     configurarInterfaceTabela();
     atualizarInterfaceUtilizador();
     configurarFormularioPerfil();
+    configurarFiltroTurmas();
 
 
     function atualizarInterfaceUtilizador() {
@@ -84,48 +85,48 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function configurarInterfaceTabela() {
-    const filtro = document.getElementById('filtro-prazos');
-    const linhas = document.querySelectorAll('.status-table tbody tr');
-    let contadores = { critico: 0, hoje: 0, pendente: 0, todos: 0 };
+        const filtro = document.getElementById('filtro-prazos');
+        const linhas = document.querySelectorAll('.status-table tbody tr');
+        let contadores = { critico: 0, hoje: 0, pendente: 0, todos: 0 };
 
-    linhas.forEach(linha => {
-        const elPrazo = linha.querySelector('.calculo-prazo');
-        const badgeEstado = linha.querySelector('.badge'); 
-        if (!elPrazo || !badgeEstado) return;
+        linhas.forEach(linha => {
+            const elPrazo = linha.querySelector('.calculo-prazo');
+            const badgeEstado = linha.querySelector('.badge');
+            if (!elPrazo || !badgeEstado) return;
 
-        if (badgeEstado.innerText.trim().toLowerCase() === "entregue") {
-            elPrazo.innerText = "—";
-            linha.setAttribute('data-estado', 'entregue');
-            return;
-        }
+            if (badgeEstado.innerText.trim().toLowerCase() === "entregue") {
+                elPrazo.innerText = "—";
+                linha.setAttribute('data-estado', 'entregue');
+                return;
+            }
 
-        const dias = calcularDias(elPrazo.getAttribute('data-prazo'));
-        
-        if (dias < 0) {
-            badgeEstado.innerText = "Em Falta";
-            badgeEstado.className = "badge red";
-            const estado = 'critico';
-            contadores[estado]++;
-            linha.setAttribute('data-estado', estado);
-        } else if (dias === 0) {
-            const estado = 'hoje';
-            contadores[estado]++;
-            linha.setAttribute('data-estado', estado);
-        } else {
-            const estado = 'pendente';
-            contadores[estado]++;
-            linha.setAttribute('data-estado', estado);
-        }
+            const dias = calcularDias(elPrazo.getAttribute('data-prazo'));
 
-        contadores.todos++;
+            if (dias < 0) {
+                badgeEstado.innerText = "Em Falta";
+                badgeEstado.className = "badge red";
+                const estado = 'critico';
+                contadores[estado]++;
+                linha.setAttribute('data-estado', estado);
+            } else if (dias === 0) {
+                const estado = 'hoje';
+                contadores[estado]++;
+                linha.setAttribute('data-estado', estado);
+            } else {
+                const estado = 'pendente';
+                contadores[estado]++;
+                linha.setAttribute('data-estado', estado);
+            }
 
-        linha.querySelectorAll('.btn-icon').forEach(btn => {
-            btn.onclick = () => processarAcao(btn, linha);
+            contadores.todos++;
+
+            linha.querySelectorAll('.btn-icon').forEach(btn => {
+                btn.onclick = () => processarAcao(btn, linha);
+            });
         });
-    });
 
-    if (filtro) atualizarDropdownFiltro(filtro, contadores, linhas);
-}
+        if (filtro) atualizarDropdownFiltro(filtro, contadores, linhas);
+    }
 
     function processarAcao(btn, linha) {
         const acao = btn.getAttribute('title');
@@ -160,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- 4. Validação de Formulários ---
 
     function inicializarValidacaoFormularios() {
         document.querySelectorAll('input').forEach(campo => {
@@ -173,4 +173,55 @@ document.addEventListener('DOMContentLoaded', function () {
             campo.addEventListener('input', (e) => e.target.setCustomValidity(''));
         });
     }
+    
+function configurarFiltroTurmas() {
+    const filtro = document.getElementById('filtro-turmas');
+    const linhas = document.querySelectorAll('#tabela-turmas tbody tr');
+    
+    if (!filtro || linhas.length === 0) return;
+
+    let contadores = { 
+        'em-curso': 0, 
+        planeada: 0, 
+        concluida: 0, 
+        arquivada: 0, 
+        cancelada: 0, 
+        todas: 0 
+    };
+
+    linhas.forEach(linha => {
+        const estado = linha.getAttribute('data-estado');
+        if (contadores.hasOwnProperty(estado)) {
+            contadores[estado]++;
+        }
+        contadores.todas++;
+    });
+
+    filtro.options[0].text = `${contadores['em-curso']} EM CURSO`;
+    filtro.options[1].text = `${contadores.planeada} PLANEADAS`;
+    filtro.options[2].text = `${contadores.concluida} CONCLUÍDAS`;
+    filtro.options[3].text = `${contadores.arquivada} ARQUIVADAS`;
+    filtro.options[4].text = `${contadores.cancelada} CANCELADAS`;
+    filtro.options[5].text = `TODOS (${contadores.todas})`;
+
+    filtro.addEventListener('change', function () {
+        const valor = this.value;
+
+        const coresAtivas = { 
+            'em-curso': 'blue', 
+            planeada: 'yellow', 
+            concluida: 'green', 
+            arquivada: 'gray', 
+            cancelada: 'red',
+            todas: 'gray' 
+        };
+        
+        this.className = `badge ${coresAtivas[valor] || 'gray'}`;
+
+        linhas.forEach(l => {
+            l.style.display = (valor === 'todas' || l.getAttribute('data-estado') === valor) ? '' : 'none';
+        });
+    });
+}
+
 });

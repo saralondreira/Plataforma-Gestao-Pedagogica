@@ -59,22 +59,72 @@
             </header>
 
             <div class="content-area">
+                <div class="content-standard">
 
-                <div class="header-flex">
-                    <div>
-                        <h1>Turmas</h1>
-                        <p class="section-subtitle">Gestão de Turmas</p>
+                    <div class="header-flex">
+                        <div>
+                            <h1>Gestão de Turmas</h1>
+                            <p class="section-subtitle">Administração e acompanhamento de turmas ativos e histórico.</p>
+                        </div>
+                        <button class="btn-card" id="btn-nova-turma">
+                            <i class="ph ph-plus-circle"></i> Nova Turma
+                        </button>
                     </div>
-                </div>
 
-                <div class="dashboard-grid-agenda">
-                    <div class="main-container-agenda">
-                        <div class="section-card">
-                            <div class="card-header-simple">
-                                <h3>Gestão de Turmas em Desenvolvimento...</h3>
-                            </div>
+                    <div class="section-card table-standard">
+                        <div class="card-header-simple">
+                            <h3>Lista de Turmas</h3>
+                            <select id="filtro-turmas" class="badge gray">
+                                <option value="em-curso">0 EM CURSO</option>
+                                <option value="planeada">0 PLANEADAS</option>
+                                <option value="concluida">0 CONCLUÍDAS</option>
+                                <option value="arquivada">0 ARQUIVADAS</option>
+                                <option value="cancelada">0 CANCELADAS</option>
+                                <option value="todas" selected>TODOS (0)</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container-clean">
+                            <table class="status-table" id="tabela-turmas">
+                                <thead>
+                                    <tr>
+                                        <th>Código / Turma</th>
+                                        <th>Designação</th>
+                                        <th>Data Início</th>
+                                        <th>Nº Formandos</th>
+                                        <th>Estado</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-estado="em-curso">
+                                        <td><strong>T-2024-A</strong></td>
+                                        <td>Técnico de Informática (0792)</td>
+                                        <td>12 Jan 2024</td>
+                                        <td>18</td>
+                                        <td><span class="badge blue">Em Curso</span></td>
+                                        <td>
+                                            <button class="btn-icon" title="Editar"><i
+                                                    class="ph ph-pencil-simple"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-estado="planeada">
+                                        <td><strong>T-2024-C</strong></td>
+                                        <td>Marketing Digital (5440)</td>
+                                        <td>15 Mar 2024</td>
+                                        <td>20</td>
+                                        <td><span class="badge yellow">Planeada</span></td>
+                                        <td>
+                                            <button class="btn-icon" title="Editar"><i
+                                                    class="ph ph-pencil-simple"></i></button>
+                                            <button class="btn-icon" title="Ver Formandos"><i class="ph ph-users"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </main>
