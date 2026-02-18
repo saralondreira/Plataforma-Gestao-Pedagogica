@@ -28,23 +28,23 @@
             </div>
             <nav class="sidebar-menu">
                 <nav class="sidebar-menu">
-                <nav class="sidebar-menu">
-                    <a href="dashboardCoord.html" class="menu-item"><i class="ph ph-chart-pie-slice"></i><span
-                            class="link-text">Visão Global</span></a>
-                    <a href="turmas.html" class="menu-item"><i class="ph ph-chalkboard-teacher"></i><span
-                            class="link-text">Gestão Turmas</span></a>
-                    <a href="formadores.html" class="menu-item active"><i class="ph ph-users-three"></i><span
-                            class="link-text">Gestão Formadores</span></a>
-                    <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
-                            class="link-text">Agenda</span></a>
+                    <nav class="sidebar-menu">
+                        <a href="dashboardCoord.html" class="menu-item"><i class="ph ph-chart-pie-slice"></i><span
+                                class="link-text">Visão Global</span></a>
+                        <a href="turmas.html" class="menu-item"><i class="ph ph-chalkboard-teacher"></i><span
+                                class="link-text">Gestão Turmas</span></a>
+                        <a href="formadores.html" class="menu-item active"><i class="ph ph-users-three"></i><span
+                                class="link-text">Gestão Formadores</span></a>
+                        <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
+                                class="link-text">Agenda</span></a>
+                    </nav>
                 </nav>
-            </nav>
-            <div class="sidebar-footer">
-                <a href="perfil.html" class="menu-item"><i class="ph ph-user"></i><span class="link-text">O Meu
-                        Perfil</span></a>
-                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
-                        class="link-text">Terminar Sessão</span></a>
-            </div>
+                <div class="sidebar-footer">
+                    <a href="perfil.html" class="menu-item"><i class="ph ph-user"></i><span class="link-text">O Meu
+                            Perfil</span></a>
+                    <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
+                            class="link-text">Terminar Sessão</span></a>
+                </div>
         </aside>
 
         <main class="main-content">
@@ -60,25 +60,147 @@
             </header>
 
             <div class="content-area">
+                <div class="content-standard">
 
-                <div class="header-flex">
-                    <div>
-                        <h1>Formadores</h1>
-                        <p class="section-subtitle">Gestão de formadores </p>
+                    <div class="header-flex">
+                        <div>
+                            <h1>Gestão de Formadores</h1>
+                            <p class="section-subtitle">Administração e acompanhamento de formadores.</p>
+                        </div>
+                        <button class="btn-card" id="btn-nova-turma">
+                            <i class="ph ph-plus-circle"></i> Gerir
+                        </button>
                     </div>
-                </div>
 
-                <div class="dashboard-grid-agenda">
-                    <div class="main-container-agenda">
-                        <div class="section-card">
-                            <div class="card-header-simple">
-                                <h3>Gestão de Formadores em Desenvolvimento...</h3>
-                            </div>
+                    <div class="section-card table-standard">
+                        <div class="card-header-simple">
+                            <h3>Lista de Formadores</h3>
+                            <select id="filtro-turmas" class="badge gray">
+                                <option value="ativo">Ativo (0)</option>
+                                <option value="planeada">Ausente (0)</option>
+                                <option value="todas" selected>TODOS (0)</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container-clean">
+                            <table class="status-table" id="tabela-formadores">
+                                <thead>
+                                    <tr>
+                                        <th>Sigla</th>
+                                        <th>Nome Completo</th>
+                                        <th>Turmas</th>
+                                        <th>UC</th>
+                                        <th>Estado</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-estado="ativo">
+                                        <td>
+                                            <div class="avatar-circle">AS</div> A. Silva
+                                        </td>
+                                        <td>Ana Maria Silva</td>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td><span class="badge green">Ativo</span></td>
+                                        <td>
+                                            <button class="btn-icon" title="Editar"><i
+                                                    class="ph ph-pencil-simple"></i></button>
+                                            <button class="btn-icon" title="Ver Perfil"><i
+                                                    class="ph ph-users"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-estado="ativo">
+                                        <td>
+                                            <div class="avatar-circle">JP</div> J. Pinto
+                                        </td>
+                                        <td>José Mário Pinho</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td><span class="badge green">Ativo</span></td>
+                                        <td>
+                                            <button class="btn-icon" title="Editar"><i
+                                                    class="ph ph-pencil-simple"></i></button>
+                                            <button class="btn-icon" title="Ver Perfil"><i
+                                                    class="ph ph-users"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-estado="ativo">
+                                        <td>
+                                            <div class="avatar-circle">MR</div> M. Reis
+                                        </td>
+                                        <td>Mário Tavares dos Reis</td>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td><span class="badge green">Ativo</span></td>
+                                        <td>
+                                            <button class="btn-icon" title="Editar"><i
+                                                    class="ph ph-pencil-simple"></i></button>
+                                            <button class="btn-icon" title="Ver Perfil"><i
+                                                    class="ph ph-users"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr data-estado="ativo">
+                                        <td>
+                                            <div class="avatar-circle"> AC</div> A. Carvalho
+                                        </td>
+                                        <td>Andreila Silva Carvalho</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td><span class="badge green">Ativo</span></td>
+                                        <td>
+                                            <button class="btn-icon" title="Editar"><i
+                                                    class="ph ph-pencil-simple"></i></button>
+                                            <button class="btn-icon" title="Ver Perfil"><i
+                                                    class="ph ph-users"></i></button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </main>
+        <div id="modal-turma" class="modal">
+            <div class="modal-content section-card">
+                <div class="card-header-simple">
+                    <h3>Criar Nova Turma</h3>
+                    <button class="btn-icon" id="fechar-modal"><i class="ph ph-x"></i></button>
+                </div>
+
+                <form id="form-nova-turma">
+                    <div class="input-group">
+                        <label for="new-codigo">Código / Turma</label>
+                        <input type="text" id="new-codigo" placeholder="Ex: T-2026-A" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-designacao">Designação (UFCD/Curso)</label>
+                        <input type="text" id="new-designacao" placeholder="Ex: Programação Web" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="input-group">
+                            <label for="new-data">Data Início</label>
+                            <input type="date" id="new-data" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="new-alunos">Nº Formandos</label>
+                            <input type="number" id="new-alunos" min="1" value="20">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-estado">Estado Inicial</label>
+                        <select id="new-estado" class="badge yellow" style="width: 100%;">
+                            <option value="planeada" selected>PLANEADA</option>
+                            <option value="em-curso">EM CURSO</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-login">Gravar Turma</button>
+                </form>
+            </div>
+        </div>
     </div>
     <footer>
         <p class="copy">&copy: 2026 - Programação web (frontend)</p>
