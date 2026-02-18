@@ -433,11 +433,15 @@ textarea {
 /* =========================================
    6. TABELAS E BADGES
    ========================================= */
+
 .table-container-clean {
     width: 100%;
     overflow-x: auto;
     background: white;
     border-radius: 8px;
+    height: 450px;     
+    overflow-y: auto;    
+    display: block;     
 }
 
 .status-table {
@@ -592,11 +596,6 @@ tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    
-    background-color: #eff6ff; 
-    color: #2563eb;
-    border: 1px solid #bfdbfe; 
-    
     padding: 6px 16px;
     border-radius: 20px;    
     
@@ -604,15 +603,19 @@ tr[data-estado="pendente"] .btn-icon:hover { color: #2563eb; transform: scale(1.
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    text-decoration: none;
     
     transition: all 0.2s ease;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    text-decoration: none;
+    
 }
 
 .btn-link-sm:hover {
-    background-color: #f1f5f9;
-    border-color: #cbd5e1;
-    color: #1e293b;
+    background-color: #eff6ff; 
+    color: #2563eb;
+    border: 1px solid #bfdbfe; 
     text-decoration: none;
 }
 
@@ -791,6 +794,7 @@ select.badge {
     font-weight: 700;
     transition: all 0.2s ease;
     border: 1px solid transparent;
+    background-color: #ffffff !important;
 }
 
 select.badge.red { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
@@ -870,3 +874,43 @@ select.badge.yellow { background-color: #fefce8; color: #ca8a04; border-color: #
     color: #dc2626; 
     font-weight: 600;
 }
+
+#tabela-formadores {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#tabela-formadores th:nth-child(1), #tabela-formadores td:nth-child(1) { width: 200px; } 
+#tabela-formadores th:nth-child(2), #tabela-formadores td:nth-child(2) { width: auto; }  
+#tabela-formadores th:nth-child(3), #tabela-formadores td:nth-child(3) { width: 100px; text-align: center; } 
+#tabela-formadores th:nth-child(4), #tabela-formadores td:nth-child(4) { width: 80px; text-align: center; }  
+#tabela-formadores th:nth-child(5), #tabela-formadores td:nth-child(5) { width: 120px; } 
+#tabela-formadores th:nth-child(6), #tabela-formadores td:nth-child(6) { width: 100px; } 
+/* =========================================
+   AJUSTES ESPECÍFICOS: DASHBOARD
+   ========================================= */
+#tabela-dashboard {
+    table-layout: fixed; 
+    width: 100%;
+}
+
+#tabela-dashboard th:nth-child(1), 
+#tabela-dashboard td:nth-child(1) { width: 160px; text-align: left; } 
+
+#tabela-dashboard th:nth-child(2), 
+#tabela-dashboard td:nth-child(2) { width: 150px; text-align: center; } 
+
+#tabela-dashboard th:nth-child(3), 
+#tabela-dashboard td:nth-child(3) { width: auto; text-align: left; } 
+
+#tabela-dashboard th:nth-child(4), 
+#tabela-dashboard td:nth-child(4) { width: 140px; text-align: center; }
+
+#tabela-dashboard th:nth-child(5), 
+#tabela-dashboard td:nth-child(5) { width: 120px; text-align: center; }
+
+#tabela-dashboard th:nth-child(6), 
+#tabela-dashboard td:nth-child(6) { width: 140px; text-align: center; }
+
+#tabela-dashboard th:nth-child(7), 
+#tabela-dashboard td:nth-child(7) { width: 80px; text-align: center; }

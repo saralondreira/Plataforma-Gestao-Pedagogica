@@ -4,9 +4,93 @@ document.addEventListener('DOMContentLoaded', function () {
     configurarInterfaceTabela();
     atualizarInterfaceUtilizador();
     configurarFormularioPerfil();
-    configurarFiltroTurmas();
     configurarModalTurma();
 
+    /* =============================================================
+       FILTROS REUTILIZÁVEIS (Lógica Unificada)
+       ============================================================= */
+    
+    // 1. Configurar filtro das TURMAS
+    inicializarFiltro('filtro-turmas', 'tabela-turmas', {
+        'em-curso': 'blue',
+        'planeada': 'yellow',
+        'concluida': 'green',
+        'arquivada': 'gray',
+        'cancelada': 'red',
+        'todas': 'gray'
+    });
+
+    // 2. Configurar filtro dos FORMADORES
+    inicializarFiltro('filtro-formadores', 'tabela-formadores', {
+        'ativo': 'green',
+        'inativo': 'red',
+        'todos': 'gray'
+    });
+
+    /**
+     * Função genérica para criar filtros em tabelas
+     * @param {string} idSelect - O ID do <select> HTML
+     * @param {string} idTabela - O ID da <table> HTML
+     * @param {object} mapaCores - Objeto com a correspondência valor -> cor
+     */
+    function inicializarFiltro(idSelect, idTabela, mapaCores) {
+        const filtro = document.getElementById(idSelect);
+        // Tenta encontrar a tabela, se não encontrar pelo ID, tenta pela classe genérica (fallback)
+        const tabela = document.getElementById(idTabela);
+        
+        if (!filtro || !tabela) return;
+
+        const linhas = tabela.querySelectorAll('tbody tr');
+
+        // 1. Contagem dinâmica
+        let contadores = { todas: 0, todos: 0 }; // Prepara contadores genéricos
+        
+        // Inicializa os contadores a 0 para todas as opções do select
+        Array.from(filtro.options).forEach(opt => {
+             contadores[opt.value] = 0;
+        });
+
+        // Conta as linhas reais
+        linhas.forEach(linha => {
+            const estado = linha.getAttribute('data-estado');
+            if (contadores.hasOwnProperty(estado)) {
+                contadores[estado]++;
+            }
+            // Incrementa o contador geral (seja "todas" ou "todos")
+            if (contadores.hasOwnProperty('todas')) contadores.todas++;
+            if (contadores.hasOwnProperty('todos')) contadores.todos++;
+        });
+
+        // 2. Atualizar os textos do Select com os números
+        Array.from(filtro.options).forEach(opt => {
+            const total = contadores[opt.value] || 0;
+            // Limpa qualquer número antigo que esteja no texto e adiciona o novo
+            const textoBase = opt.text.split('(')[0].trim();
+            opt.text = `${textoBase} (${total})`;
+        });
+
+        // 3. Lógica de Filtragem e Cores
+        filtro.addEventListener('change', function () {
+            const valor = this.value;
+            
+            // Atualiza a cor do badge do select
+            this.className = `badge ${mapaCores[valor] || 'gray'}`;
+
+            // Mostra ou esconde linhas
+            linhas.forEach(l => {
+                const estadoLinha = l.getAttribute('data-estado');
+                // Verifica se é "todas" ou "todos" para mostrar tudo
+                l.style.display = (valor === 'todas' || valor === 'todos' || estadoLinha === valor) ? '' : 'none';
+            });
+        });
+        
+        // Disparar evento para definir cor inicial correta
+        filtro.dispatchEvent(new Event('change'));
+    }
+
+    /* =============================================================
+       OUTRAS FUNÇÕES (Mantidas do teu código original)
+       ============================================================= */
 
     function atualizarInterfaceUtilizador() {
         const nomeGuardado = localStorage.getItem('utilizadorNome');
@@ -47,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (formLogin) {
         formLogin.addEventListener('submit', function (e) {
             e.preventDefault();
-
             window.location.href = "dashboardCoord.html";
         });
     }
@@ -58,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (partes.length === 1) return partes[0].charAt(0).toUpperCase();
         return (partes[0].charAt(0) + partes[partes.length - 1].charAt(0)).toUpperCase();
     }
-
 
     function calcularDias(dataAlvo) {
         const hoje = new Date();
@@ -132,9 +214,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function processarAcao(btn, linha) {
         const acao = btn.getAttribute('title');
         const colunas = linha.querySelectorAll('td');
-
         const nome = colunas[0].innerText.replace(/^[A-Z]{2}\s/, '').trim();
-        const doc = colunas[2].innerText;
+        const doc = colunas[2] ? colunas[2].innerText : 'Item';
 
         if (acao === "Enviar Mensagem" || acao === "Enviar Alerta") {
             window.location.href = `mailto:exemplo@instituicao.pt?subject=Pendente: ${doc}&body=Olá ${nome}, falta o documento ${doc}.`;
@@ -143,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('A verificação ainda está em desenvolvimento.');
         }
         else {
-            alert(`${acao} para ${nome}: ${doc}`);
+            alert(`${acao} para ${nome}`);
         }
     }
 
@@ -162,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     function inicializarValidacaoFormularios() {
         document.querySelectorAll('input').forEach(campo => {
             campo.addEventListener('invalid', (e) => {
@@ -174,103 +254,28 @@ document.addEventListener('DOMContentLoaded', function () {
             campo.addEventListener('input', (e) => e.target.setCustomValidity(''));
         });
     }
-    
-function configurarFiltroTurmas() {
-    const filtro = document.getElementById('filtro-turmas');
-    const linhas = document.querySelectorAll('#tabela-turmas tbody tr');
-    
-    if (!filtro || linhas.length === 0) return;
 
-    let contadores = { 
-        'em-curso': 0, 
-        planeada: 0, 
-        concluida: 0, 
-        arquivada: 0, 
-        cancelada: 0, 
-        todas: 0 
-    };
-
-    linhas.forEach(linha => {
-        const estado = linha.getAttribute('data-estado');
-        if (contadores.hasOwnProperty(estado)) {
-            contadores[estado]++;
-        }
-        contadores.todas++;
-    });
-
-    filtro.options[0].text = `${contadores['em-curso']} EM CURSO`;
-    filtro.options[1].text = `${contadores.planeada} PLANEADAS`;
-    filtro.options[2].text = `${contadores.concluida} CONCLUÍDAS`;
-    filtro.options[3].text = `${contadores.arquivada} ARQUIVADAS`;
-    filtro.options[4].text = `${contadores.cancelada} CANCELADAS`;
-    filtro.options[5].text = `TODOS (${contadores.todas})`;
-
-    filtro.addEventListener('change', function () {
-        const valor = this.value;
-
-        const coresAtivas = { 
-            'em-curso': 'blue', 
-            planeada: 'yellow', 
-            concluida: 'green', 
-            arquivada: 'gray', 
-            cancelada: 'red',
-            todas: 'gray' 
+    function configurarModalTurma() {
+        const elementos = {
+            modal: document.getElementById('modal-turma'),
+            btnAbrir: document.getElementById('btn-nova-turma'),
+            btnFechar: document.getElementById('fechar-modal')
         };
-        
-        this.className = `badge ${coresAtivas[valor] || 'gray'}`;
+        if (!elementos.modal || !elementos.btnAbrir || !elementos.btnFechar) return;
 
-        linhas.forEach(l => {
-            const estadoLinha = l.getAttribute('data-estado');
-            l.style.display = (valor === 'todas' || estadoLinha === valor) ? '' : 'none';
+        const alternarModal = (mostrar) => {
+            elementos.modal.style.display = mostrar ? 'flex' : 'none';
+        };
+
+        elementos.btnAbrir.addEventListener('click', () => alternarModal(true));
+        elementos.btnFechar.addEventListener('click', () => alternarModal(false));
+        window.addEventListener('click', (event) => {
+            if (event.target === elementos.modal) alternarModal(false);
         });
-    });
-}
-
-
-function configurarModalTurma() {
-    const elementos = {
-        modal: document.getElementById('modal-turma'),
-        btnAbrir: document.getElementById('btn-nova-turma'),
-        btnFechar: document.getElementById('fechar-modal')
-    };
-
-    if (!elementos.modal || !elementos.btnAbrir || !elementos.btnFechar) return;
-
-    const alternarModal = (mostrar) => {
-        elementos.modal.style.display = mostrar ? 'flex' : 'none';
-    };
-
-    elementos.btnAbrir.addEventListener('click', () => alternarModal(true));
-    elementos.btnFechar.addEventListener('click', () => alternarModal(false));
-
-    window.addEventListener('click', (event) => {
-        if (event.target === elementos.modal) alternarModal(false);
-    });
-
-    window.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && elementos.modal.style.display === 'flex') {
-            alternarModal(false);
-        }
-    });
-}
-
-function configurarCoresModal() {
-    const selectEstado = document.getElementById('new-estado');
-    
-    if (selectEstado) {
-        selectEstado.addEventListener('change', function() {
-            const valor = this.value;
-            
-            const cores = {
-                'em-curso': 'blue',
-                'planeada': 'yellow',
-                'concluida': 'green',
-                'arquivada': 'gray',
-                'cancelada': 'red'
-            };
-            
-            this.className = `badge ${cores[valor] || 'gray'}`;
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && elementos.modal.style.display === 'flex') {
+                alternarModal(false);
+            }
         });
     }
-}
 });
