@@ -914,3 +914,179 @@ select.badge.yellow { background-color: #fefce8; color: #ca8a04; border-color: #
 
 #tabela-dashboard th:nth-child(7), 
 #tabela-dashboard td:nth-child(7) { width: 80px; text-align: center; }
+
+/* =============================================================
+   RESPONSIVIDADE PARA TELEMÓVEL (MÁXIMO 768px)
+   ============================================================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        flex-direction: column; 
+        height: auto;
+        min-height: 100vh;
+    }
+
+    body {
+        padding-bottom: 0;
+        background-color: #f1f5f9; 
+    }
+
+    .main-content {
+        width: 100%;
+        overflow-y: visible; 
+        padding-bottom: 120px; 
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 70px; 
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        flex-direction: row; 
+        padding: 0 10px; 
+        justify-content: space-between; 
+        align-items: center;
+        z-index: 9999; 
+        background-color: #0f172a;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.3); 
+    }
+
+    .sidebar-header, 
+    .link-text {
+        display: none !important;
+    }
+
+    .sidebar-menu {
+        display: flex !important;
+        flex-direction: row !important;
+        flex: 1; 
+        justify-content: space-around; 
+        align-items: center;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar-footer {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center;
+        gap: 15px;
+        padding-left: 15px;
+        border-top: none; 
+        margin-top: 0;
+        border-left: 1px solid #334155; 
+    }
+
+    .menu-item {
+        padding: 10px;
+        border-radius: 12px; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #94a3b8;
+    }
+
+    .menu-item i {
+        font-size: 26px; 
+        margin: 0;
+    }
+
+    .menu-item.active {
+        background-color: #1e293b;
+        color: #60a5fa;
+    }
+
+    .top-bar {
+        padding: 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .user-profile-header {
+        justify-content: center;
+    }
+
+    .content-area {
+        padding: 15px; 
+    }
+
+    .header-flex {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        width: 100%; 
+    }
+
+    .header-flex button, 
+    .header-flex .btn-card {
+        margin-top: 10px;
+        width: 100% !important; 
+        justify-content: center;
+        display: flex;
+    }
+
+    .aviso {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .content-area h1,
+    .section-subtitle {
+        width: 100%; 
+    }
+
+    .card-header-simple {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .table-container-clean {
+        height: auto;
+        max-height: 500px;
+        border: 1px solid #e2e8f0;
+        overflow-x: auto; 
+    }
+
+    #tabela-dashboard, 
+    #tabela-turmas, 
+    #tabela-formadores {
+        min-width: 900px !important; 
+    }
+
+    select.badge, 
+    .input-group input, 
+    .input-group select {
+        width: 100% !important;
+    }
+
+    .dashboard-grid {
+        display: flex !important; 
+        flex-direction: column !important;
+        gap: 24px;
+    }
+
+    .profile-header {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        gap: 15px !important;
+    }
+    
+    .section-card-save button {
+        width: 100% !important;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        padding: 20px;
+    }
+}
