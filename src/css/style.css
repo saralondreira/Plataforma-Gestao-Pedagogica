@@ -394,7 +394,6 @@ textarea {
     display: grid;
     grid-template-columns: 3.5fr 1fr; 
     gap: 24px;
-    margin-top: 20px;
 }
 
 .header-flex {
@@ -799,18 +798,75 @@ select.badge.yellow { background-color: #fefce8; color: #ca8a04; border-color: #
 select.badge.blue { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
 select.badge.gray { background-color: #f8fafc; color: #64748b; border-color: #e2e8f0; }
 
-#filtro-turmas option[value="em-curso"] { color: #2563eb; font-weight: 600; }
-#filtro-turmas option[value="planeada"] { color: #ca8a04; font-weight: 600; }
-#filtro-turmas option[value="concluida"] { color: #16a34a; font-weight: 600; }
-#filtro-turmas option[value="arquivada"] { color: #64748b; font-weight: 600; }
-#filtro-turmas option[value="cancelada"] { color: #dc2626; font-weight: 600; }
-#filtro-turmas option[value="todas"] { color: #1e293b; font-weight: 600; }
+#filtro-turmas option[value="em-curso"] { color: #2563eb !important; font-weight: 600; }
+#filtro-turmas option[value="planeada"] { color: #ca8a04 !important; font-weight: 600; }
+#filtro-turmas option[value="concluida"] { color: #16a34a !important; font-weight: 600; }
+#filtro-turmas option[value="arquivada"] { color: #64748b !important; font-weight: 600; }
+#filtro-turmas option[value="cancelada"] { color: #dc2626 !important; font-weight: 600; }
+#filtro-turmas option[value="todas"] { color: #1e293b !important; font-weight: 600; }
 
 #filtro-turmas option {
     background-color: white;
 }
 
+select.badge.blue { background-color: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+select.badge.yellow { background-color: #fefce8; color: #ca8a04; border-color: #fef08a; }
+#new-estado option[value="em-curso"] { color: #2563eb; font-weight: 600; }
+#new-estado option[value="planeada"] { color: #ca8a04; font-weight: 600; }
+
 .table-standard {
     width: 100%;
     margin-top: 20px;
+}
+
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.modal .input-group input, .modal select {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+}
+
+#new-estado option[value="em-curso"] { 
+    color: #2563eb; 
+    font-weight: 600;
+}
+
+#new-estado option[value="planeada"] { 
+    color: #ca8a04; 
+    font-weight: 600;
+}
+
+#new-estado option[value="concluida"] { 
+    color: #16a34a; 
+    font-weight: 600;
+}
+
+#new-estado option[value="arquivada"] { 
+    color: #64748b; 
+    font-weight: 600;
+}
+
+#new-estado option[value="cancelada"] { 
+    color: #dc2626; 
+    font-weight: 600;
 }

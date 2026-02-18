@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     atualizarInterfaceUtilizador();
     configurarFormularioPerfil();
     configurarFiltroTurmas();
+    configurarModalTurma();
 
 
     function atualizarInterfaceUtilizador() {
@@ -219,9 +220,57 @@ function configurarFiltroTurmas() {
         this.className = `badge ${coresAtivas[valor] || 'gray'}`;
 
         linhas.forEach(l => {
-            l.style.display = (valor === 'todas' || l.getAttribute('data-estado') === valor) ? '' : 'none';
+            const estadoLinha = l.getAttribute('data-estado');
+            l.style.display = (valor === 'todas' || estadoLinha === valor) ? '' : 'none';
         });
     });
 }
 
+
+function configurarModalTurma() {
+    const elementos = {
+        modal: document.getElementById('modal-turma'),
+        btnAbrir: document.getElementById('btn-nova-turma'),
+        btnFechar: document.getElementById('fechar-modal')
+    };
+
+    if (!elementos.modal || !elementos.btnAbrir || !elementos.btnFechar) return;
+
+    const alternarModal = (mostrar) => {
+        elementos.modal.style.display = mostrar ? 'flex' : 'none';
+    };
+
+    elementos.btnAbrir.addEventListener('click', () => alternarModal(true));
+    elementos.btnFechar.addEventListener('click', () => alternarModal(false));
+
+    window.addEventListener('click', (event) => {
+        if (event.target === elementos.modal) alternarModal(false);
+    });
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && elementos.modal.style.display === 'flex') {
+            alternarModal(false);
+        }
+    });
+}
+
+function configurarCoresModal() {
+    const selectEstado = document.getElementById('new-estado');
+    
+    if (selectEstado) {
+        selectEstado.addEventListener('change', function() {
+            const valor = this.value;
+            
+            const cores = {
+                'em-curso': 'blue',
+                'planeada': 'yellow',
+                'concluida': 'green',
+                'arquivada': 'gray',
+                'cancelada': 'red'
+            };
+            
+            this.className = `badge ${cores[valor] || 'gray'}`;
+        });
+    }
+}
 });
