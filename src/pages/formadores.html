@@ -75,10 +75,10 @@
                     <div class="section-card table-standard">
                         <div class="card-header-simple">
                             <h3>Lista de Formadores</h3>
-                            <select id="filtro-turmas" class="badge gray">
-                                <option value="ativo">Ativo (0)</option>
-                                <option value="planeada">Ausente (0)</option>
-                                <option value="todas" selected>TODOS (0)</option>
+                            <select id="filtro-formadores" class="badge gray">
+                                <option value="ativo">Ativos</option>
+                                <option value="inativo">Inativos</option>
+                                <option value="todos" selected>Todos</option>
                             </select>
                         </div>
 
@@ -155,7 +155,21 @@
                                                     class="ph ph-users"></i></button>
                                         </td>
                                     </tr>
-
+                                    <tr data-estado="inativo">
+                                        <td>
+                                            <div class="avatar-circle">RF</div> R. Ferreira
+                                        </td>
+                                        <td>Rui Ferreira</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td><span class="badge red">Inativo</span></td>
+                                        <td>
+                                            <button class="btn-icon" title="Editar"><i
+                                                    class="ph ph-pencil-simple"></i></button>
+                                            <button class="btn-icon" title="Ver Perfil"><i
+                                                    class="ph ph-users"></i></button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
