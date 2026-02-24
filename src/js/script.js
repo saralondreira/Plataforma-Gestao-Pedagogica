@@ -1,4 +1,69 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+    const dadosTurmas = [
+        { codigo: "T-2024-A", designacao: "Técnico de Informática (0792)", data: "12 Jan 2024", alunos: 18, estadoVal: "em-curso", estadoTexto: "Em Curso", cor: "blue" },
+        { codigo: "T-2024-B", designacao: "Marketing Digital (5440)", data: "15 Mar 2024", alunos: 20, estadoVal: "planeada", estadoTexto: "Planeada", cor: "yellow" }
+    ];
+
+    const dadosFormadores = [
+        { sigla: "AS", nomeAbrev: "A. Silva", nome: "Ana Maria Silva", turmas: 1, uc: 2, estadoVal: "ativo", estadoTexto: "Ativo", cor: "green" },
+        { sigla: "JP", nomeAbrev: "J. Pinto", nome: "José Mário Pinho", turmas: 1, uc: 1, estadoVal: "ativo", estadoTexto: "Ativo", cor: "green" },
+        { sigla: "MR", nomeAbrev: "M. Reis", nome: "Mário Tavares dos Reis", turmas: 1, uc: 2, estadoVal: "ativo", estadoTexto: "Ativo", cor: "green" },
+        { sigla: "AC", nomeAbrev: "A. Carvalho", nome: "Andreila Silva Carvalho", turmas: 1, uc: 1, estadoVal: "ativo", estadoTexto: "Ativo", cor: "green" },
+        { sigla: "RF", nomeAbrev: "R. Ferreira", nome: "Rui Ferreira", turmas: 0, uc: 0, estadoVal: "inativo", estadoTexto: "Inativo", cor: "red" }
+    ];
+
+    function renderizarTurmas() {
+        const tbody = document.querySelector('#tabela-turmas tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = ''; 
+        
+        dadosTurmas.forEach(turma => {
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-estado', turma.estadoVal);
+            tr.innerHTML = `
+                <td><strong>${turma.codigo}</strong></td>
+                <td>${turma.designacao}</td>
+                <td>${turma.data}</td>
+                <td>${turma.alunos}</td>
+                <td><span class="badge ${turma.cor}">${turma.estadoTexto}</span></td>
+                <td>
+                    <button class="btn-icon" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-icon" title="Ver Turma"><i class="ph ph-users"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderizarFormadores() {
+        const tbody = document.querySelector('#tabela-formadores tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+
+        dadosFormadores.forEach(formador => {
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-estado', formador.estadoVal);
+            tr.innerHTML = `
+                <td><div class="avatar-circle">${formador.sigla}</div> ${formador.nomeAbrev}</td>
+                <td>${formador.nome}</td>
+                <td>${formador.turmas}</td>
+                <td>${formador.uc}</td>
+                <td><span class="badge ${formador.cor}">${formador.estadoTexto}</span></td>
+                <td>
+                    <button class="btn-icon" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-icon" title="Ver Perfil"><i class="ph ph-users"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+
+    renderizarTurmas();
+    renderizarFormadores();
     inicializarValidacaoFormularios();
     atualizarPrazos();
     configurarInterfaceTabela();
@@ -6,11 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
     configurarFormularioPerfil();
     configurarModalTurma();
 
-    /* =============================================================
-       FILTROS REUTILIZÁVEIS (Lógica Unificada)
-       ============================================================= */
-    
-    // 1. Configurar filtro das TURMAS
+   
     inicializarFiltro('filtro-turmas', 'tabela-turmas', {
         'em-curso': 'blue',
         'planeada': 'yellow',
@@ -20,77 +81,85 @@ document.addEventListener('DOMContentLoaded', function () {
         'todas': 'gray'
     });
 
-    // 2. Configurar filtro dos FORMADORES
     inicializarFiltro('filtro-formadores', 'tabela-formadores', {
         'ativo': 'green',
         'inativo': 'red',
         'todos': 'gray'
     });
 
-    /**
-     * Função genérica para criar filtros em tabelas
-     * @param {string} idSelect - O ID do <select> HTML
-     * @param {string} idTabela - O ID da <table> HTML
-     * @param {object} mapaCores - Objeto com a correspondência valor -> cor
-     */
+    
     function inicializarFiltro(idSelect, idTabela, mapaCores) {
         const filtro = document.getElementById(idSelect);
-        // Tenta encontrar a tabela, se não encontrar pelo ID, tenta pela classe genérica (fallback)
         const tabela = document.getElementById(idTabela);
         
         if (!filtro || !tabela) return;
 
         const linhas = tabela.querySelectorAll('tbody tr');
 
-        // 1. Contagem dinâmica
-        let contadores = { todas: 0, todos: 0 }; // Prepara contadores genéricos
+        let contadores = { todas: 0, todos: 0 }; 
         
-        // Inicializa os contadores a 0 para todas as opções do select
         Array.from(filtro.options).forEach(opt => {
              contadores[opt.value] = 0;
         });
 
-        // Conta as linhas reais
         linhas.forEach(linha => {
             const estado = linha.getAttribute('data-estado');
             if (contadores.hasOwnProperty(estado)) {
                 contadores[estado]++;
             }
-            // Incrementa o contador geral (seja "todas" ou "todos")
             if (contadores.hasOwnProperty('todas')) contadores.todas++;
             if (contadores.hasOwnProperty('todos')) contadores.todos++;
         });
 
-        // 2. Atualizar os textos do Select com os números
         Array.from(filtro.options).forEach(opt => {
             const total = contadores[opt.value] || 0;
-            // Limpa qualquer número antigo que esteja no texto e adiciona o novo
             const textoBase = opt.text.split('(')[0].trim();
             opt.text = `${textoBase} (${total})`;
         });
 
-        // 3. Lógica de Filtragem e Cores
         filtro.addEventListener('change', function () {
             const valor = this.value;
             
-            // Atualiza a cor do badge do select
             this.className = `badge ${mapaCores[valor] || 'gray'}`;
+            let linhasVisiveis = 0;
 
-            // Mostra ou esconde linhas
             linhas.forEach(l => {
                 const estadoLinha = l.getAttribute('data-estado');
-                // Verifica se é "todas" ou "todos" para mostrar tudo
-                l.style.display = (valor === 'todas' || valor === 'todos' || estadoLinha === valor) ? '' : 'none';
-            });
+                if (valor === 'todas' || valor === 'todos' || estadoLinha === valor) {
+                    l.style.display = '';
+                    linhasVisiveis++;
+                } else {
+                    l.style.display = 'none';
+                }
         });
         
-        // Disparar evento para definir cor inicial correta
+        const tbody = tabela.querySelector('tbody');
+        let linhaVazia = tbody.querySelector('.linha-vazia');
+        
+        if (linhasVisiveis === 0) {
+                if (!linhaVazia) {
+                    linhaVazia = document.createElement('tr');
+                    linhaVazia.className = 'linha-vazia';
+                    const totalColunas = tabela.querySelectorAll('th').length || 6;
+                    
+                    linhaVazia.innerHTML = `
+                        <td colspan="${totalColunas}" style="text-align: center; padding: 40px; color: #64748b;">
+                            <i class="ph ph-folder-open" style="font-size: 32px; margin-bottom: 8px; color: #cbd5e1; display: block;"></i>
+                            Não existem dados para o estado selecionado.
+                        </td>
+                    `;
+                    tbody.appendChild(linhaVazia);
+                }
+                linhaVazia.style.display = ''; 
+            } else {
+                if (linhaVazia) {
+                    linhaVazia.style.display = 'none';
+                }
+            }
+        });
+
         filtro.dispatchEvent(new Event('change'));
     }
-
-    /* =============================================================
-       OUTRAS FUNÇÕES (Mantidas do teu código original)
-       ============================================================= */
 
     function atualizarInterfaceUtilizador() {
         const nomeGuardado = localStorage.getItem('utilizadorNome');
