@@ -196,14 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    const formLogin = document.getElementById('form-login');
-    if (formLogin) {
-        formLogin.addEventListener('submit', function (e) {
-            e.preventDefault();
-            window.location.href = "dashboardCoord.html";
-        });
-    }
-
     function gerarIniciais(nome) {
         const partes = nome.trim().split(/\s+/);
         if (partes.length === 0) return "??";
