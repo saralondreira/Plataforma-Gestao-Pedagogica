@@ -1,80 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Solicitar Acesso - Gestão Pedagógica</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="../js/script.js" defer></script>
-</head>
-
-<body>
-
+  </head>
+  <body>
     <div class="main-container">
+      <div class="login-side">
+        <div class="login-content">
+          <div class="brand">
+            <h2>Pedido de Acesso</h2>
+            <p class="subtitle">
+              Preencha os dados para validação pela coordenação.
+            </p>
+          </div>
 
-        <div class="login-side">
-            <div class="login-content">
-
-                <div class="brand">
-                    <h2>Pedido de Acesso</h2>
-                    <p class="subtitle">Preencha os dados para validação pela coordenação.</p>
-                </div>
-
-                <form action="#" method="POST">
-
-                    <div class="input-group">
-                        <label for="nome">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" placeholder="O seu nome completo" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="email">Email Institucional</label>
-                        <input type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.pt$"
-                            placeholder="ex: exemplo@email.pt" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="cargo">Função / Cargo</label>
-                        <select id="cargo" name="cargo" required>
-                            <option value="" disabled selected>Selecione a sua função</option>
-                            <option value="formador">Formador</option>
-                            <option value="mediador">Mediador</option>
-                            <option value="coordenador">Coordenador</option>
-                            <option value="administrativo">Serviços Administrativos</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="motivo">Motivo / Observações</label>
-                        <textarea id="motivo" name="motivo" rows="3"
-                            placeholder="Indique o curso ou módulo, se aplicável."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-login"><a href="login.html">Enviar Pedido</a></button>
-
-                    <div class="back-link">
-                        <a href="login.html">← Voltar ao Login</a>
-                    </div>
-
-                </form>
-
-                <div class="footer-logos">
-                    <p>Cofinanciado por:</p>
-                    <div class="logos-placeholder">
-                        <span>PESSOAS 2030</span> | <span>Portugal 2030</span>
-                    </div>
-                </div>
+          <form id="form-pedido">
+            <div class="input-group">
+              <label for="nome">Nome Completo</label>
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                placeholder="O seu nome completo"
+                required
+              />
             </div>
+
+            <div class="input-group">
+              <label for="email">Email Institucional</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.pt$"
+                placeholder="ex: exemplo@email.pt"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="cargo">Função / Cargo</label>
+              <select id="cargo" name="cargo" required>
+                <option value="" disabled selected>
+                  Selecione a sua função
+                </option>
+                <option value="formador">Formador</option>
+                <option value="mediador">Mediador</option>
+                <option value="coordenador">Coordenador</option>
+                <option value="administrativo">Serviços Administrativos</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="motivo">Motivo / Observações</label>
+              <textarea
+                id="motivo"
+                name="motivo"
+                rows="3"
+                placeholder="Indique o curso ou módulo, se aplicável."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn-login">Enviar Pedido</button>
+            <div class="back-link">
+              <a href="login.html">← Voltar ao Login</a>
+            </div>
+          </form>
+
+          <div class="footer-logos">
+            <p>Cofinanciado por:</p>
+            <div class="logos-placeholder">
+              <span>PESSOAS 2030</span> | <span>Portugal 2030</span>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="image-side"></div>
-
+      <div class="image-side"></div>
     </div>
     <footer>
-        <p class="copy">&copy: 2026 - Programação web (frontend)</p>
+      <p class="copy">&copy: 2026 - Programação web (frontend)</p>
     </footer>
-</body>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        const firebaseConfig = {
+            apiKey: "...",
+            authDomain: "...",
+            projectId: "...",
+            // ...
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const formPedido = document.getElementById('form-pedido');
+        
+        if (formPedido) {
+            formPedido.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const nome = document.getElementById('nome').value;
+                const email = document.getElementById('email').value;
+                const cargo = document.getElementById('cargo').value;
+                const motivo = document.getElementById('motivo').value;
+
+                try {
+                    await addDoc(collection(db, "pedidos_acesso"), {
+                        nome: nome,
+                        email: email,
+                        cargo: cargo,
+                        motivo: motivo,
+                        estado: "pendente",
+                        dataCriacao: serverTimestamp() 
+                    });
+
+                    alert("Pedido enviado com sucesso! Aguarde a aprovação da coordenação.");
+                    window.location.href = "login.html";
+
+                } catch (error) {
+                    console.error("Erro ao guardar o pedido: ", error);
+                    alert("Ocorreu um erro ao submeter o pedido. Tente novamente mais tarde.");
+                }
+            });
+        }
+    </script>
+  </body>
 </html>
