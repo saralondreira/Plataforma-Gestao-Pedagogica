@@ -69,9 +69,7 @@
                         <h1>Painel de Controlo</h1>
                         <p class="section-subtitle">Visão geral da atividade pedagógica.</p>
                     </div>
-                    <button class="btn-card" style="width: auto;"><a
-                            href="https://calendar.google.com/calendar/render?action=TEMPLATE" class="aviso"
-                            target="_blank">+ Novo Aviso</a></button>
+                    <button type="button" id="btn-novo-aviso" class="btn-card" style="width: auto;">+ Novo Aviso</button>
 
                 </div>
 
@@ -201,6 +199,45 @@
                 </div>
             </div>
         </main>
+
+        <div id="modal-aviso" class="modal">
+            <div class="modal-content section-card">
+                <div class="card-header-simple">
+                    <h3>Solicitar Documento (Aviso)</h3>
+                    <button class="btn-icon" id="fechar-modal-aviso" type="button">
+                        <i class="ph ph-x"></i>
+                    </button>
+                </div>
+
+                <form id="form-novo-aviso">
+                    <div class="input-group">
+                        <label for="aviso-formador">Formador</label>
+                        <input type="text" id="aviso-formador" placeholder="Ex: A. Silva" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="aviso-turma">Turma / UFCD</label>
+                        <input type="text" id="aviso-turma" placeholder="Ex: T-2026-A (0792)" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="aviso-documento">Tipo de Documento</label>
+                        <select id="aviso-documento" required>
+                            <option value="" disabled selected>Selecionar...</option>
+                            <option value="Pauta de Avaliação">Pauta de Avaliação</option>
+                            <option value="Sumários">Sumários</option>
+                            <option value="Cronograma">Cronograma</option>
+                            <option value="Ficha de Assiduidade">Ficha de Assiduidade</option>
+                            <option value="Diário de Bordo">Diário de Bordo</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="aviso-prazo">Prazo (Data Limite)</label>
+                        <input type="date" id="aviso-prazo" required>
+                    </div>
+                    <button type="submit" class="btn-login">Guardar Aviso</button>
+                </form>
+            </div>
+        </div>
     </div>
     <footer>
         <p class="copy">&copy: 2026 - Programação web (frontend)</p>
