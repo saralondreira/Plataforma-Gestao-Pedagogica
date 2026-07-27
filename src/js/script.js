@@ -61,15 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
-    renderizarTurmas();
-    renderizarFormadores();
     inicializarValidacaoFormularios();
-    atualizarPrazos();
-    configurarInterfaceTabela();
-    atualizarInterfaceUtilizador();
-    configurarFormularioPerfil();
-    configurarModalTurma();
 
    
     inicializarFiltro('filtro-turmas', 'tabela-turmas', {

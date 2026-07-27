@@ -1,151 +1,179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestão de Formadores</title>
 
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../css/style.css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="/js/script.js" defer></script>
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/formadores.js" defer></script>
+  </head>
 
-<body>
-
+  <body>
     <div class="dashboard-container">
-
-        <aside class="sidebar hoverable">
-            <div class="sidebar-header">
-                <a href="dashboardCoord.html"
-                    style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
-                    <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
-                    <div class="logo-text">
-                        <h3>Gestão Pedagógica</h3>
-                    </div>
-                </a>
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="dashboardCoord.html"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
             </div>
-            <nav class="sidebar-menu">
-                <a href="dashboardCoord.html" class="menu-item active"><i class="ph ph-chart-pie-slice"></i><span
-                        class="link-text">Visão Global</span></a>
-                <a href="turmas.html" class="menu-item "><i class="ph ph-chalkboard-teacher"></i><span
-                        class="link-text">Gestão Turmas</span></a>
-                <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span
-                        class="link-text">Gestão Formadores</span></a>
-                <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
-                        class="link-text">Agenda</span></a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <a href="perfil.html" class="menu-item"><i class="ph ph-user"></i><span class="link-text">O Meu
-                        Perfil</span></a>
-                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
-                        class="link-text">Terminar Sessão</span></a>
-            </div>
-        </aside>
-
-        <main class="main-content">
-
-            <header class="top-bar">
-                <div class="user-profile-header">
-                    <div class="avatar-circle">??</div>
-                    <div class="user-info">
-                        <a href="dashboardCoord.html" style="text-decoration: none;">
-                            <span class="user-name">Olá, <strong>Utilizador</strong></span>
-                        </a>
-                        <a href="dashboardCoord.html" style="text-decoration: none;">
-                            <span class="user-role">Coordenadora</span>
-                        </a>
-                    </div>
-                </div>
-            </header>
-
-            <div class="content-area">
-                <div class="content-standard">
-
-                    <div class="header-flex">
-                        <div>
-                            <h1>Gestão de Formadores</h1>
-                            <p class="section-subtitle">Administração e acompanhamento de formadores.</p>
-                        </div>
-                        <button class="btn-card" id="btn-nova-turma">
-                            <i class="ph ph-plus-circle"></i> Gerir
-                        </button>
-                    </div>
-
-                    <div class="section-card table-standard">
-                        <div class="card-header-simple">
-                            <h3>Lista de Formadores</h3>
-                            <select id="filtro-formadores" class="badge gray">
-                                <option value="ativo">Ativos</option>
-                                <option value="inativo">Inativos</option>
-                                <option value="todos" selected>Todos</option>
-                            </select>
-                        </div>
-
-                        <div class="table-container-clean">
-                            <table class="status-table" id="tabela-formadores">
-                                <thead>
-                                    <tr>
-                                        <th>Sigla</th>
-                                        <th>Nome Completo</th>
-                                        <th>Turmas</th>
-                                        <th>UC</th>
-                                        <th>Estado</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </main>
-        <div id="modal-turma" class="modal">
-            <div class="modal-content section-card">
-                <div class="card-header-simple">
-                    <h3>Criar Nova Turma</h3>
-                    <button class="btn-icon" id="fechar-modal"><i class="ph ph-x"></i></button>
-                </div>
-
-                <form id="form-nova-turma">
-                    <div class="input-group">
-                        <label for="new-codigo">Código / Turma</label>
-                        <input type="text" id="new-codigo" placeholder="Ex: T-2026-A" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="new-designacao">Designação (UFCD/Curso)</label>
-                        <input type="text" id="new-designacao" placeholder="Ex: Programação Web" required>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group">
-                            <label for="new-data">Data Início</label>
-                            <input type="date" id="new-data" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="new-alunos">Nº Formandos</label>
-                            <input type="number" id="new-alunos" min="1" value="20">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="new-estado">Estado Inicial</label>
-                        <select id="new-estado" class="badge yellow" style="width: 100%;">
-                            <option value="planeada" selected>PLANEADA</option>
-                            <option value="em-curso">EM CURSO</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-login">Gravar Turma</button>
-                </form>
-            </div>
+          </a>
         </div>
+        <nav class="sidebar-menu">
+          <a href="dashboardCoord.html" class="menu-item active"
+            ><i class="ph ph-chart-pie-slice"></i
+            ><span class="link-text">Visão Global</span></a
+          >
+          <a href="turmas.html" class="menu-item"
+            ><i class="ph ph-chalkboard-teacher"></i
+            ><span class="link-text">Gestão Turmas</span></a
+          >
+          <a href="formadores.html" class="menu-item"
+            ><i class="ph ph-users-three"></i
+            ><span class="link-text">Gestão Formadores</span></a
+          >
+          <a href="agenda.html" class="menu-item"
+            ><i class="ph ph-calendar-check"></i
+            ><span class="link-text">Agenda</span></a
+          >
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-role">Coordenadora</span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1>Gestão de Formadores</h1>
+                <p class="section-subtitle">
+                  Administração e acompanhamento de formadores.
+                </p>
+              </div>
+<button class="btn-card" id="btn-novo-formador">
+    <i class="ph ph-plus-circle"></i> Novo Formador
+</button>
+              </button>
+            </div>
+
+            <div class="section-card table-standard">
+              <div class="card-header-simple" style="display: flex; gap: 15px; align-items: center;">
+    <h3 style="margin-right: auto;">Lista de Formadores</h3>
+    
+    <div style="position: relative;">
+        <i class="ph ph-magnifying-glass" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #64748b;"></i>
+        <input type="text" id="pesquisa-formadores" placeholder="Pesquisar formador..." style="padding: 8px 10px 8px 30px; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; font-family: 'Inter', sans-serif;">
+    </div>
+
+    <select id="filtro-formadores" class="badge gray">
+        <option value="ativo">ATIVO</option>
+        <option value="inativo">INATIVO</option>
+        <option value="todos" selected>TODOS</option>
+    </select>
+</div>
+
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-formadores">
+                  <thead>
+                    <tr>
+                      <th>Sigla</th>
+                      <th>Nome Completo</th>
+                      <th>Turmas</th>
+                      <th>UC</th>
+                      <th>Estado</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div id="modal-formador" class="modal">
+    <div class="modal-content section-card">
+        <div class="card-header-simple">
+            <h3 id="modal-titulo-formador">Adicionar Formador</h3>
+            <button type="button" class="btn-icon" id="fechar-modal-formador"><i class="ph ph-x"></i></button>
+        </div>
+
+        <form id="form-novo-formador">
+            <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 15px;">
+                <div class="input-group">
+                    <label for="new-sigla">Sigla</label>
+                    <input type="text" id="new-sigla" placeholder="Ex: AS" maxlength="3" required>
+                </div>
+                <div class="input-group">
+                    <label for="new-nome">Nome Completo</label>
+                    <input type="text" id="new-nome" placeholder="Ex: Ana Maria Silva" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="input-group">
+                    <label for="new-turmas-qtd">Qtd. Turmas</label>
+                    <input type="number" id="new-turmas-qtd" min="0" value="0">
+                </div>
+                <div class="input-group">
+                    <label for="new-ucs-qtd">Qtd. UCs</label>
+                    <input type="number" id="new-ucs-qtd" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="new-estado-formador">Estado</label>
+                <select id="new-estado-formador" class="badge green" style="width: 100%;">
+                    <option value="ativo" selected>ATIVO</option>
+                    <option value="inativo">INATIVO</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-login">Gravar Formador</button>
+        </form>
+    </div>
+</div>
     </div>
     <footer>
-        <p class="copy">&copy: 2026 - Programação web (frontend)</p>
+      <p class="copy">&copy: 2026 - Programação web (frontend)</p>
     </footer>
-</body>
-
+  </body>
 </html>

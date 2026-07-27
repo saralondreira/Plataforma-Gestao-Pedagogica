@@ -10,6 +10,7 @@
       rel="stylesheet"
     />
     <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/forms.js" defer></script>
   </head>
   <body>
     <div class="main-container">
@@ -90,49 +91,71 @@
       <p class="copy">&copy: 2026 - Programação web (frontend)</p>
     </footer>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "...",
-            authDomain: "...",
-            projectId: "...",
-            // ...
-        };
+      const firebaseConfig = {
+        apiKey: "...",
+        authDomain: "...",
+        projectId: "...",
+        // ...
+      };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
-        const formPedido = document.getElementById('form-pedido');
-        
-        if (formPedido) {
-            formPedido.addEventListener('submit', async function (e) {
-                e.preventDefault();
+      const formPedido = document.getElementById("form-pedido");
 
-                const nome = document.getElementById('nome').value;
-                const email = document.getElementById('email').value;
-                const cargo = document.getElementById('cargo').value;
-                const motivo = document.getElementById('motivo').value;
+      if (formPedido) {
+        formPedido.addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-                try {
-                    await addDoc(collection(db, "pedidos_acesso"), {
-                        nome: nome,
-                        email: email,
-                        cargo: cargo,
-                        motivo: motivo,
-                        estado: "pendente",
-                        dataCriacao: serverTimestamp() 
-                    });
+          const nome = document.getElementById("nome").value;
+          const email = document.getElementById("email").value;
+          const cargo = document.getElementById("cargo").value;
+          const motivo = document.getElementById("motivo").value;
 
-                    alert("Pedido enviado com sucesso! Aguarde a aprovação da coordenação.");
-                    window.location.href = "login.html";
-
-                } catch (error) {
-                    console.error("Erro ao guardar o pedido: ", error);
-                    alert("Ocorreu um erro ao submeter o pedido. Tente novamente mais tarde.");
-                }
+          try {
+            await addDoc(collection(db, "pedidos_acesso"), {
+              nome: nome,
+              email: email,
+              cargo: cargo,
+              motivo: motivo,
+              estado: "pendente",
+              dataCriacao: serverTimestamp(),
             });
-        }
+
+            alert(
+              "Pedido enviado com sucesso! Aguarde a aprovação da coordenação.",
+            );
+            window.location.href = "login.html";
+          } catch (error) {
+            console.error("Erro ao guardar o pedido: ", error);
+            alert(
+              "Ocorreu um erro ao submeter o pedido. Tente novamente mais tarde.",
+            );
+          }
+        });
+      }
+    </script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, collection, addDoc, serverTimestamp } from "...";
+
+      const firebaseConfig = { ... };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const formPedido = document.getElementById('form-pedido');
+
+      if (formPedido) {
+      }
     </script>
   </body>
 </html>
