@@ -9,6 +9,7 @@ const contactoInput = document.getElementById('contacto');
 const emailInput = document.getElementById('email');
 const linkedinInput = document.getElementById('linkedin');
 const competenciasTextarea = document.getElementById('competencias');
+const roleSelect = document.getElementById('role');
 
 let utilizadorAtualUid = null;
 
@@ -30,7 +31,8 @@ onAuthStateChanged(auth, async (user) => {
                 if (contactoInput) contactoInput.value = dados.contacto || "";
                 if (linkedinInput) linkedinInput.value = dados.linkedin || "";
                 if (competenciasTextarea) competenciasTextarea.value = dados.competencias || "";
-                
+                if (roleSelect) roleSelect.value = dados.role || "coordenador";
+
                 atualizarNomeCabecalho(dados.nome);
             }
         } catch (error) {
@@ -54,6 +56,7 @@ if (formPerfil) {
         const contacto = contactoInput.value.trim();
         const linkedin = linkedinInput.value.trim();
         const competencias = competenciasTextarea.value.trim();
+        const role = roleSelect ? roleSelect.value : "coordenador";
 
         try {
          await setDoc(doc(db, "perfis", utilizadorAtualUid), {
@@ -61,6 +64,7 @@ if (formPerfil) {
                 contacto: contacto,
                 linkedin: linkedin,
                 competencias: competencias,
+                role: role,
                 ultimaAtualizacao: new Date()
             }, { merge: true });
 

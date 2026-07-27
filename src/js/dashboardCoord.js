@@ -107,10 +107,21 @@ async function carregarDashboard() {
                 ? ''
                 : `<button class="btn-icon btn-entregue" data-id="${id}" title="Marcar como Entregue"><i class="ph ph-check-circle"></i></button>`;
 
+            let indicadorSubmissao = '';
+            if (entrega.submissao) {
+                if (entrega.submissao.tipo === 'ficheiro') {
+                    indicadorSubmissao = `<a href="${entrega.submissao.ficheiroUrl}" target="_blank" title="Ficheiro submetido pelo formador: ${entrega.submissao.ficheiroNome || ''}"><i class="ph ph-paperclip"></i></a>`;
+                } else if (entrega.submissao.tipo === 'excecao') {
+                    indicadorSubmissao = `<i class="ph ph-warning-circle" style="color: #ca8a04;" title="Exceção (sem ficheiro): ${entrega.submissao.nota || ''}"></i>`;
+                } else if (entrega.submissao.tipo === 'coordenacao') {
+                    indicadorSubmissao = `<i class="ph ph-user-check" title="Confirmado pela coordenação"></i>`;
+                }
+            }
+
             tr.innerHTML = `
                 <td><div class="avatar-circle">${iniciais}</div> ${entrega.formadorNome}</td>
                 <td>${entrega.turma}</td>
-                <td>${entrega.documento}</td>
+                <td>${entrega.documento} ${indicadorSubmissao}</td>
                 <td style="color: ${corPrazo}; font-weight: 500;">${textoPrazo}</td>
                 <td><strong>${dataFormatada}</strong></td>
                 <td>${badgeHTML}</td>
@@ -133,7 +144,10 @@ async function carregarDashboard() {
             botao.addEventListener("click", async () => {
                 const id = botao.getAttribute("data-id");
                 try {
-                    await updateDoc(doc(db, "entregas", id), { entregue: true });
+                    await updateDoc(doc(db, "entregas", id), {
+                        entregue: true,
+                        submissao: { tipo: "coordenacao", data: new Date() },
+                    });
                     showToast("Marcado como entregue!", "success");
                     carregarDashboard();
                 } catch (error) {

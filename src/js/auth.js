@@ -1,8 +1,9 @@
-import { auth } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { showToast } from "./toast.js";
 
 const formLogin = document.getElementById('form-login');
@@ -18,10 +19,21 @@ if (formLogin) {
     const password = passwordInput.value;
 
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then(async (credenciais) => {
         showToast("Login efetuado com sucesso! A redirecionar...", "success");
+
+        let destino = "dashboardCoord.html";
+        try {
+          const perfilDoc = await getDoc(doc(db, "perfis", credenciais.user.uid));
+          if (perfilDoc.exists() && perfilDoc.data().role === "formador") {
+            destino = "dashboardFormador.html";
+          }
+        } catch (error) {
+          console.error("Erro ao verificar perfil:", error);
+        }
+
         setTimeout(() => {
-          window.location.href = "../pages/dashboardCoord.html";
+          window.location.href = destino;
         }, 1500);
       })
       .catch(() => {

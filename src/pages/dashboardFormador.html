@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Os Meus Documentos - Gestão Pedagógica</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/dashboardFormador.js" defer></script>
+  </head>
+
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="dashboardFormador.html"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu">
+          <a href="dashboardFormador.html" class="menu-item active"
+            ><i class="ph ph-clipboard-text"></i
+            ><span class="link-text">Os Meus Documentos</span></a
+          >
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="dashboardFormador.html" style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="dashboardFormador.html" style="text-decoration: none">
+                <span class="user-role">Formador(a)</span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1>Os Meus Documentos</h1>
+                <p class="section-subtitle">
+                  Documentos pendentes e entregues atribuídos a ti.
+                </p>
+              </div>
+            </div>
+
+            <div class="section-card table-standard">
+              <div class="card-header-simple">
+                <h3>Documentação</h3>
+              </div>
+
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-documentos-formador">
+                  <thead>
+                    <tr>
+                      <th>Turma / UFCD</th>
+                      <th>Documento</th>
+                      <th>Prazo</th>
+                      <th>Data Limite</th>
+                      <th>Estado</th>
+                      <th>Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="modal-submeter" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3>Submeter Documento</h3>
+            <button type="button" class="btn-icon" id="fechar-modal-submeter">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+
+          <form id="form-submeter-documento">
+            <div class="input-group">
+              <label for="submeter-ficheiro">Ficheiro (PDF, Word ou imagem)</label>
+              <input
+                type="file"
+                id="submeter-ficheiro"
+                accept=".pdf,.doc,.docx,image/*"
+                required
+              />
+            </div>
+            <button type="submit" class="btn-login">Submeter Documento</button>
+          </form>
+
+          <p style="text-align: center; margin-top: 15px;">
+            <a href="#" id="link-abrir-excecao" class="btn-link-sm"
+              >Não tenho ficheiro — marcar como enviado (exceção)</a
+            >
+          </p>
+        </div>
+      </div>
+
+      <div id="modal-excecao" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3>Marcar como Enviado (Exceção)</h3>
+            <button type="button" class="btn-icon" id="fechar-modal-excecao">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+
+          <form id="form-excecao">
+            <div class="input-group">
+              <label for="excecao-nota">Motivo (ex.: entregue por email, em mão...)</label>
+              <textarea
+                id="excecao-nota"
+                rows="3"
+                placeholder="Descreve brevemente como o documento foi entregue"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn-login">Confirmar Exceção</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>
