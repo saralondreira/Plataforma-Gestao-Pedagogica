@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const authRoutes = require("./routes/auth.routes");
 const turmasRoutes = require("./routes/turmas.routes");
+const formadoresRoutes = require("./routes/formadores.routes");
 const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
@@ -15,6 +16,7 @@ app.get("/api/v1/health", (req, res) => res.json({ data: { status: "ok" } }));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/turmas", turmasRoutes);
+app.use("/api/v1/formadores", formadoresRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

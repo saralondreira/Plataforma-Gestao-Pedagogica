@@ -149,6 +149,17 @@
                 </div>
             </div>
 
+            <div id="grupo-credenciais-formador" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="input-group">
+                    <label for="new-email-formador">Email de Acesso</label>
+                    <input type="email" id="new-email-formador" placeholder="ex: ana.silva@escola.pt">
+                </div>
+                <div class="input-group">
+                    <label for="new-password-formador">Palavra-passe Inicial</label>
+                    <input type="password" id="new-password-formador" placeholder="mín. 6 caracteres">
+                </div>
+            </div>
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div class="input-group">
                     <label for="new-turmas-qtd">Qtd. Turmas</label>
@@ -163,8 +174,8 @@
             <div class="input-group">
                 <label for="new-estado-formador">Estado</label>
                 <select id="new-estado-formador" class="badge green" style="width: 100%;">
-                    <option value="ativo" selected>ATIVO</option>
-                    <option value="inativo">INATIVO</option>
+                    <option value="ATIVO" selected>ATIVO</option>
+                    <option value="INATIVO">INATIVO</option>
                 </select>
             </div>
             <button type="submit" class="btn-login">Gravar Formador</button>

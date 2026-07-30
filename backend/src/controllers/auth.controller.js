@@ -42,4 +42,21 @@ async function me(req, res, next) {
   }
 }
 
-module.exports = { register, login, me };
+const updateMeSchema = z.object({
+  nome: z.string().min(2).optional(),
+  contacto: z.string().optional(),
+  linkedin: z.string().optional(),
+  competencias: z.string().optional(),
+});
+
+async function updateMe(req, res, next) {
+  try {
+    const dados = updateMeSchema.parse(req.body);
+    const user = await authService.updateProfile(req.user.id, dados);
+    res.json({ data: user });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { register, login, me, updateMe };

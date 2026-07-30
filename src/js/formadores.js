@@ -1,14 +1,4 @@
-import { db } from "./firebase-config.js";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  deleteDoc,
-  updateDoc,
-  query,
-  orderBy,
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { api } from "./api-client.js";
 import { showToast } from "./toast.js";
 
 const formNovoFormador = document.getElementById("form-novo-formador");
@@ -17,6 +7,9 @@ const modalFormador = document.getElementById("modal-formador");
 const modalTitulo = document.getElementById("modal-titulo-formador");
 const btnNovoFormador = document.getElementById("btn-novo-formador");
 const btnFecharModal = document.getElementById("fechar-modal-formador");
+const grupoCredenciais = document.getElementById("grupo-credenciais-formador");
+const emailInput = document.getElementById("new-email-formador");
+const passwordInput = document.getElementById("new-password-formador");
 
 let idFormadorEmEdicao = null;
 
@@ -31,6 +24,9 @@ if (btnNovoFormador) {
     idFormadorEmEdicao = null;
     formNovoFormador.reset();
     modalTitulo.textContent = "Adicionar Formador";
+    if (grupoCredenciais) grupoCredenciais.style.display = "grid";
+    if (emailInput) emailInput.required = true;
+    if (passwordInput) passwordInput.required = true;
     modalFormador.style.display = "flex";
   });
 }
@@ -39,68 +35,60 @@ async function carregarFormadores() {
   if (!tbodyFormadores) return;
 
   try {
-    const q = query(collection(db, "formadores"), orderBy("dataCriacao", "desc"));
-    const querySnapshot = await getDocs(q);
-    
+    const formadores = await api("/formadores");
     tbodyFormadores.innerHTML = "";
 
-    if (querySnapshot.empty) {
+    if (formadores.length === 0) {
       tbodyFormadores.innerHTML =
         '<tr class="linha-vazia"><td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">Nenhum formador registado.</td></tr>';
       return;
     }
 
-    querySnapshot.forEach((documentoFirebase) => {
-      const formador = documentoFirebase.data();
-      const id = documentoFirebase.id;
-
-      let cor = formador.estado === "ativo" ? "green" : "red";
-      let estadoTexto = formador.estado ? formador.estado.toUpperCase() : "ATIVO";
+    formadores.forEach((formador) => {
+      const cor = formador.estadoFormador === "ATIVO" ? "green" : "red";
+      const estadoTexto = formador.estadoFormador || "ATIVO";
 
       const tr = document.createElement("tr");
-      tr.setAttribute("data-estado", formador.estado || "ativo");
+      tr.setAttribute("data-estado", estadoTexto.toLowerCase());
 
       tr.innerHTML = `
-                <td><div class="avatar-circle">${formador.sigla || ''}</div> <strong>${formador.nome || ''}</strong></td>
-                <td>${formador.nome || ''}</td>
-                <td style="text-align: center;">${formador.turmas || 0}</td>
-                <td style="text-align: center;">${formador.ucs || 0}</td>
+                <td><div class="avatar-circle">${formador.sigla || ""}</div> <strong>${formador.nome}</strong></td>
+                <td>${formador.nome}</td>
+                <td style="text-align: center;">${formador.turmasQtd ?? 0}</td>
+                <td style="text-align: center;">${formador.ucsQtd ?? 0}</td>
                 <td><span class="badge ${cor}">${estadoTexto}</span></td>
                 <td>
-                    <button class="btn-icon btn-editar" 
-                        data-id="${id}" 
-                        data-sigla="${formador.sigla || ''}" 
-                        data-nome="${formador.nome || ''}" 
-                        data-turmas="${formador.turmas || 0}" 
-                        data-ucs="${formador.ucs || 0}" 
-                        data-estado="${formador.estado || 'ativo'}" 
+                    <button class="btn-icon btn-editar"
+                        data-id="${formador.id}"
+                        data-sigla="${formador.sigla || ""}"
+                        data-nome="${formador.nome}"
+                        data-turmas="${formador.turmasQtd ?? 0}"
+                        data-ucs="${formador.ucsQtd ?? 0}"
+                        data-estado="${estadoTexto}"
                         title="Editar"><i class="ph ph-pencil-simple"></i>
                     </button>
-                    <button class="btn-icon btn-apagar" data-id="${id}" title="Apagar"><i class="ph ph-trash"></i></button>
+                    <button class="btn-icon btn-apagar" data-id="${formador.id}" title="Apagar"><i class="ph ph-trash"></i></button>
                 </td>
             `;
       tbodyFormadores.appendChild(tr);
     });
 
-    const botoesApagar = document.querySelectorAll(".btn-apagar");
-    botoesApagar.forEach((botao) => {
+    document.querySelectorAll(".btn-apagar").forEach((botao) => {
       botao.addEventListener("click", async () => {
         const idFormador = botao.getAttribute("data-id");
         if (confirm("Tens a certeza que queres apagar este formador?")) {
           try {
-            await deleteDoc(doc(db, "formadores", idFormador));
+            await api(`/formadores/${idFormador}`, { method: "DELETE" });
             showToast("Formador apagado com sucesso!", "success");
             carregarFormadores();
           } catch (error) {
-            console.error("Erro:", error);
-            showToast("Erro ao apagar formador.", "error");
+            showToast(error.message || "Erro ao apagar formador.", "error");
           }
         }
       });
     });
 
-    const botoesEditar = document.querySelectorAll(".btn-editar");
-    botoesEditar.forEach((botao) => {
+    document.querySelectorAll(".btn-editar").forEach((botao) => {
       botao.addEventListener("click", () => {
         idFormadorEmEdicao = botao.getAttribute("data-id");
         document.getElementById("new-sigla").value = botao.getAttribute("data-sigla");
@@ -110,11 +98,16 @@ async function carregarFormadores() {
         document.getElementById("new-estado-formador").value = botao.getAttribute("data-estado");
 
         modalTitulo.textContent = "Editar Formador";
+        // Email/password só se aplicam à criação da conta — não são editáveis aqui.
+        if (grupoCredenciais) grupoCredenciais.style.display = "none";
+        if (emailInput) emailInput.required = false;
+        if (passwordInput) passwordInput.required = false;
         modalFormador.style.display = "flex";
       });
     });
   } catch (error) {
     console.error("Erro ao carregar formadores:", error);
+    showToast(error.message || "Erro ao carregar formadores.", "error");
   }
 }
 
@@ -126,29 +119,29 @@ if (formNovoFormador) {
 
     const sigla = document.getElementById("new-sigla").value;
     const nome = document.getElementById("new-nome").value;
-    const turmas = document.getElementById("new-turmas-qtd").value;
-    const ucs = document.getElementById("new-ucs-qtd").value;
-    const estado = document.getElementById("new-estado-formador").value;
+    const turmasQtd = document.getElementById("new-turmas-qtd").value;
+    const ucsQtd = document.getElementById("new-ucs-qtd").value;
+    const estadoFormador = document.getElementById("new-estado-formador").value.toUpperCase();
 
     try {
       if (idFormadorEmEdicao) {
-        const formadorRef = doc(db, "formadores", idFormadorEmEdicao);
-        await updateDoc(formadorRef, {
-          sigla: sigla,
-          nome: nome,
-          turmas: turmas,
-          ucs: ucs,
-          estado: estado,
+        await api(`/formadores/${idFormadorEmEdicao}`, {
+          method: "PATCH",
+          body: { sigla, nome, turmasQtd, ucsQtd, estadoFormador },
         });
         showToast("Formador atualizado com sucesso!", "success");
       } else {
-        await addDoc(collection(db, "formadores"), {
-          sigla: sigla,
-          nome: nome,
-          turmas: turmas,
-          ucs: ucs,
-          estado: estado,
-          dataCriacao: new Date(),
+        await api("/formadores", {
+          method: "POST",
+          body: {
+            sigla,
+            nome,
+            turmasQtd,
+            ucsQtd,
+            estadoFormador,
+            email: emailInput.value,
+            password: passwordInput.value,
+          },
         });
         showToast("Novo formador adicionado com sucesso!", "success");
       }
@@ -159,7 +152,7 @@ if (formNovoFormador) {
       carregarFormadores();
     } catch (error) {
       console.error("Erro ao guardar formador: ", error);
-      showToast("Ocorreu um erro ao guardar os dados.", "error");
+      showToast(error.message || "Ocorreu um erro ao guardar os dados.", "error");
     }
   });
 }
@@ -172,14 +165,8 @@ if (inputPesquisaFormadores) {
 
     linhasTabela.forEach((linha) => {
       if (linha.classList.contains("linha-vazia")) return;
-
       const textoDaLinha = linha.textContent.toLowerCase();
-
-      if (textoDaLinha.includes(termoPesquisa)) {
-        linha.style.display = "";
-      } else {
-        linha.style.display = "none";
-      }
+      linha.style.display = textoDaLinha.includes(termoPesquisa) ? "" : "none";
     });
   });
 }

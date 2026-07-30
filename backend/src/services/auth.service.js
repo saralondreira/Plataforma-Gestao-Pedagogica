@@ -53,4 +53,9 @@ async function getById(id) {
   return toPublicUser(user);
 }
 
-module.exports = { register, login, getById, toPublicUser };
+async function updateProfile(id, dados) {
+  const user = await prisma.user.update({ where: { id }, data: dados });
+  return toPublicUser(user);
+}
+
+module.exports = { register, login, getById, updateProfile, toPublicUser };
