@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://localhost:4000/api/v1";
+export const API_ORIGIN = "http://localhost:4000";
+const API_BASE_URL = `${API_ORIGIN}/api/v1`;
 const TOKEN_KEY = "pedagogica_token";
 const USER_KEY = "pedagogica_user";
 
@@ -22,14 +23,17 @@ export function clearSession() {
 }
 
 export async function api(path, { method = "GET", body } = {}) {
-  const headers = { "Content-Type": "application/json" };
+  const headers = {};
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
+
+  const isFormData = body instanceof FormData;
+  if (body !== undefined && !isFormData) headers["Content-Type"] = "application/json";
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
   });
 
   if (response.status === 204) return null;
