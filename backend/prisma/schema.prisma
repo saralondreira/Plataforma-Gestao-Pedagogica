@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  COORDENADOR
+  FORMADOR
+}
+
+enum EstadoTurma {
+  PLANEADA
+  EM_CURSO
+  CONCLUIDA
+}
+
+enum EstadoFormador {
+  ATIVO
+  INATIVO
+}
+
+enum SubmissaoTipo {
+  FICHEIRO
+  EXCECAO
+  COORDENACAO
+}
+
+enum EstadoPedidoAcesso {
+  PENDENTE
+  APROVADO
+  REJEITADO
+}
+
+// Unifica identidade de login + perfil. Quando role = FORMADOR, os campos
+// sigla/turmasQtd/ucsQtd/estado (ficha do formador) ficam preenchidos.
+model User {
+  id             Int             @id @default(autoincrement())
+  nome           String
+  email          String          @unique
+  passwordHash   String
+  role           Role
+  contacto       String?
+  linkedin       String?
+  competencias   String?         @db.Text
+  sigla          String?
+  turmasQtd      Int?
+  ucsQtd         Int?
+  estadoFormador EstadoFormador?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  entregas Entrega[] @relation("EntregasDoFormador")
+
+  @@map("users")
+}
+
+model Turma {
+  id           Int         @id @default(autoincrement())
+  codigo       String      @unique
+  designacao   String
+  dataInicio   DateTime
+  numFormandos Int         @default(20)
+  estado       EstadoTurma @default(PLANEADA)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  entregas Entrega[]
+
+  @@map("turmas")
+}
+
+model Entrega {
+  id                  Int            @id @default(autoincrement())
+  formadorId          Int
+  formador            User           @relation("EntregasDoFormador", fields: [formadorId], references: [id])
+  turmaId             Int
+  turma               Turma          @relation(fields: [turmaId], references: [id])
+  documento           String
+  dataLimite          DateTime
+  entregue            Boolean        @default(false)
+  submissaoTipo       SubmissaoTipo?
+  submissaoFicheiroUrl String?
+  submissaoNota        String?       @db.Text
+  submissaoData         DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  @@map("entregas")
+}
+
+model PedidoAcesso {
+  id        Int                 @id @default(autoincrement())
+  nome      String
+  email     String
+  cargo     String
+  motivo    String              @db.Text
+  estado    EstadoPedidoAcesso  @default(PENDENTE)
+  createdAt DateTime            @default(now())
+
+  @@map("pedidos_acesso")
+}

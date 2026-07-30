@@ -1,23 +1,10 @@
-import { db } from "./firebase-config.js";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  deleteDoc,
-  updateDoc,
-  query,
-  orderBy,
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { api } from "./api-client.js";
 import { showToast } from "./toast.js";
 
 const formNovaTurma = document.getElementById("form-nova-turma");
 const tbodyTurmas = document.querySelector("#tabela-turmas tbody");
 const modalTurma = document.getElementById("modal-turma");
 const modalTitulo = document.querySelector("#modal-turma h3");
-const btnNovoAviso = document.getElementById("btn-novo-aviso"); 
-const modalAviso = document.getElementById("modal-aviso"); 
-const fecharModalAviso = document.getElementById("fechar-modal-aviso");
 let idTurmaEmEdicao = null;
 
 const btnNovaTurma = document.getElementById("btn-nova-turma");
@@ -32,81 +19,75 @@ if (btnNovaTurma) {
 
 const btnFecharModal = document.getElementById("fechar-modal");
 if (btnFecharModal) {
-    btnFecharModal.addEventListener("click", () => {
-        modalTurma.style.display = "none";
-    });
+  btnFecharModal.addEventListener("click", () => {
+    modalTurma.style.display = "none";
+  });
+}
+
+function estadoParaBadge(estado) {
+  if (estado === "EM_CURSO") return { cor: "blue", texto: "EM CURSO" };
+  if (estado === "CONCLUIDA") return { cor: "gray", texto: "CONCLUÍDA" };
+  return { cor: "yellow", texto: "PLANEADA" };
 }
 
 async function carregarTurmas() {
   if (!tbodyTurmas) return;
 
   try {
-    const q = query(collection(db, "turmas"), orderBy("dataCriacao", "desc"));
-    const querySnapshot = await getDocs(q);
+    const turmas = await api("/turmas");
     tbodyTurmas.innerHTML = "";
 
-    if (querySnapshot.empty) {
+    if (turmas.length === 0) {
       tbodyTurmas.innerHTML =
         '<tr class="linha-vazia"><td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">Nenhuma turma encontrada.</td></tr>';
       return;
     }
 
-    querySnapshot.forEach((documentoFirebase) => {
-      const turma = documentoFirebase.data();
-      const id = documentoFirebase.id;
-
-      let cor = "gray";
-      let estadoTexto = turma.estado ? turma.estado.toUpperCase() : "PLANEADA";
-      if (turma.estado === "em-curso") {
-        cor = "blue";
-        estadoTexto = "EM CURSO";
-      }
-      if (turma.estado === "planeada") cor = "yellow";
+    turmas.forEach((turma) => {
+      const { cor, texto } = estadoParaBadge(turma.estado);
+      const dataInicioISO = turma.dataInicio.slice(0, 10);
 
       const tr = document.createElement("tr");
-      tr.setAttribute("data-estado", turma.estado || "planeada");
+      tr.setAttribute("data-estado", turma.estado);
 
       tr.innerHTML = `
-                <td><strong>${turma.codigo || ''}</strong></td>
-                <td>${turma.designacao || ''}</td>
-                <td>${turma.dataInicio || ''}</td>
-                <td>${turma.alunos || 0}</td>
-                <td><span class="badge ${cor}">${estadoTexto}</span></td>
+                <td><strong>${turma.codigo}</strong></td>
+                <td>${turma.designacao}</td>
+                <td>${dataInicioISO}</td>
+                <td>${turma.numFormandos}</td>
+                <td><span class="badge ${cor}">${texto}</span></td>
                 <td>
-                    <button class="btn-icon btn-editar" 
-                        data-id="${id}" 
-                        data-codigo="${turma.codigo || ''}" 
-                        data-designacao="${turma.designacao || ''}" 
-                        data-data="${turma.dataInicio || ''}" 
-                        data-alunos="${turma.alunos || 0}" 
-                        data-estado="${turma.estado || 'planeada'}" 
+                    <button class="btn-icon btn-editar"
+                        data-id="${turma.id}"
+                        data-codigo="${turma.codigo}"
+                        data-designacao="${turma.designacao}"
+                        data-data="${dataInicioISO}"
+                        data-alunos="${turma.numFormandos}"
+                        data-estado="${turma.estado}"
                         title="Editar"><i class="ph ph-pencil-simple"></i>
                     </button>
-                    <button class="btn-icon btn-apagar" data-id="${id}" title="Apagar"><i class="ph ph-trash"></i></button>
+                    <button class="btn-icon btn-apagar" data-id="${turma.id}" title="Apagar"><i class="ph ph-trash"></i></button>
                 </td>
             `;
       tbodyTurmas.appendChild(tr);
     });
 
-    const botoesApagar = document.querySelectorAll(".btn-apagar");
-    botoesApagar.forEach((botao) => {
+    document.querySelectorAll(".btn-apagar").forEach((botao) => {
       botao.addEventListener("click", async () => {
         const idTurma = botao.getAttribute("data-id");
         if (confirm("Tens a certeza que queres apagar esta turma permanentemente?")) {
           try {
-            await deleteDoc(doc(db, "turmas", idTurma));
+            await api(`/turmas/${idTurma}`, { method: "DELETE" });
             showToast("Turma apagada com sucesso!", "success");
             carregarTurmas();
           } catch (error) {
-            console.error("Erro:", error);
-            showToast("Erro ao apagar.", "error");
+            showToast(error.message || "Erro ao apagar.", "error");
           }
         }
       });
     });
 
-    const botoesEditar = document.querySelectorAll(".btn-editar");
-    botoesEditar.forEach((botao) => {
+    document.querySelectorAll(".btn-editar").forEach((botao) => {
       botao.addEventListener("click", () => {
         idTurmaEmEdicao = botao.getAttribute("data-id");
         document.getElementById("new-codigo").value = botao.getAttribute("data-codigo");
@@ -121,6 +102,7 @@ async function carregarTurmas() {
     });
   } catch (error) {
     console.error("Erro ao carregar turmas:", error);
+    showToast(error.message || "Erro ao carregar turmas.", "error");
   }
 }
 
@@ -130,32 +112,20 @@ if (formNovaTurma) {
   formNovaTurma.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const codigo = document.getElementById("new-codigo").value;
-    const designacao = document.getElementById("new-designacao").value;
-    const dataInicio = document.getElementById("new-data").value;
-    const alunos = document.getElementById("new-alunos").value;
-    const estado = document.getElementById("new-estado").value;
+    const dados = {
+      codigo: document.getElementById("new-codigo").value,
+      designacao: document.getElementById("new-designacao").value,
+      dataInicio: document.getElementById("new-data").value,
+      numFormandos: document.getElementById("new-alunos").value,
+      estado: document.getElementById("new-estado").value,
+    };
 
     try {
       if (idTurmaEmEdicao) {
-        const turmaRef = doc(db, "turmas", idTurmaEmEdicao);
-        await updateDoc(turmaRef, {
-          codigo: codigo,
-          designacao: designacao,
-          dataInicio: dataInicio,
-          alunos: alunos,
-          estado: estado,
-        });
+        await api(`/turmas/${idTurmaEmEdicao}`, { method: "PATCH", body: dados });
         showToast("Turma atualizada com sucesso!", "success");
       } else {
-        await addDoc(collection(db, "turmas"), {
-          codigo: codigo,
-          designacao: designacao,
-          dataInicio: dataInicio,
-          alunos: alunos,
-          estado: estado,
-          dataCriacao: new Date(),
-        });
+        await api("/turmas", { method: "POST", body: dados });
         showToast("Nova turma criada com sucesso!", "success");
       }
 
@@ -165,23 +135,21 @@ if (formNovaTurma) {
       carregarTurmas();
     } catch (error) {
       console.error("Erro ao guardar turma: ", error);
-      showToast("Ocorreu um erro ao guardar os dados.", "error");
+      showToast(error.message || "Ocorreu um erro ao guardar os dados.", "error");
     }
   });
 }
 
-const inputPesquisa = document.getElementById('pesquisa-turmas');
+const inputPesquisa = document.getElementById("pesquisa-turmas");
 if (inputPesquisa) {
-    inputPesquisa.addEventListener('keyup', function() {
-        const termoPesquisa = this.value.toLowerCase(); 
-        const linhasTabela = document.querySelectorAll('#tabela-turmas tbody tr'); 
+  inputPesquisa.addEventListener("keyup", function () {
+    const termoPesquisa = this.value.toLowerCase();
+    const linhasTabela = document.querySelectorAll("#tabela-turmas tbody tr");
 
-        linhasTabela.forEach(linha => {
-            if (linha.classList.contains('linha-vazia')) return; 
-            const textoDaLinha = ReadText(linha);
-            linha.style.display = textoDaLinha.includes(termoPesquisa) ? '' : 'none';
-        });
+    linhasTabela.forEach((linha) => {
+      if (linha.classList.contains("linha-vazia")) return;
+      const textoDaLinha = linha.textContent.toLowerCase();
+      linha.style.display = textoDaLinha.includes(termoPesquisa) ? "" : "none";
     });
+  });
 }
-
-function ReadText(el) { return el.textContent.toLowerCase(); }
