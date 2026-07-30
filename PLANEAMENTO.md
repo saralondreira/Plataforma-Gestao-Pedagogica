@@ -1,62 +1,52 @@
 # Ponto de Situação e Planeamento
 
-> 14 de julho de 2026 · Sem prazo fixo — plano organizado por fases e prioridades.
+> 30 de julho de 2026 · Sem prazo fixo — plano organizado por fases e prioridades.
 
 ## Ponto de situação
 
 ### ✅ Feito
-- UI completa e responsiva: login, forms, dashboard, turmas, formadores, perfil
-- Firebase configurado (Auth + Firestore) e ligado ao projeto `plataforma-gestaopedagogica`
-- Autenticação (login/registo) em `auth.js` com toasts
-- Módulos JS por página com leitura/escrita Firestore: `dashboardCoord.js`, `turmas.js`, `formadores.js`, `perfil.js`, `forms.js`
 
-### ⚠️ Problemas detetados na revisão (14/jul)
+- UI completa e responsiva: login, forms, dashboard, turmas, formadores, painel do formador, perfil.
+- **Migração completa de Firebase para stack própria** (Node/Express + MySQL + Prisma + JWT), conforme o guia oficial da UC00605/UC00614:
+  - Fase 0 — Fundação (auth JWT/bcrypt) + Turmas.
+  - Fase 1 — Formadores (agora contas de login reais, não só um roster) + Perfil.
+  - Fase 2 — Entregas, com upload real de ficheiros (multer) e via de exceção.
+  - Fase 3 — Pedidos de Acesso (rota pública).
+  - Fase 4 — Testes automatizados (Jest + Supertest, 30 testes), documentação OpenAPI (`/api-docs`), checklist RGPD (`backend/RGPD.md`), remoção completa do Firebase do projeto.
+- Modelo de dados relacional real: `Entrega.formadorId`/`turmaId` são foreign keys, não texto livre casado por nome (como era no Firestore).
 
-| # | Problema | Impacto |
-|---|----------|---------|
-| P1 | **`firestore.rules` expiraram a 09/05/2026** (`allow read, write: if request.time < timestamp.date(2026, 5, 9)`) | Todos os pedidos ao Firestore são **negados desde maio** — nada funciona contra a base de dados |
-| P2 | **`dashboardCoord.html` não tem nenhuma tag `<script>`** | O `dashboardCoord.js` (250 linhas) nunca corre; o dashboard não carrega dados nem menus |
-| P3 | **`login.html` importa `src="auth.js"`** (caminho errado; devia ser `../js/auth.js`) | O login está partido — 404 ao carregar o módulo |
-| P4 | **Sem guarda de autenticação** nas páginas internas (só `perfil.js` usa `onAuthStateChanged`) | Qualquer pessoa acede ao dashboard/turmas/formadores por URL sem login |
-| P5 | **"Terminar Sessão" é um link direto** para login.html, sem `signOut()` | A sessão Firebase fica ativa após "logout" |
-| P6 | **`agenda.html` é placeholder** ("Agenda em Desenvolvimento") | Funcionalidade prometida no ponto de situação por fazer |
-| P7 | **Trabalho todo por commitar** — 12 ficheiros modificados + 7 novos desde o último commit | Risco de perda; histórico git não reflete a fase Firebase |
-| P8 | Detalhes menores: `&copy:` em vez de `&copy;` nos footers; scripts inline em `forms.html` duplicam lógica de `forms.js`; header da agenda mostra "Utilizador"/"??" fixo | Polimento |
+### Problemas históricos (da fase Firebase, todos moot — código já não existe)
+
+Os problemas P1–P8 identificados na revisão de 14/jul (regras Firestore expiradas, caminho errado do `auth.js`, dashboard sem `<script>`, etc.) deixaram de se aplicar: essa integração foi substituída por completo pela stack Node/Express/MySQL. Ver `CONTEXTO.md` para o histórico.
+
+### ⚠️ Pendências atuais
+
+| # | Item | Impacto |
+|---|------|---------|
+| Q1 | Sem guarda de autenticação client-side nas páginas internas — só se descobre que a sessão expirou quando uma chamada à API devolve 401 | UX pobre (mostra a página vazia antes de eventualmente falhar), não é um problema de segurança (a API já exige JWT em todas as rotas protegidas) |
+| Q2 | **"Terminar Sessão"** é só um link para `login.html`, não chama `clearSession()` | O token fica no `localStorage` depois de "sair"; ao voltar para trás no browser a sessão parece ainda ativa até expirar (7 dias) |
+| Q3 | `agenda.html` continua placeholder | Funcionalidade prometida, nunca começada |
+| Q4 | Sem rate limiting em `/auth/login` e `/auth/register` | Ver `backend/RGPD.md` §7 |
+| Q5 | Ficheiros em `backend/uploads/` acessíveis por URL direta, sem exigir autenticação para download | Ver `backend/RGPD.md` §3 |
 
 ## Plano de trabalho
 
-### Fase 0 — Desbloquear (fazer primeiro, ~1 sessão)
-1. **Commit de segurança** do estado atual num branch (ex.: `firebase-integration`) — resolve P7 antes de mexer em mais alguma coisa
-2. **Corrigir `firestore.rules`** — substituir a regra expirada por regras reais: leitura/escrita apenas para utilizadores autenticados (`request.auth != null`) e fazer deploy (P1)
-3. **Corrigir caminho do `auth.js`** em login.html (P3)
-4. **Adicionar `<script>` em falta** ao dashboardCoord.html (script.js + dashboardCoord.js) (P2)
-5. **Testar o ciclo completo:** registo → login → dashboard lê Firestore → criar turma → aparece na tabela
+### Fase 5 — Polimento de sessão (~1 sessão)
+1. Criar um pequeno `guard.js` partilhado: chama `GET /auth/me` ao carregar cada página interna; se 401, redireciona para login (Q1).
+2. Ligar `clearSession()` ao botão "Terminar Sessão" em todas as páginas (Q2).
 
-### Fase 1 — Autenticação sólida (~1–2 sessões)
-1. Criar um `guard.js` partilhado com `onAuthStateChanged`: redireciona para login se não autenticado; incluir em todas as páginas internas (P4)
-2. Implementar `signOut()` no botão "Terminar Sessão" (P5)
-3. Preencher nome/avatar reais no header de todas as páginas a partir do perfil (substituir "Utilizador"/"??")
+### Fase 6 — Agenda (funcionalidade nova, ~2–3 sessões)
+1. Grelha de calendário mensal (CSS Grid, navegação mês anterior/seguinte).
+2. Nova entidade `Disponibilidade` no schema Prisma (formadorId, data, período).
+3. Formadores marcam disponibilidade; coordenadora vê disponibilidades agregadas no calendário.
+4. Endpoints REST + testes, seguindo o mesmo padrão das restantes entidades.
 
-### Fase 2 — Dados reais em todo o lado (~2–3 sessões)
-1. Auditar página a página: eliminar restos de dados simulados de `script.js` onde já há Firestore
-2. Completar CRUD: editar e apagar turmas/formadores (hoje há sobretudo criar/ler)
-3. Unificar `forms.html`: mover os dois blocos `<script type="module">` inline para `forms.js`
-4. Definir e documentar o modelo de dados Firestore (coleções: `turmas`, `formadores`, `perfis`, `pedidosAcesso`, `documentos`) em `CONTEXTO.md`
-
-### Fase 3 — Agenda (funcionalidade nova, ~2–3 sessões)
-1. Grelha de calendário mensal (CSS Grid, navegação mês anterior/seguinte)
-2. Formadores marcam disponibilidade (escrita em coleção `disponibilidades`)
-3. Coordenadora vê disponibilidades agregadas no calendário
-
-### Fase 4 — Qualidade e entrega (~1–2 sessões)
-1. Corrigir P8 (typos, headers, código duplicado)
-2. Roles: distinguir coordenador vs. formador (campo `role` no perfil; menus e permissões consoante o papel)
-3. Rever regras Firestore por coleção (não apenas "autenticado pode tudo")
-4. Atualizar README.md (ainda descreve só a fase frontend) e escrever relatório final
-5. Merge do branch para main
+### Fase 7 — Segurança antes de um deploy real (~1 sessão)
+1. Rate limiting no login/registo (Q4).
+2. Proteger o acesso aos ficheiros em `/uploads` (Q5).
+3. Rever os restantes itens do checklist `backend/RGPD.md` (política de privacidade, direito ao apagamento).
+4. Preparar `Dockerfile`/variáveis de ambiente de produção (M07 do guia).
 
 ### Critério de "feito" por fase
-Cada fase termina com: teste manual do fluxo completo no browser + commit com mensagem descritiva. Não avançar de fase com erros na consola.
 
-## Ordem de ataque imediata
-**P7 → P1 → P3 → P2 → teste.** Sem isto, nada do resto é verificável, porque a app está efetivamente partida em três pontos (regras expiradas, login com 404, dashboard sem scripts).
+Cada fase termina com: testes automatizados a passar (`npm test` no `backend/`) + teste manual do fluxo completo no browser + commit com mensagem descritiva. Não avançar de fase com testes ou consola com erros.

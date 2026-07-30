@@ -59,4 +59,4 @@ async function updateMe(req, res, next) {
   }
 }
 
-module.exports = { register, login, me, updateMe };
+module.exports = { register, login, me, updateMe, registerSchema, loginSchema, updateMeSchema };

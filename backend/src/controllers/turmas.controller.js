@@ -51,4 +51,4 @@ async function apagar(req, res, next) {
   }
 }
 
-module.exports = { listar, criar, atualizar, apagar };
+module.exports = { listar, criar, atualizar, apagar, turmaSchema, turmaUpdateSchema };

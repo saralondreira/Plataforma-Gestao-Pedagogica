@@ -1,8 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
+const { UPLOADS_DIR } = require("../config/paths");
 
-const UPLOADS_ROOT = path.join(__dirname, "..", "..", "uploads", "entregas");
+const UPLOADS_ROOT = path.join(UPLOADS_DIR, "entregas");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
