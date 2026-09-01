@@ -47,6 +47,46 @@ Os problemas P1–P8 identificados na revisão de 14/jul (regras Firestore expir
 3. Rever os restantes itens do checklist `backend/RGPD.md` (política de privacidade, direito ao apagamento).
 4. Preparar `Dockerfile`/variáveis de ambiente de produção (M07 do guia).
 
+## Visão futura — papel Formando e funcionalidades avançadas
+
+> Ideias trazidas por Sara em 2026-09-01, para explorar na disciplina de Trabalho de Projeto (com a formadora responsável). Âmbito maior que as Fases 5-7 e ainda sem sessões estimadas — decompor em fases concretas quando entrarmos em cada bloco.
+
+### Formando (novo papel — hoje o enum `Role` só tem COORDENADOR/FORMADOR)
+
+- Consulta da turma: colegas, horário, formador, UC atual.
+- Consulta de notas por UC.
+- Submissão de justificações de falta (com anexo, associada a um dia/aula).
+- Comunicação: formulário dirigido à coordenação, ao formador ou à assistente social.
+
+### Formador (funcionalidades novas)
+
+- Submissão de notas por formando/UC.
+- Atribuição de trabalhos, com área de submissão própria (reaproveita o padrão de upload já usado em Entregas).
+- Comunicação com o coordenador.
+- Alocação de disponibilidade na agenda: o formador marca blocos de 1h como livres; o coordenador só pode agendar aulas dentro desses blocos (liga-se à entidade `Disponibilidade` já prevista na Fase 6).
+- Consulta da própria assiduidade e do estado de cada UC que leciona.
+
+### Coordenador (funcionalidades novas)
+
+- Atribuição de uma UC/disciplina a um curso: carga horária (26h ou 50h), descritivo e formador responsável.
+- Agendamento de aulas restrito aos blocos livres marcados pelos formadores (valida contra `Disponibilidade`).
+
+### Outras ideias a considerar (sugestões a validar com a formadora)
+
+- Notificações (in-app e/ou email) para novos prazos, notas lançadas ou respostas a uma comunicação.
+- Exportação de pautas e relatórios em PDF.
+- Histórico de alterações a notas — auditoria simples, alinhada com o checklist RGPD.
+- Painel de assiduidade agregado por turma (visão do formador) e individual (visão do formando).
+- Validação de sobreposição de horários ao agendar aulas.
+- Reenvio de trabalhos até ao prazo (versões da submissão, não só o último ficheiro).
+
+### Impacto previsível no modelo de dados (a confirmar em desenho técnico)
+
+- Novo valor no enum `Role`: `FORMANDO`, e provavelmente uma entidade `Formando` própria (hoje a Turma não tem membros individuais modelados).
+- Novas entidades prováveis: `Nota`, `Justificacao`, `Trabalho` + `SubmissaoTrabalho`, `Mensagem`/`Comunicacao` (com um campo de destinatário: coordenação, formador ou assistente social).
+- `Curso` como entidade separada de `Turma`, com várias UCs associadas (carga horária + formador por UC).
+- `Disponibilidade` (já prevista na Fase 6) passa a ser também a restrição usada no agendamento de aulas pelo coordenador.
+
 ### Critério de "feito" por fase
 
 Cada fase termina com: testes automatizados a passar (`npm test` no `backend/`) + teste manual do fluxo completo no browser + commit com mensagem descritiva. Não avançar de fase com testes ou consola com erros.

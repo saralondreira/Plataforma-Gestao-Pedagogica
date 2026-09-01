@@ -72,6 +72,7 @@ backend/                        # API Node/Express + MySQL
 - **Guarda de autenticação no frontend**: as páginas internas não verificam sessão antes de renderizar (só redirecionam se uma chamada à API falhar com 401). Considerar um `guard.js` partilhado.
 - **"Terminar Sessão"** ainda é só um link para `login.html` — não limpa o token/utilizador do `localStorage` (`clearSession()` existe em `api-client.js` mas não está ligado a nenhum botão).
 - Ver `RGPD.md` para o checklist de itens pendentes antes de um deploy com dados reais.
+- **Papel Formando (visão futura)**: ainda não existe no modelo (`Role` só tem COORDENADOR/FORMADOR). Ver `PLANEAMENTO.md` — secção "Visão futura — papel Formando e funcionalidades avançadas".
 
 ## Documentos de referência
 
