@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trabalhos</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/trabalhos.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="FORMADOR,FORMANDO">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="login.html"
+            data-home-link
+            style="text-decoration: none; display: flex; align-items: center; gap: 12px"
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu" data-auto></nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-role"></span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1 id="titulo-pagina">Trabalhos</h1>
+                <p class="section-subtitle" id="subtitulo-pagina"></p>
+              </div>
+              <button class="btn-login" id="btn-novo-trabalho" type="button" style="display: none; width: auto">
+                <i class="ph ph-plus"></i> Novo trabalho
+              </button>
+            </div>
+
+            <div id="vista-formando" style="display: none">
+            <div class="section-card table-standard">
+              <div class="card-header-simple"><h3>Os meus trabalhos</h3></div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-meus-trabalhos">
+                  <thead><tr><th>UC</th><th>Trabalho</th><th>Prazo</th><th>Estado</th><th>Avaliação</th><th>Ações</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+            <div id="vista-formador" style="display: none">
+            <div class="section-card" style="margin-bottom: 20px">
+              <div class="input-group">
+                <label for="select-turma-uc">Turma / UC</label>
+                <select id="select-turma-uc"><option value="">— Seleciona —</option></select>
+              </div>
+            </div>
+            <div class="section-card table-standard" id="cartao-trabalhos" style="display: none">
+              <div class="card-header-simple"><h3 id="titulo-trabalhos">Trabalhos atribuídos</h3></div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-trabalhos-formador">
+                  <thead><tr><th>Trabalho</th><th>Prazo</th><th>Submissões</th><th>Ações</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="modal-submeter" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3 id="modal-submeter-titulo">Submeter trabalho</h3>
+            <button class="btn-icon" id="fechar-modal-submeter" type="button" aria-label="Fechar"><i class="ph ph-x"></i></button>
+          </div>
+          <form id="form-submeter" action="javascript:void(0);">
+            <p style="color: #64748b; margin-bottom: 15px" id="submeter-info"></p>
+            <div class="input-group">
+              <label for="submeter-ficheiro">Ficheiro (pdf, doc, docx, png, jpg, txt, zip; máx. 10 MB)</label>
+              <input type="file" id="submeter-ficheiro" required accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.txt,.zip" />
+            </div>
+            <div class="input-group">
+              <label for="submeter-comentario">Comentário (opcional)</label>
+              <textarea id="submeter-comentario" rows="3" maxlength="1000"></textarea>
+            </div>
+            <button type="submit" class="btn-login">Submeter</button>
+          </form>
+        </div>
+      </div>
+      <div id="modal-novo-trabalho" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3 id="modal-novo-trabalho-titulo">Novo trabalho</h3>
+            <button class="btn-icon" id="fechar-modal-novo-trabalho" type="button" aria-label="Fechar"><i class="ph ph-x"></i></button>
+          </div>
+          <form id="form-novo-trabalho" action="javascript:void(0);">
+            <div class="input-group">
+              <label for="trabalho-titulo">Título</label>
+              <input type="text" id="trabalho-titulo" required minlength="3" maxlength="150" />
+            </div>
+            <div class="input-group">
+              <label for="trabalho-descricao">Descrição / instruções</label>
+              <textarea id="trabalho-descricao" rows="4" maxlength="5000"></textarea>
+            </div>
+            <div class="input-group">
+              <label for="trabalho-prazo">Prazo (último dia de entrega)</label>
+              <input type="date" id="trabalho-prazo" required />
+            </div>
+            <button type="submit" class="btn-login">Atribuir trabalho</button>
+          </form>
+        </div>
+      </div>
+      <div id="modal-submissoes" class="modal">
+        <div class="modal-content section-card" style="max-width: 900px; width: 95%">
+          <div class="card-header-simple">
+            <h3 id="modal-submissoes-titulo">Submissões</h3>
+            <button class="btn-icon" id="fechar-modal-submissoes" type="button" aria-label="Fechar"><i class="ph ph-x"></i></button>
+          </div>
+          <p style="color: #64748b; margin-bottom: 10px" id="submissoes-descricao"></p>
+          <div class="table-container-clean">
+            <table class="status-table" id="tabela-submissoes">
+              <thead><tr><th>Formando</th><th>Enviado em</th><th>Ficheiro</th><th>Nota (0–20)</th><th>Feedback</th><th>Ação</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

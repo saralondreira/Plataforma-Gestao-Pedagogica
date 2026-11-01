@@ -7,13 +7,19 @@ const turmaSchema = z.object({
   dataInicio: z.coerce.date(),
   numFormandos: z.coerce.number().int().positive().default(20),
   estado: z.enum(["PLANEADA", "EM_CURSO", "CONCLUIDA"]).default("PLANEADA"),
+  idCursoIEFP: z.string().optional(),
+  // .nullable() antes de .optional() para aceitar explicitamente `null` (remover
+  // o mediador já atribuído) sem ser coagido para 0 pelo z.coerce.number() —
+  // omitido continua a significar "não mexer no campo" (graças ao .partial() no update).
+  mediadorId: z.coerce.number().int().positive().nullable().optional(),
 });
 
 const turmaUpdateSchema = turmaSchema.partial();
 
 async function listar(req, res, next) {
   try {
-    const turmas = await turmasService.listar();
+    const incluirInativos = req.query.incluirInativos === "true";
+    const turmas = await turmasService.listar({ incluirInativos });
     res.json({ data: turmas });
   } catch (error) {
     next(error);
@@ -51,4 +57,22 @@ async function apagar(req, res, next) {
   }
 }
 
-module.exports = { listar, criar, atualizar, apagar, turmaSchema, turmaUpdateSchema };
+async function reativar(req, res, next) {
+  try {
+    const id = Number(req.params.id);
+    const turma = await turmasService.reativar(id);
+    res.json({ data: turma });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function minhasMediacoes(req, res, next) {
+  try {
+    res.json({ data: await require("../services/mediacao.service").minhasTurmas(req.user.id) });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { minhasMediacoes, listar, criar, atualizar, apagar, reativar, turmaSchema, turmaUpdateSchema };

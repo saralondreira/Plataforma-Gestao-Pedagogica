@@ -6,16 +6,17 @@
     <title>Gestão de Turmas</title>
 
     <link rel="stylesheet" href="../css/style.css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="../js/script.js" defer></script>
     <script type="module" src="../js/turmas.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
   </head>
 
-  <body>
+  <body data-roles="COORDENADOR">
     <div class="dashboard-container">
       <aside class="sidebar hoverable">
         <div class="sidebar-header">
@@ -35,11 +36,11 @@
           </a>
         </div>
         <nav class="sidebar-menu">
-          <a href="dashboardCoord.html" class="menu-item active"
+          <a href="dashboardCoord.html" class="menu-item"
             ><i class="ph ph-chart-pie-slice"></i
             ><span class="link-text">Visão Global</span></a
           >
-          <a href="turmas.html" class="menu-item"
+          <a href="turmas.html" class="menu-item active"
             ><i class="ph ph-chalkboard-teacher"></i
             ><span class="link-text">Gestão Turmas</span></a
           >
@@ -47,9 +48,17 @@
             ><i class="ph ph-users-three"></i
             ><span class="link-text">Gestão Formadores</span></a
           >
+          <a href="formandos.html" class="menu-item"
+            ><i class="ph ph-graduation-cap"></i
+            ><span class="link-text">Gestão Formandos</span></a
+          >
           <a href="agenda.html" class="menu-item"
             ><i class="ph ph-calendar-check"></i
             ><span class="link-text">Agenda</span></a
+          >
+          <a href="pedidosAcesso.html" class="menu-item"
+            ><i class="ph ph-user-plus"></i
+            ><span class="link-text">Pedidos de Acesso</span></a
           >
         </nav>
 
@@ -115,6 +124,7 @@
                   <input
                     type="text"
                     id="pesquisa-turmas"
+                    aria-label="Pesquisar turmas"
                     placeholder="Pesquisar turma..."
                     style="
                       padding: 8px 10px 8px 30px;
@@ -126,12 +136,15 @@
                   />
                 </div>
 
-                <select id="filtro-turmas" class="badge gray">
-                  <option value="em-curso">0 EM CURSO</option>
-                  <option value="planeada">0 PLANEADAS</option>
-                  <option value="concluida">0 CONCLUÍDAS</option>
-                  <option value="arquivada">0 ARQUIVADAS</option>
-                  <option value="cancelada">0 CANCELADAS</option>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #475569; white-space: nowrap;">
+                    <input type="checkbox" id="mostrar-turmas-desativadas">
+                    Mostrar desativadas
+                </label>
+
+                <select id="filtro-turmas" aria-label="Filtrar por estado" class="badge gray">
+                  <option value="em-curso">EM CURSO (0)</option>
+                  <option value="planeada">PLANEADAS (0)</option>
+                  <option value="concluida">CONCLUÍDAS (0)</option>
                   <option value="todas" selected>TODOS (0)</option>
                 </select>
               </div>
@@ -159,12 +172,12 @@
         <div class="modal-content section-card">
           <div class="card-header-simple">
             <h3>Criar Nova Turma</h3>
-            <button class="btn-icon" id="fechar-modal">
+            <button class="btn-icon" id="fechar-modal" aria-label="Fechar">
               <i class="ph ph-x"></i>
             </button>
           </div>
 
-          <form id="form-nova-turma">
+          <form id="form-nova-turma" action="javascript:void(0);">
             <div class="input-group">
               <label for="new-codigo">Código / Turma</label>
               <input
@@ -203,10 +216,21 @@
                 <option value="CONCLUIDA">CONCLUÍDA</option>
               </select>
             </div>
+            <div class="input-group">
+              <label for="new-id-curso-iefp">ID de Curso IEFP (opcional)</label>
+              <input type="text" id="new-id-curso-iefp" placeholder="Ex: 25.0422" />
+            </div>
+            <div class="input-group">
+              <label for="new-mediador">Mediador Responsável (opcional)</label>
+              <select id="new-mediador">
+                <option value="">— Sem mediador —</option>
+              </select>
+            </div>
             <button type="submit" class="btn-login">Gravar Turma</button>
           </form>
         </div>
       </div>
+
     </div>
 
     <footer>

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const entregasController = require("../controllers/entregas.controller");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireRole } = require("../middleware/auth");
 const { upload } = require("../middleware/upload");
 
 const router = Router();
@@ -35,7 +35,7 @@ router.use(requireAuth);
  *     responses:
  *       201: { description: Entrega criada, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Entrega' } } } } } }
  */
-router.get("/", entregasController.listar);
+router.get("/", requireRole("COORDENADOR"), entregasController.listar);
 
 /**
  * @openapi
@@ -48,7 +48,7 @@ router.get("/", entregasController.listar);
  *       200: { description: Lista de entregas do formador, content: { application/json: { schema: { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/Entrega' } } } } } } }
  */
 router.get("/minhas", entregasController.listarMinhas);
-router.post("/", entregasController.criar);
+router.post("/", requireRole("COORDENADOR"), entregasController.criar);
 
 /**
  * @openapi
@@ -61,15 +61,28 @@ router.post("/", entregasController.criar);
  *     responses:
  *       200: { description: Entrega atualizada }
  *   delete:
- *     summary: Apaga um aviso
+ *     summary: Desativa um aviso (soft delete — mantém o histórico de submissões)
  *     tags: [Entregas]
  *     security: [{ bearerAuth: [] }]
  *     parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
  *     responses:
- *       204: { description: Entrega apagada }
+ *       204: { description: Entrega desativada }
  */
-router.patch("/:id", entregasController.atualizar);
-router.delete("/:id", entregasController.apagar);
+router.patch("/:id", requireRole("COORDENADOR"), entregasController.atualizar);
+router.delete("/:id", requireRole("COORDENADOR"), entregasController.apagar);
+
+/**
+ * @openapi
+ * /entregas/{id}/reativar:
+ *   patch:
+ *     summary: Reativa uma entrega desativada
+ *     tags: [Entregas]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+ *     responses:
+ *       200: { description: Entrega reativada, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Entrega' } } } } } }
+ */
+router.patch("/:id/reativar", requireRole("COORDENADOR"), entregasController.reativar);
 
 /**
  * @openapi
@@ -82,7 +95,7 @@ router.delete("/:id", entregasController.apagar);
  *     responses:
  *       200: { description: Entrega marcada como entregue (submissaoTipo=COORDENACAO) }
  */
-router.patch("/:id/marcar-entregue", entregasController.marcarComoEntregue);
+router.patch("/:id/marcar-entregue", requireRole("COORDENADOR"), entregasController.marcarComoEntregue);
 
 /**
  * @openapi
@@ -123,5 +136,20 @@ router.post("/:id/submeter", upload.single("ficheiro"), entregasController.subme
  *       403: { description: Não és o formador desta entrega, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  */
 router.post("/:id/excecao", entregasController.excecao);
+
+/**
+ * @openapi
+ * /entregas/{id}/ficheiro:
+ *   get:
+ *     summary: Descarrega o ficheiro submetido (só o formador dono ou a coordenação)
+ *     tags: [Entregas]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+ *     responses:
+ *       200: { description: O ficheiro }
+ *       403: { description: Não és o formador desta entrega, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+ *       404: { description: Sem ficheiro submetido, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+ */
+router.get("/:id/ficheiro", entregasController.ficheiro);
 
 module.exports = router;

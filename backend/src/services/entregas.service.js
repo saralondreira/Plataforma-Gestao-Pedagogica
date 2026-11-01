@@ -6,16 +6,17 @@ const INCLUDE_RELACOES = {
   turma: { select: { id: true, codigo: true, designacao: true } },
 };
 
-async function listar() {
+async function listar({ incluirInativos = false } = {}) {
   return prisma.entrega.findMany({
+    where: incluirInativos ? {} : { ativo: true },
     include: INCLUDE_RELACOES,
     orderBy: { dataLimite: "asc" },
   });
 }
 
-async function listarPorFormador(formadorId) {
+async function listarPorFormador(formadorId, { incluirInativos = false } = {}) {
   return prisma.entrega.findMany({
-    where: { formadorId },
+    where: { formadorId, ...(incluirInativos ? {} : { ativo: true }) },
     include: INCLUDE_RELACOES,
     orderBy: { dataLimite: "asc" },
   });
@@ -30,9 +31,16 @@ async function atualizar(id, dados) {
   return prisma.entrega.update({ where: { id }, data: dados, include: INCLUDE_RELACOES });
 }
 
+// Antes fazia DELETE definitivo. Agora só marca a entrega como inativa —
+// mantém o histórico de submissões já feitas. Ver reativar() para desfazer.
 async function apagar(id) {
   await obterOuFalhar(id);
-  await prisma.entrega.delete({ where: { id } });
+  await prisma.entrega.update({ where: { id }, data: { ativo: false } });
+}
+
+async function reativar(id) {
+  await obterOuFalhar(id);
+  return prisma.entrega.update({ where: { id }, data: { ativo: true }, include: INCLUDE_RELACOES });
 }
 
 async function marcarComoEntregue(id, submissao) {
@@ -47,9 +55,9 @@ async function marcarComoEntregue(id, submissao) {
 async function obterOuFalhar(id) {
   const entrega = await prisma.entrega.findUnique({ where: { id } });
   if (!entrega) {
-    throw new AppError(404, "NOT_FOUND", "Entrega não encontrada.");
+    throw new AppError(404, "ENTREGA_NOT_FOUND", "Entrega não encontrada.");
   }
   return entrega;
 }
 
-module.exports = { listar, listarPorFormador, criar, atualizar, apagar, marcarComoEntregue, obterOuFalhar };
+module.exports = { listar, listarPorFormador, criar, atualizar, apagar, reativar, marcarComoEntregue, obterOuFalhar };

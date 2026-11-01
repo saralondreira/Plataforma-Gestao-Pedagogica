@@ -13,6 +13,19 @@ function errorHandler(err, req, res, next) {
     });
   }
 
+  if (err.name === "MulterError") {
+    const mensagem = err.code === "LIMIT_FILE_SIZE" ? "O ficheiro é demasiado grande (máximo 10 MB)." : "Erro ao carregar o ficheiro.";
+    return res.status(422).json({ error: { code: "UPLOAD_INVALIDO", message: mensagem, statusCode: 422 } });
+  }
+
+  // Corpo JSON inválido ou demasiado grande (erros do express.json): problema do pedido, não do servidor.
+  if (err.type === "entity.parse.failed") {
+    return res.status(400).json({ error: { code: "JSON_INVALIDO", message: "O corpo do pedido não é JSON válido.", statusCode: 400 } });
+  }
+  if (err.type === "entity.too.large") {
+    return res.status(413).json({ error: { code: "CORPO_DEMASIADO_GRANDE", message: "O corpo do pedido é demasiado grande.", statusCode: 413 } });
+  }
+
   if (err instanceof ZodError) {
     return res.status(422).json({
       error: {

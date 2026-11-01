@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horas por Formador</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/relatorioHoras.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="COORDENADOR">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="login.html"
+            data-home-link
+            style="text-decoration: none; display: flex; align-items: center; gap: 12px"
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu" data-auto></nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-role"></span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1 id="titulo-pagina">Horas por Formador</h1>
+                <p class="section-subtitle" id="subtitulo-pagina">Horas de aula dadas e por dar, por formador e por UC.</p>
+              </div>
+              <button class="btn-login" id="btn-exportar-horas" type="button" style="width: auto">
+                <i class="ph ph-download-simple"></i> Exportar (CSV)
+              </button>
+            </div>
+
+            <div class="section-card" style="margin-bottom: 20px">
+              <div style="display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap">
+                <div class="input-group" style="margin-bottom: 0"><label for="filtro-de">De</label><input type="date" id="filtro-de" /></div>
+                <div class="input-group" style="margin-bottom: 0"><label for="filtro-ate">Até</label><input type="date" id="filtro-ate" /></div>
+                <button class="btn-card" id="btn-limpar-filtro" type="button">Sem filtro</button>
+              </div>
+            </div>
+
+            <div class="section-card table-standard">
+              <div class="card-header-simple"><h3>Resumo</h3></div>
+              <div class="table-container-clean" style="height: auto">
+                <table class="status-table" id="tabela-horas">
+                  <thead><tr><th>Formador</th><th>Horas dadas</th><th>Por dar</th><th>Total</th><th>Blocos livres</th><th>Bloqueados</th><th></th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

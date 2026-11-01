@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A Minha Agenda - Gestão Pedagógica</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/agendaFormador.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="FORMADOR">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="dashboardFormador.html"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu">
+          <a href="dashboardFormador.html" class="menu-item"
+            ><i class="ph ph-clipboard-text"></i
+            ><span class="link-text">Os Meus Documentos</span></a
+          >
+          <a href="agendaFormador.html" class="menu-item active"
+            ><i class="ph ph-calendar-check"></i
+            ><span class="link-text">A Minha Agenda</span></a
+          >
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="dashboardFormador.html" style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="dashboardFormador.html" style="text-decoration: none">
+                <span class="user-role">Formador(a)</span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1>A Minha Agenda</h1>
+                <p class="section-subtitle">
+                  Marca os teus blocos de 1h livres — a coordenação só pode agendar aulas dentro desses blocos.
+                </p>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="agenda-nav">
+                <button class="btn-icon" id="btn-semana-anterior" title="Semana anterior">
+                  <i class="ph ph-caret-left"></i>
+                </button>
+                <span class="agenda-semana-label" id="agenda-semana-label">—</span>
+                <button class="btn-icon" id="btn-semana-seguinte" title="Semana seguinte">
+                  <i class="ph ph-caret-right"></i>
+                </button>
+                <button class="btn-card" id="btn-semana-hoje" style="margin-left: auto">Hoje</button>
+              </div>
+
+              <div class="agenda-grid-wrap">
+                <div class="agenda-grid" id="agenda-grid"></div>
+              </div>
+
+              <div class="agenda-legenda">
+                <span><span class="ponto" style="background:#f0fdf4;border:1px solid #bbf7d0;"></span>Livre</span>
+                <span><span class="ponto" style="background:#fef2f2;border:1px solid #fecaca;"></span>Bloqueado</span>
+                <span><span class="ponto" style="background:#eff6ff;border:1px solid #bfdbfe;"></span>Aula agendada (não editável aqui)</span>
+                <span><span class="ponto" style="background:#fff;border:1px solid #e2e8f0;"></span>Por definir</span>
+              </div>
+              <p class="section-subtitle" style="margin-top: 10px;">
+                Clica numa célula para alternar: por definir → Livre → Bloqueado → por definir outra vez.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

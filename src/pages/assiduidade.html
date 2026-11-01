@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assiduidade</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/assiduidade.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="COORDENADOR,FORMADOR,FORMANDO">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="login.html"
+            data-home-link
+            style="text-decoration: none; display: flex; align-items: center; gap: 12px"
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu" data-auto></nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-role"></span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1 id="titulo-pagina">Assiduidade</h1>
+                <p class="section-subtitle" id="subtitulo-pagina"></p>
+              </div>
+            </div>
+
+            <div id="vista-formando" style="display: none">
+              <div id="resumo-assiduidade" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px"></div>
+            <div class="section-card table-standard">
+              <div class="card-header-simple"><h3>As minhas aulas</h3></div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-minhas-aulas">
+                  <thead><tr><th>Data</th><th>Hora</th><th>UC</th><th>Presença</th><th>Justificação</th><th>Ação</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+            <div id="vista-presencas" style="display: none">
+            <div class="section-card" style="margin-bottom: 20px">
+              <div class="input-group">
+                <label for="select-turma-uc">Turma / UC</label>
+                <select id="select-turma-uc"><option value="">— Seleciona —</option></select>
+              </div>
+            </div>
+            <div class="section-card" style="margin-bottom: 20px">
+              <div class="input-group">
+                <label for="select-aula">Aula (só aulas já dadas)</label>
+                <select id="select-aula" disabled><option value="">— Seleciona primeiro a UC —</option></select>
+              </div>
+            </div>
+            <div class="section-card table-standard" id="cartao-presencas" style="display: none">
+              <div class="card-header-simple"><h3 id="titulo-presencas">Presenças</h3></div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-presencas">
+                  <thead><tr><th>Formando</th><th>Presença</th><th>Justificação</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div style="padding: 15px"><button class="btn-login" id="btn-guardar-presencas" type="button" style="width: auto; display: inline-block">Guardar presenças</button></div>
+            </div>
+            </div>
+            <div id="vista-justificacoes" style="display: none">
+            <div class="section-card table-standard">
+              <div class="card-header-simple"><h3>Justificações de faltas</h3></div>
+              <div style="padding: 0 15px 10px"><label style="font-size: 0.85rem; color: #475569">
+                <input type="checkbox" id="mostrar-decididas" /> Mostrar também as já decididas</label></div><div class="table-container-clean">
+                <table class="status-table" id="tabela-justificacoes">
+                  <thead><tr><th>Formando</th><th>Aula</th><th>UC</th><th>Motivo</th><th>Anexo</th><th>Estado</th><th>Ação</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="modal-justificar" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3 id="modal-justificar-titulo">Justificar falta</h3>
+            <button class="btn-icon" id="fechar-modal-justificar" type="button" aria-label="Fechar"><i class="ph ph-x"></i></button>
+          </div>
+          <form id="form-justificar" action="javascript:void(0);">
+            <p style="color: #64748b; margin-bottom: 15px" id="justificar-aula-info"></p>
+            <div class="input-group">
+              <label for="justificar-motivo">Motivo</label>
+              <textarea id="justificar-motivo" rows="4" required minlength="3" maxlength="2000"></textarea>
+            </div>
+            <div class="input-group">
+              <label for="justificar-anexo">Anexo (opcional — pdf, doc, docx, png, jpg, txt, zip; máx. 10 MB)</label>
+              <input type="file" id="justificar-anexo" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.txt,.zip" />
+            </div>
+            <button type="submit" class="btn-login">Submeter justificação</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

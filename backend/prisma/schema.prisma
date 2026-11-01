@@ -10,6 +10,7 @@ datasource db {
 enum Role {
   COORDENADOR
   FORMADOR
+  FORMANDO
 }
 
 enum EstadoTurma {
@@ -31,8 +32,36 @@ enum SubmissaoTipo {
 
 enum EstadoPedidoAcesso {
   PENDENTE
+  A_AGUARDAR_RH
   APROVADO
   REJEITADO
+}
+
+enum EstadoDisponibilidade {
+  LIVRE
+  BLOQUEADO
+}
+
+enum Modalidade {
+  PRESENCIAL
+  ONLINE
+}
+
+enum EstadoPresenca {
+  PRESENTE
+  AUSENTE
+}
+
+enum EstadoJustificacao {
+  PENDENTE
+  ACEITE
+  REJEITADA
+}
+
+enum DestinoMensagem {
+  COORDENACAO
+  FORMADOR
+  ASSISTENTE_SOCIAL
 }
 
 // Unifica identidade de login + perfil. Quando role = FORMADOR, os campos
@@ -50,10 +79,38 @@ model User {
   turmasQtd      Int?
   ucsQtd         Int?
   estadoFormador EstadoFormador?
+  ativo          Boolean         @default(true)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
-  entregas Entrega[] @relation("EntregasDoFormador")
+  entregas           Entrega[]         @relation("EntregasDoFormador")
+  turmaUcsLecionadas TurmaUc[]         @relation("UCsDoFormador")
+  disponibilidades   Disponibilidade[] @relation("DisponibilidadesDoFormador")
+  turmasComoMediador Turma[]           @relation("MediadorDaTurma")
+
+  // Funcionalidades de formando/formador (2026-10-20): notas, assiduidade,
+  // trabalhos e mensagens. Ver PLANEAMENTO.md.
+  notasRecebidas       Nota[]              @relation("NotasDoFormando")
+  notasLancadas        Nota[]              @relation("NotasLancadas")
+  notasAlteradas       NotaHistorico[]     @relation("NotasAlteradas")
+  sumariosEscritos     Sumario[]           @relation("SumariosEscritos")
+  sumariosValidados    Sumario[]           @relation("SumariosValidados")
+  documentosEnviados   DocumentoUc[]       @relation("DocumentosEnviados")
+  comunicadosEscritos  Comunicado[]        @relation("ComunicadosEscritos")
+  notasHistoricoDoFormando NotaHistorico[] @relation("HistoricoNotasDoFormando")
+  presencas            Presenca[]          @relation("PresencasDoFormando")
+  justificacoes        Justificacao[]      @relation("JustificacoesDoFormando")
+  justificacoesDecididas Justificacao[]    @relation("JustificacoesDecididas")
+  trabalhosCriados     Trabalho[]          @relation("TrabalhosCriados")
+  submissoesTrabalho   SubmissaoTrabalho[] @relation("SubmissoesDoFormando")
+  mensagensEnviadas    Mensagem[]          @relation("MensagensEnviadas")
+  mensagensRecebidas   Mensagem[]          @relation("MensagensRecebidas")
+
+  // Só usado quando role = FORMANDO — a turma em que está inscrito. Um
+  // formando está, no máximo, numa turma de cada vez (ver PLANEAMENTO.md,
+  // "Dashboard do Formando", 2026-09-09).
+  turmaId Int?
+  turma   Turma? @relation("FormandosDaTurma", fields: [turmaId], references: [id])
 
   @@map("users")
 }
@@ -65,41 +122,347 @@ model Turma {
   dataInicio   DateTime
   numFormandos Int         @default(20)
   estado       EstadoTurma @default(PLANEADA)
+  ativo        Boolean     @default(true)
+  idCursoIEFP  String?
+  mediadorId   Int?
+  mediador     User?       @relation("MediadorDaTurma", fields: [mediadorId], references: [id])
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
-  entregas Entrega[]
+  entregas         Entrega[]
+  comunicados      Comunicado[]
+  turmaUcs         TurmaUc[]
+  formandos        User[]         @relation("FormandosDaTurma")
+  pedidosDecididos PedidoAcesso[] @relation("PedidosDecididosParaTurma")
 
   @@map("turmas")
 }
 
 model Entrega {
-  id                  Int            @id @default(autoincrement())
-  formadorId          Int
-  formador            User           @relation("EntregasDoFormador", fields: [formadorId], references: [id])
-  turmaId             Int
-  turma               Turma          @relation(fields: [turmaId], references: [id])
-  documento           String
-  dataLimite          DateTime
-  entregue            Boolean        @default(false)
-  submissaoTipo       SubmissaoTipo?
+  id                   Int            @id @default(autoincrement())
+  formadorId           Int
+  formador             User           @relation("EntregasDoFormador", fields: [formadorId], references: [id])
+  turmaId              Int
+  turma                Turma          @relation(fields: [turmaId], references: [id])
+  documento            String
+  dataLimite           DateTime
+  entregue             Boolean        @default(false)
+  submissaoTipo        SubmissaoTipo?
   submissaoFicheiroUrl String?
-  submissaoNota        String?       @db.Text
-  submissaoData         DateTime?
-  createdAt            DateTime      @default(now())
-  updatedAt             DateTime     @updatedAt
+  submissaoNota        String?        @db.Text
+  submissaoData        DateTime?
+  ativo                Boolean        @default(true)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
 
   @@map("entregas")
 }
 
 model PedidoAcesso {
-  id        Int                 @id @default(autoincrement())
+  id        Int                @id @default(autoincrement())
   nome      String
   email     String
   cargo     String
-  motivo    String              @db.Text
-  estado    EstadoPedidoAcesso  @default(PENDENTE)
-  createdAt DateTime            @default(now())
+  motivo    String             @db.Text
+  estado    EstadoPedidoAcesso @default(PENDENTE)
+  createdAt DateTime           @default(now())
+
+  // Preenchidos quando a coordenação aprova (estado passa a A_AGUARDAR_RH):
+  // a decisão de papel/turma já está tomada, só falta o RH criar a conta
+  // fora da plataforma e confirmar aqui. Ver PLANEAMENTO.md, "Pedidos de
+  // Acesso via RH" (2026-09-10).
+  roleDecidido    Role?
+  turmaIdDecidido Int?
+  turmaDecidida   Turma? @relation("PedidosDecididosParaTurma", fields: [turmaIdDecidido], references: [id])
 
   @@map("pedidos_acesso")
+}
+
+model Uc {
+  id           Int      @id @default(autoincrement())
+  abreviatura  String   @unique
+  nome         String
+  cargaHoraria Int
+  ativo        Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  turmaUcs TurmaUc[]
+
+  @@map("ucs")
+}
+
+// Associação de uma UC do catálogo a uma turma concreta: cada turma que usa
+// a UC define aqui o seu próprio formador (a mesma UC pode ser lecionada por
+// formadores diferentes em turmas diferentes). A carga horária é sempre a
+// do catálogo (Uc.cargaHoraria) — não varia por turma.
+model TurmaUc {
+  id         Int      @id @default(autoincrement())
+  turmaId    Int
+  turma      Turma    @relation(fields: [turmaId], references: [id])
+  ucId       Int
+  uc         Uc       @relation(fields: [ucId], references: [id])
+  formadorId Int
+  formador   User     @relation("UCsDoFormador", fields: [formadorId], references: [id])
+  ativo      Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  aulas     Aula[]
+  notas     Nota[]
+  notasHistorico NotaHistorico[]
+  trabalhos Trabalho[]
+  documentos DocumentoUc[]
+
+  @@unique([turmaId, ucId])
+  @@map("turma_ucs")
+}
+
+model Disponibilidade {
+  id         Int                   @id @default(autoincrement())
+  formadorId Int
+  formador   User                  @relation("DisponibilidadesDoFormador", fields: [formadorId], references: [id])
+  data       DateTime              @db.Date
+  horaInicio Int
+  estado     EstadoDisponibilidade @default(LIVRE)
+  motivo     String?
+  ativo      Boolean               @default(true)
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+
+  aula Aula?
+
+  @@unique([formadorId, data, horaInicio])
+  @@map("disponibilidades")
+}
+
+model Aula {
+  id                Int             @id @default(autoincrement())
+  turmaUcId         Int
+  turmaUc           TurmaUc         @relation(fields: [turmaUcId], references: [id])
+  disponibilidadeId Int             @unique
+  disponibilidade   Disponibilidade @relation(fields: [disponibilidadeId], references: [id])
+  data              DateTime        @db.Date
+  horaInicio        Int
+  duracaoHoras      Int             @default(1)
+  modalidade        Modalidade
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  presencas     Presenca[]
+  justificacoes Justificacao[]
+  sumario       Sumario?
+
+  @@map("aulas")
+}
+
+// Nota final de um formando numa UC de uma turma (escala 0–20). Uma por
+// formando/UC — lançar outra vez atualiza.
+model Nota {
+  id           Int      @id @default(autoincrement())
+  turmaUcId    Int
+  turmaUc      TurmaUc  @relation(fields: [turmaUcId], references: [id])
+  formandoId   Int
+  formando     User     @relation("NotasDoFormando", fields: [formandoId], references: [id])
+  valor        Float
+  observacoes  String?  @db.Text
+  lancadaPorId Int
+  lancadaPor   User     @relation("NotasLancadas", fields: [lancadaPorId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([turmaUcId, formandoId])
+  @@map("notas")
+}
+
+// Auditoria simples das notas (RGPD): uma linha por lançamento/alteração.
+// valorAnterior é null no primeiro lançamento.
+model NotaHistorico {
+  id                    Int      @id @default(autoincrement())
+  turmaUcId             Int
+  turmaUc               TurmaUc  @relation(fields: [turmaUcId], references: [id])
+  formandoId            Int
+  formando              User     @relation("HistoricoNotasDoFormando", fields: [formandoId], references: [id])
+  valorAnterior         Float?
+  valorNovo             Float
+  observacoesAnteriores String?  @db.Text
+  observacoesNovas      String?  @db.Text
+  alteradaPorId         Int
+  alteradaPor           User     @relation("NotasAlteradas", fields: [alteradaPorId], references: [id])
+  createdAt             DateTime @default(now())
+
+  @@index([turmaUcId, formandoId])
+  @@map("notas_historico")
+}
+
+// Presença de um formando numa aula. "Falta justificada" não é um estado
+// próprio: é AUSENTE com uma Justificacao ACEITE.
+model Presenca {
+  id         Int            @id @default(autoincrement())
+  aulaId     Int
+  aula       Aula           @relation(fields: [aulaId], references: [id])
+  formandoId Int
+  formando   User           @relation("PresencasDoFormando", fields: [formandoId], references: [id])
+  estado     EstadoPresenca
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@unique([aulaId, formandoId])
+  @@map("presencas")
+}
+
+model Justificacao {
+  id            Int                @id @default(autoincrement())
+  aulaId        Int
+  aula          Aula               @relation(fields: [aulaId], references: [id])
+  formandoId    Int
+  formando      User               @relation("JustificacoesDoFormando", fields: [formandoId], references: [id])
+  motivo        String             @db.Text
+  anexoUrl      String?
+  estado        EstadoJustificacao @default(PENDENTE)
+  decididaPorId Int?
+  decididaPor   User?              @relation("JustificacoesDecididas", fields: [decididaPorId], references: [id])
+  decididaEm    DateTime?
+  notaDecisao   String?            @db.Text
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@unique([aulaId, formandoId])
+  @@map("justificacoes")
+}
+
+model Trabalho {
+  id          Int      @id @default(autoincrement())
+  turmaUcId   Int
+  turmaUc     TurmaUc  @relation(fields: [turmaUcId], references: [id])
+  titulo      String
+  descricao   String   @db.Text
+  dataLimite  DateTime
+  ativo       Boolean  @default(true)
+  criadoPorId Int
+  criadoPor   User     @relation("TrabalhosCriados", fields: [criadoPorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  submissoes SubmissaoTrabalho[]
+
+  @@map("trabalhos")
+}
+
+// Uma submissão por formando/trabalho: reenviar (até ao prazo) substitui o
+// ficheiro — updatedAt guarda a data do último envio.
+model SubmissaoTrabalho {
+  id         Int      @id @default(autoincrement())
+  trabalhoId Int
+  trabalho   Trabalho @relation(fields: [trabalhoId], references: [id])
+  formandoId Int
+  formando   User     @relation("SubmissoesDoFormando", fields: [formandoId], references: [id])
+  ficheiroUrl String
+  comentario String?  @db.Text
+  avaliacao  Float?
+  feedback   String?  @db.Text
+  // Data do envio/reenvio — separada de updatedAt, que também muda quando o
+  // formador avalia (senão a "data de entrega" passava a ser a da avaliação).
+  enviadaEm  DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([trabalhoId, formandoId])
+  @@map("submissoes_trabalho")
+}
+
+// Comunicação interna. ASSISTENTE_SOCIAL não é um papel da plataforma: as
+// mensagens com esse destino são lidas e respondidas pela coordenação.
+model Mensagem {
+  id             Int             @id @default(autoincrement())
+  remetenteId    Int
+  remetente      User            @relation("MensagensEnviadas", fields: [remetenteId], references: [id])
+  destino        DestinoMensagem
+  destinatarioId Int?
+  destinatario   User?           @relation("MensagensRecebidas", fields: [destinatarioId], references: [id])
+  assunto        String
+  corpo          String          @db.Text
+  lida           Boolean         @default(false)
+  resposta       String?         @db.Text
+  respondidaEm   DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("mensagens")
+}
+
+
+enum EstadoSumario {
+  SUBMETIDO
+  VALIDADO
+  REJEITADO
+}
+
+// Sumário de uma aula: escrito pelo formador responsável depois (ou no dia) da
+// aula e validado pelo mediador da turma (ou pela coordenação). Uma aula tem no
+// máximo um sumário; se for rejeitado, o formador corrige-o e volta a submeter.
+model Sumario {
+  id             Int           @id @default(autoincrement())
+  aulaId         Int           @unique
+  aula           Aula          @relation(fields: [aulaId], references: [id])
+  texto          String        @db.Text
+  estado         EstadoSumario @default(SUBMETIDO)
+  escritoPorId   Int
+  escritoPor     User          @relation("SumariosEscritos", fields: [escritoPorId], references: [id])
+  validadoPorId  Int?
+  validadoPor    User?         @relation("SumariosValidados", fields: [validadoPorId], references: [id])
+  validadoEm     DateTime?
+  notaValidacao  String?       @db.Text
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([estado])
+  @@map("sumarios")
+}
+
+enum CategoriaDocumento {
+  MATERIAL
+  PLANO
+  AVALIACAO
+  OUTRO
+}
+
+// Repositório de documentos de uma UC numa turma (substitui os CDs do estudo
+// de caso). Cada upload é uma linha nova — nunca se substitui um ficheiro:
+// apagar só marca ativo=false, e o histórico mostra tudo. O ficheiro em disco
+// tem nome interno; o nome "oficial" (nomePadrao) é IDCurso_UC_Data[_vN].ext.
+model DocumentoUc {
+  id           Int                @id @default(autoincrement())
+  turmaUcId    Int
+  turmaUc      TurmaUc            @relation(fields: [turmaUcId], references: [id])
+  categoria    CategoriaDocumento @default(MATERIAL)
+  nomePadrao   String
+  nomeOriginal String
+  ficheiro     String
+  tamanho      Int
+  enviadoPorId Int
+  enviadoPor   User               @relation("DocumentosEnviados", fields: [enviadoPorId], references: [id])
+  ativo        Boolean            @default(true)
+  removidoEm   DateTime?
+  createdAt    DateTime           @default(now())
+
+  @@index([turmaUcId, ativo])
+  @@map("documentos_uc")
+}
+
+// Aviso dirigido a todos os formandos de uma turma. Escrevem-no o mediador da
+// turma ou a coordenação; os formandos só leem. Remover é desativar (ativo=false).
+model Comunicado {
+  id        Int      @id @default(autoincrement())
+  turmaId   Int
+  turma     Turma    @relation(fields: [turmaId], references: [id])
+  autorId   Int
+  autor     User     @relation("ComunicadosEscritos", fields: [autorId], references: [id])
+  assunto   String
+  corpo     String   @db.Text
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([turmaId, ativo])
+  @@map("comunicados")
 }

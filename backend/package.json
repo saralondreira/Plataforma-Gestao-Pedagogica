@@ -9,7 +9,10 @@
     "start": "node src/server.js",
     "test": "jest",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "criar-coordenador": "node scripts/criar-coordenador.js",
+    "seed": "node scripts/seed-demo.js"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
@@ -19,6 +22,7 @@
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.2.0",
+    "nodemailer": "^9.1.1",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"

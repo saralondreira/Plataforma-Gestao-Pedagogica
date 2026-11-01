@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UCs da Turma</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/turmaUcs.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="COORDENADOR">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="dashboardCoord.html"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu">
+          <a href="dashboardCoord.html" class="menu-item"
+            ><i class="ph ph-chart-pie-slice"></i
+            ><span class="link-text">Visão Global</span></a
+          >
+          <a href="turmas.html" class="menu-item active"
+            ><i class="ph ph-chalkboard-teacher"></i
+            ><span class="link-text">Gestão Turmas</span></a
+          >
+          <a href="formadores.html" class="menu-item"
+            ><i class="ph ph-users-three"></i
+            ><span class="link-text">Gestão Formadores</span></a
+          >
+          <a href="agenda.html" class="menu-item"
+            ><i class="ph ph-calendar-check"></i
+            ><span class="link-text">Agenda</span></a
+          >
+          <a href="pedidosAcesso.html" class="menu-item"
+            ><i class="ph ph-user-plus"></i
+            ><span class="link-text">Pedidos de Acesso</span></a
+          >
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-role">Coordenadora</span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <a
+                  href="turmas.html"
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    text-decoration: none;
+                    color: #2563eb;
+                    font-size: 14px;
+                    font-weight: 600;
+                    margin-bottom: 10px;
+                  "
+                  ><i class="ph ph-arrow-left"></i> Voltar a Gestão Turmas</a
+                >
+                <h1 id="titulo-turma">UCs da turma</h1>
+                <p class="section-subtitle" id="subtitulo-turma">A carregar...</p>
+              </div>
+            </div>
+
+            <div class="section-card table-standard" style="margin-bottom: 20px;">
+              <div class="card-header-simple">
+                <h3 style="margin-right: auto;">UCs associadas a esta turma</h3>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #475569; white-space: nowrap;">
+                    <input type="checkbox" id="mostrar-tuc-desativadas">
+                    Mostrar desativadas
+                </label>
+              </div>
+              <div class="table-container-clean" style="height: auto; max-height: 420px;">
+                <table class="status-table" id="tabela-turma-ucs">
+                  <thead>
+                    <tr>
+                      <th>Abrv.</th>
+                      <th>Nome</th>
+                      <th>Carga</th>
+                      <th>Formador</th>
+                      <th>Agendadas</th>
+                      <th>Por agendar</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section-card" style="margin-bottom: 20px;">
+              <div class="card-header-simple">
+                <h3 style="margin-right: auto">Copiar UCs de outra turma</h3>
+              </div>
+              <p style="color: #64748b; font-size: 13px; margin-bottom: 12px;">
+                Associa a esta turma as UCs (e formadores) de outra turma. Não copia aulas, notas nem trabalhos.
+              </p>
+              <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+                <div class="input-group" style="margin-bottom: 0; min-width: 260px;">
+                  <label for="copiar-origem">Copiar a partir de</label>
+                  <select id="copiar-origem"><option value="">— Seleciona —</option></select>
+                </div>
+                <button type="button" class="btn-login" id="btn-copiar-ucs" style="width: auto; padding: 10px 24px;">Copiar UCs</button>
+              </div>
+            </div>
+
+            <div class="section-card" style="margin-bottom: 20px;">
+              <div class="card-header-simple">
+                <h3 style="margin-right: auto">Associar UC a esta turma</h3>
+                <button type="button" class="btn-card" id="btn-toggle-nova-uc-catalogo">
+                  <i class="ph ph-plus-circle"></i> Nova UC no catálogo
+                </button>
+              </div>
+              <form id="form-associar-uc" action="javascript:void(0);">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
+                  <div class="input-group">
+                    <label for="tuc-uc-catalogo">UC do catálogo</label>
+                    <select id="tuc-uc-catalogo" required>
+                      <option value="">— Seleciona —</option>
+                    </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="tuc-formador">Formador</label>
+                    <select id="tuc-formador" required>
+                      <option value="">— Seleciona —</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" class="btn-login" style="display: inline-block; width: auto; padding: 10px 24px;">Associar UC</button>
+              </form>
+            </div>
+
+            <div class="section-card" id="bloco-nova-uc-catalogo" style="display: none;">
+              <div class="card-header-simple">
+                <h3>Nova UC no catálogo</h3>
+              </div>
+              <form id="form-nova-uc-catalogo" action="javascript:void(0);">
+                <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px">
+                  <div class="input-group">
+                    <label for="catalogo-abreviatura">Abreviatura</label>
+                    <input type="text" id="catalogo-abreviatura" placeholder="Ex: UC0004" required />
+                  </div>
+                  <div class="input-group">
+                    <label for="catalogo-nome">Nome</label>
+                    <input type="text" id="catalogo-nome" placeholder="Ex: Comunicar e Negociar" required />
+                  </div>
+                  <div class="input-group">
+                    <label for="catalogo-carga-horaria">Carga (h)</label>
+                    <input type="number" id="catalogo-carga-horaria" min="1" value="25" required />
+                  </div>
+                </div>
+                <button type="submit" class="btn-login" style="display: inline-block; width: auto; padding: 10px 24px;">Criar UC no catálogo</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

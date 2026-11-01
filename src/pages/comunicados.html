@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comunicados</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/comunicados.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="FORMADOR,COORDENADOR,FORMANDO">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="login.html"
+            data-home-link
+            style="text-decoration: none; display: flex; align-items: center; gap: 12px"
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu" data-auto></nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-role"></span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1>Comunicados</h1>
+                <p class="section-subtitle" id="subtitulo-pagina"></p>
+              </div>
+            </div>
+            <div id="comunicados-envio" class="section-card" style="height: auto; margin-bottom: 20px; display: none">
+              <div class="card-header-simple"><h3>Novo comunicado</h3></div>
+              <p id="sem-turmas" style="display: none; color: #64748b">Não és mediador de nenhuma turma — só o mediador (ou a coordenação) envia comunicados.</p>
+              <form id="form-comunicado">
+                <div class="input-group">
+                  <label for="com-turma">Turma</label>
+                  <select id="com-turma" required></select>
+                </div>
+                <div class="input-group">
+                  <label for="com-assunto">Assunto</label>
+                  <input type="text" id="com-assunto" minlength="3" maxlength="150" required />
+                </div>
+                <div class="input-group">
+                  <label for="com-corpo">Mensagem</label>
+                  <textarea id="com-corpo" rows="5" minlength="5" maxlength="5000" required></textarea>
+                </div>
+                <button type="submit" class="btn-login" style="width: auto; padding: 10px 18px">Enviar à turma</button>
+                <p style="font-size: 12px; color: #64748b; margin-top: 8px">Os formandos da turma são avisados por email (sem o conteúdo) e leem o comunicado na plataforma.</p>
+              </form>
+            </div>
+            <div id="comunicados-conteudo"></div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

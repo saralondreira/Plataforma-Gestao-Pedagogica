@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const turmasController = require("../controllers/turmas.controller");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireRole } = require("../middleware/auth");
 
 const router = Router();
 
@@ -41,7 +41,20 @@ router.use(requireAuth);
  *       409: { description: Código já em uso, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  */
 router.get("/", turmasController.listar);
-router.post("/", turmasController.criar);
+
+/**
+ * @openapi
+ * /turmas/mediacao:
+ *   get:
+ *     summary: As turmas de que o formador autenticado é mediador responsável, com UCs, horas e assiduidade dos formandos (só leitura)
+ *     tags: [Turmas]
+ *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200: { description: "Uma entrada por turma mediada (lista vazia se não for mediador de nenhuma)" }
+ *       403: { description: Só formadores, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+ */
+router.get("/mediacao", requireRole("FORMADOR"), turmasController.minhasMediacoes);
+router.post("/", requireRole("COORDENADOR"), turmasController.criar);
 
 /**
  * @openapi
@@ -59,15 +72,29 @@ router.post("/", turmasController.criar);
  *       200: { description: Turma atualizada, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Turma' } } } } } }
  *       404: { description: Turma não encontrada, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  *   delete:
- *     summary: Apaga uma turma
+ *     summary: Desativa uma turma (soft delete — mantém entregas e UCs associadas)
  *     tags: [Turmas]
  *     security: [{ bearerAuth: [] }]
  *     parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
  *     responses:
- *       204: { description: Turma apagada }
+ *       204: { description: Turma desativada }
  *       404: { description: Turma não encontrada, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  */
-router.patch("/:id", turmasController.atualizar);
-router.delete("/:id", turmasController.apagar);
+router.patch("/:id", requireRole("COORDENADOR"), turmasController.atualizar);
+router.delete("/:id", requireRole("COORDENADOR"), turmasController.apagar);
+
+/**
+ * @openapi
+ * /turmas/{id}/reativar:
+ *   patch:
+ *     summary: Reativa uma turma desativada
+ *     tags: [Turmas]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+ *     responses:
+ *       200: { description: Turma reativada, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Turma' } } } } } }
+ *       404: { description: Turma não encontrada, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+ */
+router.patch("/:id/reativar", requireRole("COORDENADOR"), turmasController.reativar);
 
 module.exports = router;

@@ -1,92 +1,249 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agenda - Gestão Pedagógica</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda</title>
-
-    <link rel="stylesheet" href="../css/style.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="../js/script.js" defer></script>
-</head>
+    <script type="module" src="../js/agenda.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
 
-<body>
-
+  <body data-roles="COORDENADOR">
     <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="dashboardCoord.html"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu">
+          <a href="dashboardCoord.html" class="menu-item"
+            ><i class="ph ph-chart-pie-slice"></i
+            ><span class="link-text">Visão Global</span></a
+          >
+          <a href="turmas.html" class="menu-item"
+            ><i class="ph ph-chalkboard-teacher"></i
+            ><span class="link-text">Gestão Turmas</span></a
+          >
+          <a href="formadores.html" class="menu-item"
+            ><i class="ph ph-users-three"></i
+            ><span class="link-text">Gestão Formadores</span></a
+          >
+          <a href="formandos.html" class="menu-item"
+            ><i class="ph ph-graduation-cap"></i
+            ><span class="link-text">Gestão Formandos</span></a
+          >
+          <a href="agenda.html" class="menu-item active"
+            ><i class="ph ph-calendar-check"></i
+            ><span class="link-text">Agenda</span></a
+          >
+          <a href="pedidosAcesso.html" class="menu-item"
+            ><i class="ph ph-user-plus"></i
+            ><span class="link-text">Pedidos de Acesso</span></a
+          >
+        </nav>
 
-        <aside class="sidebar hoverable">
-            <div class="sidebar-header">
-                <a href="dashboardCoord.html"
-                    style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
-                    <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
-                    <div class="logo-text">
-                        <h3>Gestão Pedagógica</h3>
-                    </div>
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-role">Coordenadora</span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1>Agenda Pedagógica</h1>
+                <p class="section-subtitle">
+                  Gere as UCs de cada turma e agenda aulas nos blocos livres dos formadores.
+                </p>
+              </div>
+            </div>
+
+            <div class="section-card" style="margin-bottom: 20px;">
+              <div class="card-header-simple">
+                <h3>Turma</h3>
+              </div>
+              <div class="input-group" style="max-width: 420px; margin-bottom: 0; display: flex; align-items: center; gap: 12px;">
+                <label for="select-turma" style="margin-bottom: 0; white-space: nowrap;">Escolhe uma turma</label>
+                <select id="select-turma" style="width: auto; min-width: 220px; flex: 1;">
+                  <option value="">— Seleciona —</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-card table-standard" id="bloco-ucs" style="display: none; margin-bottom: 20px;">
+              <div class="card-header-simple">
+                <h3 style="margin-right: auto">UCs desta turma</h3>
+                <a href="turmas.html" class="btn-card" title="Associar/editar UCs desta turma em Gestão Turmas">
+                  <i class="ph ph-books"></i> Gerir UCs em Gestão Turmas
                 </a>
+              </div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-ucs">
+                  <thead>
+                    <tr>
+                      <th>Abrv.</th>
+                      <th>Nome</th>
+                      <th>Formador</th>
+                      <th>Carga Horária</th>
+                      <th>Agendadas</th>
+                      <th>Por agendar</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
             </div>
-            <nav class="sidebar-menu">
-                <a href="dashboardCoord.html" class="menu-item active"><i class="ph ph-chart-pie-slice"></i><span
-                        class="link-text">Visão Global</span></a>
-                <a href="turmas.html" class="menu-item "><i class="ph ph-chalkboard-teacher"></i><span
-                        class="link-text">Gestão Turmas</span></a>
-                <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span
-                        class="link-text">Gestão Formadores</span></a>
-                <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
-                        class="link-text">Agenda</span></a>
-            </nav>
 
-            <div class="sidebar-footer">
-                <a href="perfil.html" class="menu-item"><i class="ph ph-user"></i><span class="link-text">O Meu
-                        Perfil</span></a>
-                <a href="login.html" class="menu-item logout" title="Sair"><i class="ph ph-sign-out"></i><span
-                        class="link-text">Terminar Sessão</span></a>
+            <div class="section-card" id="bloco-horario" style="display: none; margin-bottom: 20px;">
+              <div class="card-header-simple">
+                <h3>Horário da turma</h3>
+              </div>
+              <div class="agenda-toolbar" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <button class="btn-icon" id="horario-semana-anterior" title="Semana anterior"><i class="ph ph-caret-left"></i></button>
+                <span class="agenda-semana-label" id="horario-semana-label">—</span>
+                <button class="btn-icon" id="horario-semana-seguinte" title="Semana seguinte"><i class="ph ph-caret-right"></i></button>
+                <button class="btn-card" id="horario-semana-hoje" style="margin-left: auto">Hoje</button>
+                <button class="btn-card" id="btn-repetir-semana" title="Repete as aulas da semana visível nas semanas seguintes"><i class="ph ph-repeat"></i> Repetir esta semana…</button>
+                <button class="btn-card" id="btn-exportar-ics-turma" title="Aulas desta turma dos próximos 6 meses"><i class="ph ph-calendar-plus"></i> Exportar (.ics)</button>
+              </div>
+              <div class="agenda-grid-wrap">
+                <div class="agenda-grid" id="horario-grid"></div>
+              </div>
             </div>
-            </aside>
 
-        <main class="main-content">
-
-            <header class="top-bar">
-                <div class="user-profile-header">
-                    <div class="avatar-circle">??</div>
-                    <div class="user-info">
-                        <a href="dashboardCoord.html"
-                            style="text-decoration: none;">
-                            <span class="user-name">Olá, <strong>Utilizador</strong></span>
-                        </a>
-                        <a href="dashboardCoord.html"
-                            style="text-decoration: none;">
-                            <span class="user-role">Coordenadora</span>
-                        </a>
-                    </div>
+            <div class="section-card" id="bloco-ocupacao" style="margin-bottom: 20px;">
+              <div class="card-header-simple">
+                <h3>Ocupação do formador</h3>
+              </div>
+              <div class="input-group" style="max-width: 420px; display: flex; align-items: center; gap: 12px;">
+                <label for="select-formador-ocupacao" style="margin-bottom: 0; white-space: nowrap;">Formador</label>
+                <select id="select-formador-ocupacao" style="width: auto; min-width: 220px; flex: 1;">
+                  <option value="">— Seleciona —</option>
+                </select>
+              </div>
+              <div id="ocupacao-conteudo" style="display: none;">
+                <div class="agenda-toolbar" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                  <button class="btn-icon" id="ocupacao-semana-anterior" title="Semana anterior"><i class="ph ph-caret-left"></i></button>
+                  <span class="agenda-semana-label" id="ocupacao-semana-label">—</span>
+                  <button class="btn-icon" id="ocupacao-semana-seguinte" title="Semana seguinte"><i class="ph ph-caret-right"></i></button>
+                  <button class="btn-card" id="ocupacao-semana-hoje" style="margin-left: auto">Hoje</button>
                 </div>
-            </header>
-
-            <div class="content-area">
-
-                <div class="header-flex">
-                    <div>
-                        <h1>Agenda Pedagógica</h1>
-                        <p class="section-subtitle">Agenda </p>
-                    </div>
-                </div>
-
-                <div class="dashboard-grid-agenda">
-                    <div class="main-container-agenda">
-                        <div class="section-card">
-                            <div class="card-header-simple">
-                                <h3>Agenda em Desenvolvimento...</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <p id="ocupacao-resumo" style="color: #64748b; font-size: 13px; margin-bottom: 10px;"></p>
+                <div class="agenda-grid-wrap"><div class="agenda-grid" id="ocupacao-grid"></div></div>
+              </div>
             </div>
-        </main>
+
+            <div class="section-card" id="bloco-agendar" style="display: none;">
+              <div class="card-header-simple">
+                <h3 id="titulo-agendar">Agendar aula</h3>
+                <button class="btn-icon" id="btn-fechar-agendar" title="Fechar" aria-label="Fechar"><i class="ph ph-x"></i></button>
+              </div>
+
+              <div class="agenda-nav">
+                <button class="btn-icon" id="btn-semana-anterior" title="Semana anterior">
+                  <i class="ph ph-caret-left"></i>
+                </button>
+                <span class="agenda-semana-label" id="agenda-semana-label">—</span>
+                <button class="btn-icon" id="btn-semana-seguinte" title="Semana seguinte">
+                  <i class="ph ph-caret-right"></i>
+                </button>
+                <button class="btn-card" id="btn-semana-hoje" style="margin-left: auto">Hoje</button>
+              </div>
+
+              <div class="agenda-grid-wrap">
+                <div class="agenda-grid" id="agenda-grid"></div>
+              </div>
+
+              <div class="agenda-legenda">
+                <span><span class="ponto" style="background:#f0fdf4;border:1px solid #bbf7d0;"></span>Livre (disponível para agendar)</span>
+                <span><span class="ponto" style="background:#fef2f2;border:1px solid #fecaca;"></span>Bloqueado pelo formador</span>
+                <span><span class="ponto" style="background:#eff6ff;border:1px solid #bfdbfe;"></span>Já agendado</span>
+              </div>
+
+              <div id="painel-confirmar" style="display:none; margin-top: 18px; border-top: 1px solid #e2e8f0; padding-top: 18px;">
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #1e293b;">
+                  Bloco selecionado: <strong id="texto-bloco-selecionado"></strong>
+                </p>
+                <div class="input-group" style="max-width: 300px;">
+                  <label for="select-modalidade">Modalidade</label>
+                  <select id="select-modalidade">
+                    <option value="PRESENCIAL">Presencial</option>
+                    <option value="ONLINE">Online</option>
+                  </select>
+                </div>
+                <button class="btn-login" id="btn-confirmar-agendamento" style="width: auto; padding: 10px 24px;">
+                  Confirmar Agendamento
+                </button>
+              </div>
+
+              <div style="margin-top: 24px;">
+                <h3 style="font-size: 15px; color: #1e293b; margin-bottom: 12px;">Aulas já agendadas nesta UC</h3>
+                <div class="table-container-clean" style="height: auto; max-height: 260px;">
+                  <table class="status-table" id="tabela-aulas">
+                    <thead>
+                      <tr>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Modalidade</th>
+                        <th>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
     </div>
-    <footer>
-        <p class="copy">&copy: 2026 - Programação web (frontend)</p>
-    </footer>
-</body>
 
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
 </html>

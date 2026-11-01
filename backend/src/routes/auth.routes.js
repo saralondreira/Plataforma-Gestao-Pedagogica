@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const authController = require("../controllers/auth.controller");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireRole } = require("../middleware/auth");
+const { limitadorLogin, limitadorRecuperacao, limitadorRedefinicao } = require("../middleware/rateLimit");
 
 const router = Router();
 
@@ -8,8 +9,9 @@ const router = Router();
  * @openapi
  * /auth/register:
  *   post:
- *     summary: Regista um novo utilizador (coordenador ou formador)
+ *     summary: Regista um novo utilizador (coordenador ou formador) — só um coordenador autenticado pode criar contas por aqui
  *     tags: [Auth]
+ *     security: [{ bearerAuth: [] }]
  *     requestBody:
  *       required: true
  *       content:
@@ -33,7 +35,7 @@ const router = Router();
  *       409: { description: Email já em uso, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  *       422: { description: Dados inválidos, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  */
-router.post("/register", authController.register);
+router.post("/register", requireAuth, requireRole("COORDENADOR"), authController.register);
 
 /**
  * @openapi
@@ -66,7 +68,47 @@ router.post("/register", authController.register);
  *                     user: { $ref: '#/components/schemas/Utilizador' }
  *       401: { description: Credenciais inválidas, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  */
-router.post("/login", authController.login);
+router.post("/login", limitadorLogin, authController.login);
+
+/**
+ * @openapi
+ * /auth/logout:
+ *   post:
+ *     summary: Termina a sessão (apaga o cookie httpOnly da sessão)
+ *     tags: [Auth]
+ *     responses:
+ *       204: { description: Sessão terminada }
+ */
+router.post("/logout", authController.logout);
+
+/**
+ * @openapi
+ * /auth/esqueci-password:
+ *   post:
+ *     summary: Pede um email para redefinir a palavra-passe (resposta igual exista ou não a conta)
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { type: object, required: [email], properties: { email: { type: string, format: email } } }
+ *     responses:
+ *       200: { description: Pedido registado }
+ * /auth/redefinir-password:
+ *   post:
+ *     summary: Define uma nova palavra-passe com o token recebido por email (válido 1 hora, uso único)
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { type: object, required: [token, password], properties: { token: { type: string }, password: { type: string, minLength: 6 } } }
+ *     responses:
+ *       200: { description: Palavra-passe alterada }
+ *       400: { description: Token inválido ou expirado }
+ */
+router.post("/esqueci-password", limitadorRecuperacao, authController.esqueciPassword);
+router.post("/redefinir-password", limitadorRedefinicao, authController.redefinirPassword);
 
 /**
  * @openapi

@@ -1,5 +1,7 @@
 import { api } from "./api-client.js";
 import { showToast } from "./toast.js";
+import { escapeHtml } from "./sanitize.js";
+import { ligarFiltros } from "./filtroTabela.js";
 
 const formNovoFormador = document.getElementById("form-novo-formador");
 const tbodyFormadores = document.querySelector("#tabela-formadores tbody");
@@ -10,6 +12,7 @@ const btnFecharModal = document.getElementById("fechar-modal-formador");
 const grupoCredenciais = document.getElementById("grupo-credenciais-formador");
 const emailInput = document.getElementById("new-email-formador");
 const passwordInput = document.getElementById("new-password-formador");
+const checkboxDesativados = document.getElementById("mostrar-formadores-desativados");
 
 let idFormadorEmEdicao = null;
 
@@ -35,7 +38,8 @@ async function carregarFormadores() {
   if (!tbodyFormadores) return;
 
   try {
-    const formadores = await api("/formadores");
+    const incluirInativos = checkboxDesativados ? checkboxDesativados.checked : false;
+    const formadores = await api(`/formadores${incluirInativos ? "?incluirInativos=true" : ""}`);
     tbodyFormadores.innerHTML = "";
 
     if (formadores.length === 0) {
@@ -45,45 +49,65 @@ async function carregarFormadores() {
     }
 
     formadores.forEach((formador) => {
-      const cor = formador.estadoFormador === "ATIVO" ? "green" : "red";
       const estadoTexto = formador.estadoFormador || "ATIVO";
+      const cor = estadoTexto === "ATIVO" ? "green" : "red";
+      const desativado = formador.ativo === false;
 
       const tr = document.createElement("tr");
       tr.setAttribute("data-estado", estadoTexto.toLowerCase());
+      if (desativado) {
+        tr.style.opacity = "0.55";
+      }
 
-      tr.innerHTML = `
-                <td><div class="avatar-circle">${formador.sigla || ""}</div> <strong>${formador.nome}</strong></td>
-                <td>${formador.nome}</td>
-                <td style="text-align: center;">${formador.turmasQtd ?? 0}</td>
-                <td style="text-align: center;">${formador.ucsQtd ?? 0}</td>
-                <td><span class="badge ${cor}">${estadoTexto}</span></td>
-                <td>
-                    <button class="btn-icon btn-editar"
+      const acoes = desativado
+        ? `<button class="btn-icon btn-reativar" data-id="${formador.id}" title="Reativar"><i class="ph ph-arrow-counter-clockwise"></i></button>`
+        : `<button class="btn-icon btn-editar"
                         data-id="${formador.id}"
-                        data-sigla="${formador.sigla || ""}"
-                        data-nome="${formador.nome}"
+                        data-sigla="${escapeHtml(formador.sigla || "")}"
+                        data-nome="${escapeHtml(formador.nome)}"
                         data-turmas="${formador.turmasQtd ?? 0}"
                         data-ucs="${formador.ucsQtd ?? 0}"
                         data-estado="${estadoTexto}"
                         title="Editar"><i class="ph ph-pencil-simple"></i>
                     </button>
-                    <button class="btn-icon btn-apagar" data-id="${formador.id}" title="Apagar"><i class="ph ph-trash"></i></button>
-                </td>
+                    <button class="btn-icon btn-apagar" data-id="${formador.id}" title="Desativar"><i class="ph ph-trash"></i></button>`;
+
+      tr.innerHTML = `
+                <td><div class="avatar-circle">${escapeHtml(formador.sigla || "")}</div> <strong>${escapeHtml(formador.nome)}</strong></td>
+                <td>${escapeHtml(formador.nome)}${desativado ? ' <span class="badge red" style="margin-left: 6px;">DESATIVADO</span>' : ""}</td>
+                <td style="text-align: center;">${formador.turmasQtd ?? 0}</td>
+                <td style="text-align: center;">${formador.ucsQtd ?? 0}</td>
+                <td><span class="badge ${cor}">${estadoTexto}</span></td>
+                <td>${acoes}</td>
             `;
       tbodyFormadores.appendChild(tr);
     });
+    atualizarFiltro();
 
     document.querySelectorAll(".btn-apagar").forEach((botao) => {
       botao.addEventListener("click", async () => {
         const idFormador = botao.getAttribute("data-id");
-        if (confirm("Tens a certeza que queres apagar este formador?")) {
+        if (confirm("Tens a certeza que queres desativar este formador? A conta deixa de poder fazer login, mas o histórico mantém-se e podes reativá-la mais tarde.")) {
           try {
             await api(`/formadores/${idFormador}`, { method: "DELETE" });
-            showToast("Formador apagado com sucesso!", "success");
+            showToast("Formador desativado com sucesso!", "success");
             carregarFormadores();
           } catch (error) {
-            showToast(error.message || "Erro ao apagar formador.", "error");
+            showToast(error.message || "Erro ao desativar formador.", "error");
           }
+        }
+      });
+    });
+
+    document.querySelectorAll(".btn-reativar").forEach((botao) => {
+      botao.addEventListener("click", async () => {
+        const idFormador = botao.getAttribute("data-id");
+        try {
+          await api(`/formadores/${idFormador}/reativar`, { method: "PATCH" });
+          showToast("Formador reativado com sucesso!", "success");
+          carregarFormadores();
+        } catch (error) {
+          showToast(error.message || "Erro ao reativar formador.", "error");
         }
       });
     });
@@ -112,6 +136,10 @@ async function carregarFormadores() {
 }
 
 carregarFormadores();
+
+if (checkboxDesativados) {
+  checkboxDesativados.addEventListener("change", carregarFormadores);
+}
 
 if (formNovoFormador) {
   formNovoFormador.addEventListener("submit", async (e) => {
@@ -157,16 +185,11 @@ if (formNovoFormador) {
   });
 }
 
-const inputPesquisaFormadores = document.getElementById("pesquisa-formadores");
-if (inputPesquisaFormadores) {
-  inputPesquisaFormadores.addEventListener("keyup", function () {
-    const termoPesquisa = this.value.toLowerCase();
-    const linhasTabela = document.querySelectorAll("#tabela-formadores tbody tr");
-
-    linhasTabela.forEach((linha) => {
-      if (linha.classList.contains("linha-vazia")) return;
-      const textoDaLinha = linha.textContent.toLowerCase();
-      linha.style.display = textoDaLinha.includes(termoPesquisa) ? "" : "none";
-    });
-  });
-}
+const atualizarFiltro = ligarFiltros({
+  tabelaId: "tabela-formadores",
+  selectId: "filtro-formadores",
+  pesquisaId: "pesquisa-formadores",
+  rotulos: { ativo: "ATIVO", inativo: "INATIVO", todos: "TODOS" },
+  cores: { ativo: "green", inativo: "red", todos: "gray" },
+  todos: "todos",
+});

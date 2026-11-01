@@ -6,16 +6,18 @@
     <title>Os Meus Documentos - Gestão Pedagógica</title>
 
     <link rel="stylesheet" href="../css/style.css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="../js/script.js" defer></script>
     <script type="module" src="../js/dashboardFormador.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+    <script type="module" src="../js/painel.js" defer></script>
   </head>
 
-  <body>
+  <body data-roles="FORMADOR">
     <div class="dashboard-container">
       <aside class="sidebar hoverable">
         <div class="sidebar-header">
@@ -38,6 +40,10 @@
           <a href="dashboardFormador.html" class="menu-item active"
             ><i class="ph ph-clipboard-text"></i
             ><span class="link-text">Os Meus Documentos</span></a
+          >
+          <a href="agendaFormador.html" class="menu-item"
+            ><i class="ph ph-calendar-check"></i
+            ><span class="link-text">A Minha Agenda</span></a
           >
         </nav>
 
@@ -108,12 +114,12 @@
         <div class="modal-content section-card">
           <div class="card-header-simple">
             <h3>Submeter Documento</h3>
-            <button type="button" class="btn-icon" id="fechar-modal-submeter">
+            <button type="button" class="btn-icon" id="fechar-modal-submeter" aria-label="Fechar">
               <i class="ph ph-x"></i>
             </button>
           </div>
 
-          <form id="form-submeter-documento">
+          <form id="form-submeter-documento" action="javascript:void(0);">
             <div class="input-group">
               <label for="submeter-ficheiro">Ficheiro (PDF, Word ou imagem)</label>
               <input
@@ -138,12 +144,12 @@
         <div class="modal-content section-card">
           <div class="card-header-simple">
             <h3>Marcar como Enviado (Exceção)</h3>
-            <button type="button" class="btn-icon" id="fechar-modal-excecao">
+            <button type="button" class="btn-icon" id="fechar-modal-excecao" aria-label="Fechar">
               <i class="ph ph-x"></i>
             </button>
           </div>
 
-          <form id="form-excecao">
+          <form id="form-excecao" action="javascript:void(0);">
             <div class="input-group">
               <label for="excecao-nota">Motivo (ex.: entregue por email, em mão...)</label>
               <textarea

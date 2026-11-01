@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const formadoresController = require("../controllers/formadores.controller");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireRole } = require("../middleware/auth");
 
 const router = Router();
 
@@ -39,7 +39,7 @@ router.use(requireAuth);
  *       409: { description: Email já em uso, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  */
 router.get("/", formadoresController.listar);
-router.post("/", formadoresController.criar);
+router.post("/", requireRole("COORDENADOR"), formadoresController.criar);
 
 /**
  * @openapi
@@ -57,15 +57,29 @@ router.post("/", formadoresController.criar);
  *       200: { description: Formador atualizado, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Utilizador' } } } } } }
  *       404: { description: Formador não encontrado, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  *   delete:
- *     summary: Apaga um formador (remove a conta)
+ *     summary: Desativa um formador (soft delete — a conta e o histórico mantêm-se, deixa de poder fazer login e some das listagens)
  *     tags: [Formadores]
  *     security: [{ bearerAuth: [] }]
  *     parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
  *     responses:
- *       204: { description: Formador apagado }
+ *       204: { description: Formador desativado }
  *       404: { description: Formador não encontrado, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
  */
-router.patch("/:id", formadoresController.atualizar);
-router.delete("/:id", formadoresController.apagar);
+router.patch("/:id", requireRole("COORDENADOR"), formadoresController.atualizar);
+router.delete("/:id", requireRole("COORDENADOR"), formadoresController.apagar);
+
+/**
+ * @openapi
+ * /formadores/{id}/reativar:
+ *   patch:
+ *     summary: Reativa um formador desativado
+ *     tags: [Formadores]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+ *     responses:
+ *       200: { description: Formador reativado, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Utilizador' } } } } } }
+ *       404: { description: Formador não encontrado, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+ */
+router.patch("/:id/reativar", requireRole("COORDENADOR"), formadoresController.reativar);
 
 module.exports = router;

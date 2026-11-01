@@ -7,7 +7,8 @@
   <link rel="stylesheet" href="../css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
   <script src="../js/script.js" defer></script>
-<script type="module" src="../js/auth.js" defer></script></head>
+<script type="module" src="../js/auth.js" defer></script>
+  <script type="module" src="../js/mostrarPassword.js" defer></script></head>
 
   <body>
     <div class="main-container">
@@ -18,11 +19,11 @@
             <p class="subtitle">Plataforma de Gestão Pedagógica</p>
           </div>
 
-          <form id="form-login">
+          <form id="form-login" action="javascript:void(0);">
             <div class="input-group">
               <label for="email">Endereço de Email</label>
               <input
-                type="email"
+                type="email" autocomplete="username"
                 id="email"
                 name="email"
                 placeholder="ex: exemplo@email.pt"
@@ -33,7 +34,7 @@
             <div class="input-group">
               <label for="password">Palavra-passe</label>
               <input
-                type="password"
+                type="password" autocomplete="current-password"
                 id="password"
                 name="password"
                 placeholder="••••••••"
@@ -46,7 +47,7 @@
                 <input type="checkbox" id="remember" />
                 <label for="remember">Lembrar-me</label>
               </div>
-              <a href="#" class="forgot-pass">Esqueci a palavra-passe</a>
+              <a href="esqueci-password.html" class="forgot-pass">Esqueci a palavra-passe</a>
             </div>
           
             <button type="submit" id="btn-login" class="btn-login">
@@ -56,18 +57,7 @@
 
           <div class="register-area">
             <p>Ainda não tem acesso?</p>
-            <div class="input-group">
-              <label for="registo-nome">Nome Completo</label>
-              <input type="text" id="registo-nome" placeholder="Ex: Ana Silva" />
-            </div>
-            <div class="input-group">
-              <label for="registo-role">Papel na Plataforma</label>
-              <select id="registo-role">
-                <option value="COORDENADOR">Coordenador(a)</option>
-                <option value="FORMADOR">Formador(a)</option>
-              </select>
-            </div>
-            <button type="button" id="btn-register" class="btn-outline" style="width: 100%; cursor: pointer;">Registar novo utilizador</button>
+            <a href="forms.html" class="btn-outline">Solicitar credenciais</a>
           </div>
 
           <div class="footer-logos">

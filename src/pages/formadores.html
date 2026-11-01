@@ -6,16 +6,17 @@
     <title>Gestão de Formadores</title>
 
     <link rel="stylesheet" href="../css/style.css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="../js/script.js" defer></script>
     <script type="module" src="../js/formadores.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
   </head>
 
-  <body>
+  <body data-roles="COORDENADOR">
     <div class="dashboard-container">
       <aside class="sidebar hoverable">
         <div class="sidebar-header">
@@ -35,7 +36,7 @@
           </a>
         </div>
         <nav class="sidebar-menu">
-          <a href="dashboardCoord.html" class="menu-item active"
+          <a href="dashboardCoord.html" class="menu-item"
             ><i class="ph ph-chart-pie-slice"></i
             ><span class="link-text">Visão Global</span></a
           >
@@ -43,13 +44,21 @@
             ><i class="ph ph-chalkboard-teacher"></i
             ><span class="link-text">Gestão Turmas</span></a
           >
-          <a href="formadores.html" class="menu-item"
+          <a href="formadores.html" class="menu-item active"
             ><i class="ph ph-users-three"></i
             ><span class="link-text">Gestão Formadores</span></a
+          >
+          <a href="formandos.html" class="menu-item"
+            ><i class="ph ph-graduation-cap"></i
+            ><span class="link-text">Gestão Formandos</span></a
           >
           <a href="agenda.html" class="menu-item"
             ><i class="ph ph-calendar-check"></i
             ><span class="link-text">Agenda</span></a
+          >
+          <a href="pedidosAcesso.html" class="menu-item"
+            ><i class="ph ph-user-plus"></i
+            ><span class="link-text">Pedidos de Acesso</span></a
           >
         </nav>
 
@@ -92,7 +101,6 @@
 <button class="btn-card" id="btn-novo-formador">
     <i class="ph ph-plus-circle"></i> Novo Formador
 </button>
-              </button>
             </div>
 
             <div class="section-card table-standard">
@@ -101,10 +109,15 @@
     
     <div style="position: relative;">
         <i class="ph ph-magnifying-glass" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #64748b;"></i>
-        <input type="text" id="pesquisa-formadores" placeholder="Pesquisar formador..." style="padding: 8px 10px 8px 30px; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; font-family: 'Inter', sans-serif;">
+        <input type="text" id="pesquisa-formadores" aria-label="Pesquisar formadores" placeholder="Pesquisar formador..." style="padding: 8px 10px 8px 30px; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; font-family: 'Inter', sans-serif;">
     </div>
 
-    <select id="filtro-formadores" class="badge gray">
+    <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #475569; white-space: nowrap;">
+        <input type="checkbox" id="mostrar-formadores-desativados">
+        Mostrar desativados
+    </label>
+
+    <select id="filtro-formadores" aria-label="Filtrar por estado" class="badge gray">
         <option value="ativo">ATIVO</option>
         <option value="inativo">INATIVO</option>
         <option value="todos" selected>TODOS</option>
@@ -134,10 +147,10 @@
     <div class="modal-content section-card">
         <div class="card-header-simple">
             <h3 id="modal-titulo-formador">Adicionar Formador</h3>
-            <button type="button" class="btn-icon" id="fechar-modal-formador"><i class="ph ph-x"></i></button>
+            <button type="button" class="btn-icon" id="fechar-modal-formador" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
 
-        <form id="form-novo-formador">
+        <form id="form-novo-formador" action="javascript:void(0);">
             <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 15px;">
                 <div class="input-group">
                     <label for="new-sigla">Sigla</label>
@@ -156,7 +169,7 @@
                 </div>
                 <div class="input-group">
                     <label for="new-password-formador">Palavra-passe Inicial</label>
-                    <input type="password" id="new-password-formador" placeholder="mín. 6 caracteres">
+                    <input type="password" id="new-password-formador" placeholder="mín. 8 caracteres" minlength="8" autocomplete="new-password">
                 </div>
             </div>
 

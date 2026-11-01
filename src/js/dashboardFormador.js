@@ -1,5 +1,6 @@
 import { api, getUser } from "./api-client.js";
 import { showToast } from "./toast.js";
+import { escapeHtml } from "./sanitize.js";
 
 const tbodyDocumentos = document.querySelector("#tabela-documentos-formador tbody");
 
@@ -83,8 +84,8 @@ async function carregarDocumentos() {
       const tr = document.createElement("tr");
       tr.setAttribute("data-estado", estado);
       tr.innerHTML = `
-                <td>${entrega.turma.codigo}</td>
-                <td>${entrega.documento}</td>
+                <td>${escapeHtml(entrega.turma.codigo)}</td>
+                <td>${escapeHtml(entrega.documento)}</td>
                 <td style="color: ${corPrazo}; font-weight: 500;">${textoPrazo}</td>
                 <td><strong>${dataFormatada}</strong></td>
                 <td>${badgeHTML}</td>

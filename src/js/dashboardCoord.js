@@ -1,5 +1,6 @@
-import { api, API_ORIGIN } from "./api-client.js";
+import { api, abrirFicheiroProtegido } from "./api-client.js";
 import { showToast } from "./toast.js";
+import { escapeHtml } from "./sanitize.js";
 
 const tbodyDashboard = document.querySelector("#tabela-dashboard tbody");
 const filtroPrazos = document.getElementById("filtro-prazos");
@@ -52,10 +53,10 @@ async function carregarOpcoesFormularioAviso() {
 function indicadorSubmissao(entrega) {
   if (!entrega.submissaoTipo) return "";
   if (entrega.submissaoTipo === "FICHEIRO") {
-    return `<a href="${API_ORIGIN}${entrega.submissaoFicheiroUrl}" target="_blank" title="Ficheiro submetido pelo formador"><i class="ph ph-paperclip"></i></a>`;
+    return `<a href="#" class="link-ficheiro" data-id="${entrega.id}" title="Ficheiro submetido pelo formador"><i class="ph ph-paperclip"></i></a>`;
   }
   if (entrega.submissaoTipo === "EXCECAO") {
-    return `<i class="ph ph-warning-circle" style="color: #ca8a04;" title="Exceção (sem ficheiro): ${entrega.submissaoNota || ""}"></i>`;
+    return `<i class="ph ph-warning-circle" style="color: #ca8a04;" title="Exceção (sem ficheiro): ${escapeHtml(entrega.submissaoNota || "")}"></i>`;
   }
   return `<i class="ph ph-user-check" title="Confirmado pela coordenação"></i>`;
 }
@@ -118,9 +119,9 @@ async function carregarDashboard() {
       const tr = document.createElement("tr");
       tr.setAttribute("data-estado", estado);
       tr.innerHTML = `
-                <td><div class="avatar-circle">${iniciais}</div> ${entrega.formador.nome}</td>
-                <td>${entrega.turma.codigo}</td>
-                <td>${entrega.documento} ${indicadorSubmissao(entrega)}</td>
+                <td><div class="avatar-circle">${escapeHtml(iniciais)}</div> ${escapeHtml(entrega.formador.nome)}</td>
+                <td>${escapeHtml(entrega.turma.codigo)}</td>
+                <td>${escapeHtml(entrega.documento)} ${indicadorSubmissao(entrega)}</td>
                 <td style="color: ${corPrazo}; font-weight: 500;">${textoPrazo}</td>
                 <td><strong>${dataFormatada}</strong></td>
                 <td>${badgeHTML}</td>
@@ -130,13 +131,24 @@ async function carregarDashboard() {
                         data-id="${entrega.id}"
                         data-formador-id="${entrega.formadorId}"
                         data-turma-id="${entrega.turmaId}"
-                        data-documento="${entrega.documento}"
+                        data-documento="${escapeHtml(entrega.documento)}"
                         data-prazo="${entrega.dataLimite.slice(0, 10)}"
                         title="Editar"><i class="ph ph-pencil-simple"></i></button>
                     <button class="btn-icon btn-apagar-aviso" data-id="${entrega.id}" title="Apagar"><i class="ph ph-trash"></i></button>
                 </td>
             `;
       tbodyDashboard.appendChild(tr);
+    });
+
+    tbodyDashboard.querySelectorAll(".link-ficheiro").forEach((link) => {
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await abrirFicheiroProtegido(`/entregas/${link.getAttribute("data-id")}/ficheiro`);
+        } catch (error) {
+          showToast(error.message || "Não foi possível abrir o ficheiro.", "error");
+        }
+      });
     });
 
     tbodyDashboard.querySelectorAll(".btn-entregue").forEach((botao) => {
@@ -153,13 +165,13 @@ async function carregarDashboard() {
 
     tbodyDashboard.querySelectorAll(".btn-apagar-aviso").forEach((botao) => {
       botao.addEventListener("click", async () => {
-        if (confirm("Tens a certeza que queres apagar este aviso?")) {
+        if (confirm("Tens a certeza que queres desativar este aviso? O histórico de submissões mantém-se.")) {
           try {
             await api(`/entregas/${botao.getAttribute("data-id")}`, { method: "DELETE" });
-            showToast("Aviso apagado com sucesso!", "success");
+            showToast("Aviso desativado com sucesso!", "success");
             carregarDashboard();
           } catch (error) {
-            showToast(error.message || "Erro ao apagar.", "error");
+            showToast(error.message || "Erro ao desativar.", "error");
           }
         }
       });

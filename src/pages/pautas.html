@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pautas e Assiduidade</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/pautas.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="COORDENADOR">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="login.html"
+            data-home-link
+            style="text-decoration: none; display: flex; align-items: center; gap: 12px"
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu" data-auto></nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-role"></span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1 id="titulo-pagina">Pautas e Assiduidade</h1>
+                <p class="section-subtitle" id="subtitulo-pagina">Notas e assiduidade por turma.</p>
+              </div>
+              <div style="display: flex; gap: 10px">
+                <button class="btn-login" id="btn-exportar-pauta" type="button" style="display: none; width: auto">
+                  <i class="ph ph-download-simple"></i> Exportar pauta (CSV)
+                </button>
+                <button class="btn-login" id="btn-imprimir-pauta" type="button" style="display: none; width: auto">
+                  <i class="ph ph-file-pdf"></i> Exportar pauta (PDF)
+                </button>
+              </div>
+            </div>
+
+            <div id="conteudo-pautas">
+            <h2 id="cabecalho-impressao" class="so-impressao"></h2>
+            <div class="section-card" style="margin-bottom: 20px">
+              <div class="input-group">
+                <label for="select-turma">Turma</label>
+                <select id="select-turma"><option value="">— Seleciona —</option></select>
+              </div>
+            </div>
+            <div class="section-card table-standard" id="cartao-pauta" style="display: none">
+              <div class="card-header-simple"><h3>Pauta de notas</h3></div>
+              <div class="table-container-clean" id="pauta-container"></div>
+            </div>
+            <div class="section-card table-standard" id="cartao-assiduidade" style="display: none">
+              <div class="card-header-simple"><h3 id="titulo-assiduidade">Assiduidade por formando</h3></div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-assiduidade-turma">
+                  <thead><tr><th>Formando</th><th>Presenças</th><th>Faltas</th><th>Justificadas</th><th>Injustificadas</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

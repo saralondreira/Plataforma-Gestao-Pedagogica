@@ -425,6 +425,12 @@ textarea {
     height: 100%;
 }
 
+/* Cartões empilhados diretamente na página: altura pelo conteúdo. Com height:100% herdavam a
+   altura total da coluna flex e ficavam com milhares de pixéis (visto na Agenda em ecrãs largos). */
+.content-standard > .section-card {
+    height: auto;
+}
+
 .card-header-simple {
     display: flex;
     justify-content: space-between;
@@ -1018,6 +1024,10 @@ select.badge.yellow {
     border-color: #fef08a;
 }
 
+.section-card .input-group textarea {
+    resize: vertical;
+}
+
 #new-estado option[value="em-curso"] {
     color: #2563eb;
     font-weight: 600;
@@ -1036,7 +1046,7 @@ select.badge.yellow {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 10000; /* acima da barra lateral móvel (9999) */
     left: 0;
     top: 0;
     width: 100%;
@@ -1049,16 +1059,54 @@ select.badge.yellow {
 .modal-content {
     width: 100%;
     max-width: 500px;
+    height: auto; /* .section-card tem height:100% (para grelhas de cartões) — aqui esticava o modal ao ecrã todo */
+    max-height: 90vh;
+    overflow-y: auto;
     background: white;
     padding: 30px;
     border-radius: 12px;
 }
 
 .modal .input-group input,
+.modal .input-group textarea,
 .modal select {
     background-color: #f8fafc;
     border: 1px solid #cbd5e1;
     color: #1e293b;
+}
+
+/* Inputs/selects claros quando o .input-group é usado fora de um modal,
+   diretamente dentro de um .section-card (ex: seletores da página Agenda).
+   Sem isto herdava o estilo escuro da página de login (label quase invisível
+   em fundo branco e select sem estilo nenhum). (2026-09-04) */
+.section-card .input-group label {
+    color: #475569;
+}
+
+.section-card .input-group select:not(.badge),
+.section-card .input-group input,
+.section-card .input-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #1e293b;
+    outline: none;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    /* Sem isto, no Windows com tema escuro do sistema, o Chrome/Edge pode pintar
+       a caixa de um select fechado a azul sólido com texto branco (cor de
+       destaque nativa do SO) mesmo com o fundo claro definido acima — acontece
+       tipicamente no select que tiver o foco inicial da página. (2026-09-08) */
+    color-scheme: light;
+}
+
+.section-card .input-group select:not(.badge):focus,
+.section-card .input-group input:focus,
+.section-card .input-group textarea:focus {
+    border-color: #3b82f6;
+    background-color: #ffffff;
 }
 
 #new-estado option[value="em-curso"] {
@@ -1200,6 +1248,7 @@ select.badge.yellow {
         width: 100%;
         height: 70px;
         position: fixed;
+        top: auto;
         bottom: 0;
         left: 0;
         flex-direction: row;
@@ -1381,7 +1430,7 @@ select.badge.yellow {
   font-weight: 600;
   font-size: 14px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 10001;
 
   opacity: 0;
   visibility: hidden;
@@ -1400,3 +1449,219 @@ select.badge.yellow {
 
 .toast-success { background-color: #16a34a; }
 .toast-error { background-color: #dc2626; }
+/* =========================================
+   14. AGENDA — GRELHA SEMANAL (Disponibilidade / Agendamento)
+   ========================================= */
+.agenda-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.agenda-nav .agenda-semana-label {
+    font-weight: 600;
+    color: #1e293b;
+    min-width: 200px;
+    text-align: center;
+}
+
+.agenda-grid-wrap {
+    overflow-x: auto;
+}
+
+.agenda-grid {
+    display: grid;
+    grid-template-columns: 64px repeat(7, minmax(88px, 1fr));
+    gap: 4px;
+    min-width: 760px;
+}
+
+.agenda-grid-cabecalho {
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.agenda-grid-cabecalho .dia-numero {
+    display: block;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.agenda-grid-cabecalho .btn-bloquear-dia {
+    display: block;
+    margin: 4px auto 0;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #dc2626;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.agenda-grid-cabecalho .btn-bloquear-dia:hover {
+    background-color: #fee2e2;
+}
+
+.agenda-hora-label {
+    padding: 8px 4px;
+    font-size: 12px;
+    color: #64748b;
+    text-align: right;
+}
+
+.agenda-celula {
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 2px;
+    transition: filter 0.15s;
+}
+
+.agenda-celula:hover {
+    filter: brightness(0.96);
+}
+
+.agenda-celula.livre {
+    background-color: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #16a34a;
+}
+
+.agenda-celula.bloqueado {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.agenda-celula.agendado {
+    background-color: #eff6ff;
+    border-color: #bfdbfe;
+    color: #2563eb;
+    cursor: not-allowed;
+    font-weight: 600;
+}
+
+.agenda-celula.indisponivel {
+    background-color: #f8fafc;
+    cursor: default;
+}
+
+.agenda-celula.selecionavel:hover {
+    background-color: #dcfce7;
+}
+
+.agenda-celula.selecionada {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+}
+
+.agenda-legenda {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.agenda-legenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.agenda-legenda .ponto {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* =========================================
+   15. IMPRESSÃO / EXPORTAÇÃO PDF (pautas)
+   ========================================= */
+.so-impressao { display: none; }
+
+@media print {
+    .sidebar, .top-bar, .header-flex, footer, .modal { display: none !important; }
+    #conteudo-pautas > .section-card:first-of-type { display: none !important; }
+    .so-impressao { display: block; margin-bottom: 12px; }
+    .main-content, .content-area, .content-standard { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    .table-container-clean { height: auto !important; max-height: none !important; overflow: visible !important; }
+    .section-card { box-shadow: none !important; border: none !important; break-inside: avoid; height: auto !important; }
+    body { background: #fff !important; }
+}
+
+/* Zona de arrastar e largar ficheiros (Documentos) */
+.dropzone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 64px;
+  padding: 14px 18px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.dropzone i {
+  font-size: 22px;
+}
+.dropzone.ativa {
+  border-color: #2554e8;
+  background: #eef2fb;
+  color: #1b2340;
+}
+.dropzone.com-ficheiro {
+  border-style: solid;
+  border-color: #1f9d6b;
+  color: #1b2340;
+}
+.dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Indicador de foco por teclado visível em todos os controlos (os selects e os
+   campos de formulário perdiam o contorno nativo). */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #2554e8 !important;
+  outline-offset: 2px;
+}
+
+.dropzone:focus-within {
+  outline: 2px solid #2554e8;
+  outline-offset: 2px;
+}
