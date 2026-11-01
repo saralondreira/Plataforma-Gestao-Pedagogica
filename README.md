@@ -1,5 +1,5 @@
 # Plataforma de Gestão Pedagógica
-### Projeto Final — UC00604 (Frontend) · UC00605 (Backend) · UC00614 (Integração de Sistemas)
+### Projeto Final - UC00604 (Frontend) · UC00605 (Backend) · UC00614 (Integração de Sistemas)
 
 ## 📝 Visão Geral
 Este projeto nasce da necessidade de modernizar os processos administrativos em centros de formação, substituindo métodos obsoletos (como a entrega de documentação em CD) por uma **Plataforma Centralizada de Gestão Formativa**. A solução foca-se na eficiência logística, no rastreio (*tracking*) de conformidade e na segurança de dados sensíveis — com um frontend em HTML/CSS/JS puro a consumir uma API REST própria em Node.js/Express, com base de dados relacional (MySQL).
