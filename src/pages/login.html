@@ -1,57 +1,14 @@
 <!doctype html>
 <html lang="pt-PT">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Gestão Pedagógica</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <script src="../js/script.js" defer></script>
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import {
-        getAuth,
-        signInWithEmailAndPassword,
-      } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyAcDx28vAbQ3HUBQq0fAKLQHtTVmcHolZA",
-        authDomain: "plataforma-gestaopedagogica.firebaseapp.com",
-        projectId: "plataforma-gestaopedagogica",
-        storageBucket: "plataforma-gestaopedagogica.firebasestorage.app",
-        messagingSenderId: "838874023714",
-        appId: "1:838874023714:web:6b12a1e1466e67fe8a877b",
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-
-      const formLogin = document.getElementById("form-login");
-      if (formLogin) {
-        formLogin.addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-
-          signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              // Sucesso! Redirecionar para o Dashboard
-              const user = userCredential.user;
-              console.log("Login efetuado com sucesso:", user.email);
-              window.location.href = "dashboardCoord.html";
-            })
-            .catch((error) => {
-              alert("As credenciais estão incorretas. Tenta novamente.");
-              console.error("Erro do Firebase:", error.message);
-            });
-        });
-      }
-    </script>
-  </head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Gestão Pedagógica</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="../js/script.js" defer></script>
+<script type="module" src="../js/auth.js" defer></script>
+  <script type="module" src="../js/mostrarPassword.js" defer></script></head>
 
   <body>
     <div class="main-container">
@@ -62,14 +19,13 @@
             <p class="subtitle">Plataforma de Gestão Pedagógica</p>
           </div>
 
-          <form id="form-login">
+          <form id="form-login" action="javascript:void(0);">
             <div class="input-group">
               <label for="email">Endereço de Email</label>
               <input
-                type="email"
+                type="email" autocomplete="username"
                 id="email"
                 name="email"
-                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.pt$"
                 placeholder="ex: exemplo@email.pt"
                 required
               />
@@ -78,7 +34,7 @@
             <div class="input-group">
               <label for="password">Palavra-passe</label>
               <input
-                type="password"
+                type="password" autocomplete="current-password"
                 id="password"
                 name="password"
                 placeholder="••••••••"
@@ -91,16 +47,17 @@
                 <input type="checkbox" id="remember" />
                 <label for="remember">Lembrar-me</label>
               </div>
-              <a href="#" class="forgot-pass">Esqueci a palavra-passe</a>
+              <a href="esqueci-password.html" class="forgot-pass">Esqueci a palavra-passe</a>
             </div>
-            <button type="submit" class="btn-login">
+          
+            <button type="submit" id="btn-login" class="btn-login">
               Entrar na Plataforma
             </button>
           </form>
 
           <div class="register-area">
             <p>Ainda não tem acesso?</p>
-            <a href="forms.html" class="btn-outline">Solicitar credenciais </a>
+            <a href="forms.html" class="btn-outline">Solicitar credenciais</a>
           </div>
 
           <div class="footer-logos">

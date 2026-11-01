@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedidos de Acesso - Gestão Pedagógica</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/pedidosAcesso.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="COORDENADOR">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="dashboardCoord.html"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu">
+          <a href="dashboardCoord.html" class="menu-item"
+            ><i class="ph ph-chart-pie-slice"></i
+            ><span class="link-text">Visão Global</span></a
+          >
+          <a href="turmas.html" class="menu-item"
+            ><i class="ph ph-chalkboard-teacher"></i
+            ><span class="link-text">Gestão Turmas</span></a
+          >
+          <a href="formadores.html" class="menu-item"
+            ><i class="ph ph-users-three"></i
+            ><span class="link-text">Gestão Formadores</span></a
+          >
+          <a href="formandos.html" class="menu-item"
+            ><i class="ph ph-graduation-cap"></i
+            ><span class="link-text">Gestão Formandos</span></a
+          >
+          <a href="agenda.html" class="menu-item"
+            ><i class="ph ph-calendar-check"></i
+            ><span class="link-text">Agenda</span></a
+          >
+          <a href="pedidosAcesso.html" class="menu-item active"
+            ><i class="ph ph-user-plus"></i
+            ><span class="link-text">Pedidos de Acesso</span></a
+          >
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="dashboardCoord.html" style="text-decoration: none">
+                <span class="user-role">Coordenadora</span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1>Pedidos de Acesso</h1>
+                <p class="section-subtitle">
+                  Aprova ou rejeita pedidos de acesso à plataforma.
+                </p>
+              </div>
+            </div>
+
+            <div class="section-card table-standard">
+              <div class="card-header-simple">
+                <h3>Pedidos Recebidos</h3>
+              </div>
+
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-pedidos">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Cargo pretendido</th>
+                      <th>Motivo</th>
+                      <th>Estado</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="modal-aprovar" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3>Aprovar Pedido de Acesso</h3>
+            <button class="btn-icon" id="fechar-modal-aprovar" aria-label="Fechar">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+
+          <form id="form-aprovar" action="javascript:void(0);">
+            <p style="color: #64748b; margin-bottom: 15px">
+              Escolhe o papel que esta pessoa vai ter na plataforma. O pedido fica então
+              "A aguardar RH" — a conta só é criada quando confirmares, na listagem, que os
+              RH já trataram a criação da conta fora da plataforma.
+            </p>
+            <div class="input-group">
+              <label for="aprovar-role">Papel na Plataforma</label>
+              <select id="aprovar-role" class="badge blue" style="width: 100%;" required>
+                <option value="FORMADOR">Formador(a)</option>
+                <option value="FORMANDO">Formando(a)</option>
+                <option value="COORDENADOR">Coordenador(a)</option>
+              </select>
+            </div>
+            <div class="input-group" id="aprovar-turma-group" style="display: none;">
+              <label for="aprovar-turma">Turma (opcional — pode ser associada mais tarde)</label>
+              <select id="aprovar-turma">
+                <option value="">— Sem turma por agora —</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-login">Aprovar (aguarda criação da conta pelos RH)</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="modal-credenciais" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3>Conta Criada</h3>
+            <button class="btn-icon" id="fechar-modal-credenciais" aria-label="Fechar">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+          <p style="color: #64748b; margin-bottom: 15px" id="cred-mensagem">
+            Conta criada com sucesso. As credenciais de acesso foram enviadas por email
+            diretamente à pessoa — não são mostradas aqui, por segurança.
+          </p>
+          <div class="input-group">
+            <label>Email</label>
+            <input type="text" id="cred-email" readonly aria-label="Email de acesso" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

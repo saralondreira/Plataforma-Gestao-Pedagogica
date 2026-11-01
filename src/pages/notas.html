@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notas</title>
+
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/notas.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+  </head>
+
+  <body data-roles="FORMADOR,FORMANDO">
+    <div class="dashboard-container">
+      <aside class="sidebar hoverable">
+        <div class="sidebar-header">
+          <a
+            href="login.html"
+            data-home-link
+            style="text-decoration: none; display: flex; align-items: center; gap: 12px"
+          >
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <div class="logo-text">
+              <h3>Gestão Pedagógica</h3>
+            </div>
+          </a>
+        </div>
+        <nav class="sidebar-menu" data-auto></nav>
+
+        <div class="sidebar-footer">
+          <a href="perfil.html" class="menu-item"
+            ><i class="ph ph-user"></i
+            ><span class="link-text">O Meu Perfil</span></a
+          >
+          <a href="login.html" class="menu-item logout" title="Sair"
+            ><i class="ph ph-sign-out"></i
+            ><span class="link-text">Terminar Sessão</span></a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="user-profile-header">
+            <div class="avatar-circle">??</div>
+            <div class="user-info">
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-name">Olá, <strong>Utilizador</strong></span>
+              </a>
+              <a href="login.html" data-home-link style="text-decoration: none">
+                <span class="user-role"></span>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <div class="content-standard">
+            <div class="header-flex">
+              <div>
+                <h1 id="titulo-pagina">Notas</h1>
+                <p class="section-subtitle" id="subtitulo-pagina"></p>
+              </div>
+            </div>
+
+            <div id="vista-formando" style="display: none">
+            <div class="section-card table-standard">
+              <div class="card-header-simple"><h3>As minhas notas</h3></div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-minhas-notas">
+                  <thead><tr><th>UC</th><th>Formador</th><th>Nota</th><th>Observações</th><th>Atualizada em</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+            <div id="vista-formador" style="display: none">
+            <div class="section-card" style="margin-bottom: 20px">
+              <div class="input-group">
+                <label for="select-turma-uc">Turma / UC</label>
+                <select id="select-turma-uc"><option value="">— Seleciona —</option></select>
+              </div>
+            </div>
+            <div class="section-card table-standard" id="cartao-notas" style="display: none">
+              <div class="card-header-simple"><h3 id="titulo-lancamento">Notas</h3></div>
+              <div class="table-container-clean">
+                <table class="status-table" id="tabela-lancar-notas">
+                  <thead><tr><th>Formando</th><th>Email</th><th>Nota (0–20)</th><th>Observações</th><th>Ação</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <footer>
+      <p class="copy">&copy; 2026 - Programação web (frontend)</p>
+    </footer>
+  </body>
+</html>

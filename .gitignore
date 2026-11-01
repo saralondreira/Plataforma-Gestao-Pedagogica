@@ -1,1 +1,9 @@
 /Docs/estudo-de-caso.docx
+
+# Segredos e dependências nunca vão para o repositório
+.env
+.env.*
+!.env.example
+!.env.test.example
+node_modules/
+uploads/

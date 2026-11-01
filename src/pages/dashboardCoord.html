@@ -6,13 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coordenador - Gestão Pedagógica</title>
 
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2" integrity="sha384-J7cw2fbG1T4C5MirTVUxsZGaMfw2m0XsCgOQEqUvB1OF9VIsHWuZF1GmyVRzs7eu" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="/js/script.js" defer></script>
+    <script src="../js/script.js" defer></script>
+    <script type="module" src="../js/dashboardCoord.js" defer></script>
+    <script type="module" src="../js/guard.js" defer></script>
+    <script type="module" src="../js/painel.js" defer></script>
 </head>
 
-<body>
+<body data-roles="COORDENADOR">
 
     <div class="dashboard-container">
 
@@ -33,8 +36,12 @@
                         class="link-text">Gestão Turmas</span></a>
                 <a href="formadores.html" class="menu-item"><i class="ph ph-users-three"></i><span
                         class="link-text">Gestão Formadores</span></a>
+                <a href="formandos.html" class="menu-item"><i class="ph ph-graduation-cap"></i><span
+                        class="link-text">Gestão Formandos</span></a>
                 <a href="agenda.html" class="menu-item"><i class="ph ph-calendar-check"></i><span
                         class="link-text">Agenda</span></a>
+                <a href="pedidosAcesso.html" class="menu-item"><i class="ph ph-user-plus"></i><span
+                        class="link-text">Pedidos de Acesso</span></a>
             </nav>
 
             <div class="sidebar-footer">
@@ -68,9 +75,7 @@
                         <h1>Painel de Controlo</h1>
                         <p class="section-subtitle">Visão geral da atividade pedagógica.</p>
                     </div>
-                    <button class="btn-card" style="width: auto;"><a
-                            href="https://calendar.google.com/calendar/render?action=TEMPLATE" class="aviso"
-                            target="_blank">+ Novo Aviso</a></button>
+                    <button type="button" id="btn-novo-aviso" class="btn-card" style="width: auto;">+ Novo Aviso</button>
 
                 </div>
 
@@ -79,7 +84,7 @@
                         <div class="section-card">
                             <div class="card-header-simple">
                                 <h3>Documentação em Falta</h3>
-                                <select id="filtro-prazos" class="badge gray">
+                                <select id="filtro-prazos" class="badge gray" aria-label="Filtrar por prazo">
                                     <option value="critico">0 CRÍTICOS</option>
                                     <option value="hoje">0 HOJE</option>
                                     <option value="pendente">0 PENDENTES</option>
@@ -158,7 +163,7 @@
                     <div class="side-column">
                         <div class="calendar-widget">
                             <div class="widget-header">
-                                <h3>Agenda</h3> <a href="https://calendar.google.com/" target="_blank"
+                                <h3>Agenda</h3> <a href="https://calendar.google.com/" target="_blank" rel="noopener noreferrer"
                                     class="btn-link-sm">Ver tudo</a>
                             </div>
 
@@ -200,6 +205,49 @@
                 </div>
             </div>
         </main>
+
+        <div id="modal-aviso" class="modal">
+            <div class="modal-content section-card">
+                <div class="card-header-simple">
+                    <h3>Solicitar Documento (Aviso)</h3>
+                    <button class="btn-icon" id="fechar-modal-aviso" type="button" aria-label="Fechar">
+                        <i class="ph ph-x"></i>
+                    </button>
+                </div>
+
+                <form id="form-novo-aviso" action="javascript:void(0);">
+                    <div class="input-group">
+                        <label for="aviso-formador">Formador</label>
+                        <select id="aviso-formador" required>
+                            <option value="" disabled selected>Selecionar...</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="aviso-turma">Turma / UFCD</label>
+                        <select id="aviso-turma" required>
+                            <option value="" disabled selected>Selecionar...</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="aviso-documento">Tipo de Documento</label>
+                        <select id="aviso-documento" required>
+                            <option value="" disabled selected>Selecionar...</option>
+                            <option value="Pauta de Avaliação">Pauta de Avaliação</option>
+                            <option value="Sumários">Sumários</option>
+                            <option value="Cronograma">Cronograma</option>
+                            <option value="Ficha de Assiduidade">Ficha de Assiduidade</option>
+                            <option value="Diário de Bordo">Diário de Bordo</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="aviso-prazo">Prazo (Data Limite)</label>
+                        <input type="date" id="aviso-prazo" required>
+                    </div>
+                    <button type="submit" class="btn-login">Guardar Aviso</button>
+                </form>
+            </div>
+        </div>
     </div>
     <footer>
         <p class="copy">&copy: 2026 - Programação web (frontend)</p>
