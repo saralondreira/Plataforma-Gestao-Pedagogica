@@ -98,6 +98,9 @@
                   Consulta os formandos e gere a turma a que cada um está associado.
                 </p>
               </div>
+              <button class="btn-card" id="btn-novo-formando">
+                <i class="ph ph-plus-circle"></i> Novo Formando
+              </button>
             </div>
 
             <div class="section-card table-standard">
@@ -157,6 +160,39 @@
           </div>
         </div>
       </main>
+
+      <div id="modal-formando" class="modal">
+        <div class="modal-content section-card">
+          <div class="card-header-simple">
+            <h3 id="modal-formando-titulo">Novo Formando</h3>
+            <button class="btn-icon" id="fechar-modal-formando" type="button" aria-label="Fechar">
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
+
+          <form id="form-formando" action="javascript:void(0);">
+            <div class="input-group">
+              <label for="formando-nome">Nome Completo</label>
+              <input type="text" id="formando-nome" minlength="2" required>
+            </div>
+            <div class="input-group">
+              <label for="formando-email">Email de Acesso</label>
+              <input type="email" id="formando-email" required>
+            </div>
+            <div class="input-group" id="grupo-password-formando">
+              <label for="formando-password">Palavra-passe Inicial</label>
+              <input type="password" id="formando-password" placeholder="mín. 8 caracteres" minlength="8" autocomplete="new-password">
+            </div>
+            <div class="input-group">
+              <label for="formando-turma">Turma</label>
+              <select id="formando-turma">
+                <option value="">— Sem turma —</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-login">Guardar</button>
+          </form>
+        </div>
+      </div>
 
       <div id="modal-turma-formando" class="modal">
         <div class="modal-content section-card">

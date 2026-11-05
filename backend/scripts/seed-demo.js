@@ -77,6 +77,17 @@ async function semear(db = prisma) {
   }
   const [frontend, backend, integracao] = ucs;
 
+  // Segunda turma com a MESMA UC de Backend, dada por outra formadora: mostra que a mesma UC
+  // pode ter formadores e turmas diferentes (TurmaUc). Tem dois formandos e uma aula futura.
+  const turmaB = await db.turma.create({
+    data: { codigo: "TPSI-DEMO-B", designacao: "Segunda turma (demo)", dataInicio: dia(-7), estado: "EM_CURSO", idCursoIEFP: "IEFP-2026-002" },
+  });
+  const turmaUcB = await db.turmaUc.create({ data: { turmaId: turmaB.id, ucId: backend.uc.id, formadorId: fFrontend.id } });
+  const blocoB = await db.disponibilidade.create({ data: { formadorId: fFrontend.id, data: dia(4), horaInicio: 14, estado: "LIVRE" } });
+  await db.aula.create({ data: { turmaUcId: turmaUcB.id, disponibilidadeId: blocoB.id, data: dia(4), horaInicio: 14, duracaoHoras: 1, modalidade: "PRESENCIAL" } });
+  await criarUser("Joana Pires", EMAIL("formando7"), "FORMANDO", { turmaId: turmaB.id });
+  await criarUser("Marco Dias", EMAIL("formando8"), "FORMANDO", { turmaId: turmaB.id });
+
   // Presenças nas aulas dadas: todos presentes, exceto o Rui (3 faltas injustificadas → "em risco")
   // e a Inês (1 falta com justificação pendente).
   const [, rui, ines] = formandos;
@@ -157,6 +168,7 @@ async function main() {
   console.log(`  Coordenação: ${r.coordenador.email}`);
   console.log(`  Formadores:  ${r.formadores.map((f) => f.email).join(", ")} (a primeira é mediadora)`);
   console.log(`  Formandos:   ${r.formandos.map((f) => f.email).join(", ")}`);
+  console.log(`  Segunda turma (TPSI-DEMO-B, mesma UC de Backend com outra formadora): ${EMAIL("formando7")}, ${EMAIL("formando8")}`);
 }
 
 if (require.main === module) {

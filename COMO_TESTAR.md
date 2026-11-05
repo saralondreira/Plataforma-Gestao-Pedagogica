@@ -66,7 +66,7 @@ Num terminal, dentro de `backend`:
 npm test
 ```
 
-Deve mostrar `Test Suites: 30 passed` e `Tests: 279 passed` (contagem de 2026-10-28; vai crescendo com cada funcionalidade nova). Corre isto sempre que quiseres confirmar rapidamente que nada ficou partido, sem teres de testar tudo manualmente no browser.
+Deve mostrar `Test Suites: 31 passed` e `Tests: 292 passed` (contagem de 2026-11-05; vai crescendo com cada funcionalidade nova). Corre isto sempre que quiseres confirmar rapidamente que nada ficou partido, sem teres de testar tudo manualmente no browser.
 
 ## 6. Comandos úteis extra (só quando precisares)
 

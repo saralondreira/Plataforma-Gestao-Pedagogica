@@ -12,6 +12,13 @@ const formTurma = document.getElementById("form-turma-formando");
 const nomeFormandoTexto = document.getElementById("turma-formando-nome");
 const selectTurmaFormando = document.getElementById("turma-formando-select");
 
+const modalFormando = document.getElementById("modal-formando");
+const formFormando = document.getElementById("form-formando");
+const selectTurmaNovo = document.getElementById("formando-turma");
+const grupoPassword = document.getElementById("grupo-password-formando");
+const inputPassword = document.getElementById("formando-password");
+let idFormandoAEditar = null; // null = a criar um formando novo
+
 let idFormandoEmEdicao = null;
 let turmasCarregadas = false;
 
@@ -56,6 +63,13 @@ async function carregarFormandos() {
                     data-nome="${escapeHtml(formando.nome)}"
                     data-turma-id="${formando.turma ? formando.turma.id : ""}"
                     title="Mudar turma"><i class="ph ph-arrows-left-right"></i></button>
+                  ${
+                    desativado
+                      ? `<button class="btn-icon btn-reativar" data-id="${formando.id}" title="Reativar"><i class="ph ph-arrow-counter-clockwise"></i></button>`
+                      : `<button class="btn-icon btn-editar" data-id="${formando.id}" data-nome="${escapeHtml(formando.nome)}" data-email="${escapeHtml(formando.email)}" data-turma-id="${formando.turma ? formando.turma.id : ""}" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                  <button class="btn-icon btn-repor-password" data-id="${formando.id}" data-nome="${escapeHtml(formando.nome)}" title="Repor palavra-passe"><i class="ph ph-key"></i></button>
+                  <button class="btn-icon btn-desativar" data-id="${formando.id}" title="Desativar"><i class="ph ph-trash"></i></button>`
+                  }
                 </td>
             `;
       tbodyFormandos.appendChild(tr);
@@ -83,6 +97,48 @@ async function carregarFormandos() {
         if (modalTurma) modalTurma.style.display = "flex";
       });
     });
+
+    tbodyFormandos.querySelectorAll(".btn-editar").forEach((botao) => {
+      botao.addEventListener("click", () => abrirModalFormando(botao));
+    });
+
+    tbodyFormandos.querySelectorAll(".btn-repor-password").forEach((botao) => {
+      botao.addEventListener("click", async () => {
+        const password = prompt(`Nova palavra-passe para ${botao.getAttribute("data-nome")} (mínimo 8 caracteres):`, "");
+        if (password === null) return; // cancelado
+        try {
+          await api(`/formandos/${botao.getAttribute("data-id")}/password`, { method: "PATCH", body: { password } });
+          showToast("Palavra-passe reposta. Comunica-a ao formando.", "success");
+        } catch (error) {
+          showToast(error.message || "Erro ao repor a palavra-passe.", "error");
+        }
+      });
+    });
+
+    tbodyFormandos.querySelectorAll(".btn-desativar").forEach((botao) => {
+      botao.addEventListener("click", async () => {
+        if (!confirm("Desativar este formando? A conta deixa de poder entrar, mas o histórico mantém-se e podes reativá-la mais tarde.")) return;
+        try {
+          await api(`/formandos/${botao.getAttribute("data-id")}`, { method: "DELETE" });
+          showToast("Formando desativado com sucesso!", "success");
+          carregarFormandos();
+        } catch (error) {
+          showToast(error.message || "Erro ao desativar formando.", "error");
+        }
+      });
+    });
+
+    tbodyFormandos.querySelectorAll(".btn-reativar").forEach((botao) => {
+      botao.addEventListener("click", async () => {
+        try {
+          await api(`/formandos/${botao.getAttribute("data-id")}/reativar`, { method: "PATCH" });
+          showToast("Formando reativado com sucesso!", "success");
+          carregarFormandos();
+        } catch (error) {
+          showToast(error.message || "Erro ao reativar formando.", "error");
+        }
+      });
+    });
   } catch (error) {
     console.error("Erro ao carregar formandos:", error);
     showToast(error.message || "Erro ao carregar formandos.", "error");
@@ -108,6 +164,53 @@ async function carregarTurmas() {
     showToast(error.message || "Erro ao carregar turmas.", "error");
   }
 }
+
+// Abre o modal para criar (botao = null) ou editar o formando da linha.
+async function abrirModalFormando(botao) {
+  if (!turmasCarregadas) await carregarTurmas();
+  if (!turmasCarregadas) return; // sem a lista de turmas, gravar tiraria a turma ao formando
+
+  // O select de turmas é o mesmo do modal "Mudar turma": copia as opções.
+  selectTurmaNovo.innerHTML = selectTurmaFormando.innerHTML;
+  idFormandoAEditar = botao ? botao.getAttribute("data-id") : null;
+  document.getElementById("modal-formando-titulo").textContent = botao ? "Editar Formando" : "Novo Formando";
+  document.getElementById("formando-nome").value = botao ? botao.getAttribute("data-nome") : "";
+  document.getElementById("formando-email").value = botao ? botao.getAttribute("data-email") : "";
+  selectTurmaNovo.value = botao ? botao.getAttribute("data-turma-id") || "" : "";
+  // A palavra-passe só se define ao criar; depois muda-se pela recuperação de palavra-passe.
+  grupoPassword.style.display = botao ? "none" : "";
+  inputPassword.required = !botao;
+  inputPassword.value = "";
+  modalFormando.style.display = "flex";
+}
+
+document.getElementById("btn-novo-formando")?.addEventListener("click", () => abrirModalFormando(null));
+document.getElementById("fechar-modal-formando")?.addEventListener("click", () => {
+  modalFormando.style.display = "none";
+});
+
+formFormando?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const corpo = {
+    nome: document.getElementById("formando-nome").value.trim(),
+    email: document.getElementById("formando-email").value.trim(),
+    turmaId: selectTurmaNovo.value ? Number(selectTurmaNovo.value) : null,
+  };
+  try {
+    if (idFormandoAEditar) {
+      await api(`/formandos/${idFormandoAEditar}`, { method: "PATCH", body: corpo });
+      showToast("Formando atualizado com sucesso!", "success");
+    } else {
+      await api("/formandos", { method: "POST", body: { ...corpo, password: inputPassword.value } });
+      showToast("Formando criado com sucesso!", "success");
+    }
+    modalFormando.style.display = "none";
+    carregarFormandos();
+  } catch (error) {
+    console.error("Erro ao guardar formando:", error);
+    showToast(error.message || "Erro ao guardar o formando.", "error");
+  }
+});
 
 carregarFormandos();
 

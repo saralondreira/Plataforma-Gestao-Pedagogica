@@ -117,6 +117,15 @@ const selectAula = document.getElementById("select-aula");
 const cartaoPresencas = document.getElementById("cartao-presencas");
 const tbodyPresencas = document.querySelector("#tabela-presencas tbody");
 let aulaSelecionada = null;
+const btnGuardarPresencas = document.getElementById("btn-guardar-presencas");
+const blocoConfirmadas = document.getElementById("presencas-confirmadas");
+
+// Depois de confirmadas, as presenças ficam bloqueadas (só leitura) até o formador clicar em "Editar presenças".
+function bloquearPresencas(bloquear) {
+  tbodyPresencas.querySelectorAll("input[type=radio]").forEach((r) => (r.disabled = bloquear));
+  btnGuardarPresencas.style.display = bloquear ? "none" : "inline-block";
+  blocoConfirmadas.style.display = bloquear ? "inline-flex" : "none";
+}
 
 async function carregarUcsDoFormador() {
   mostrar(document.getElementById("vista-presencas"), true);
@@ -175,10 +184,11 @@ async function carregarPresencas(aulaId) {
   try {
     const dados = await api(`/assiduidade/aula/${aulaId}`);
     if (meuPedido !== pedidoPresencas) return; // resposta atrasada de uma seleção anterior
-    document.getElementById("titulo-presencas").textContent = `${dados.aula.uc.abreviatura} — ${formatarDataPT(dados.aula.data)} ${formatarHora(dados.aula.horaInicio)}`;
+    document.getElementById("titulo-presencas").textContent = `${dados.aula.turma.codigo} — ${dados.aula.uc.abreviatura} — ${formatarDataPT(dados.aula.data)} ${formatarHora(dados.aula.horaInicio)}`;
     mostrar(cartaoPresencas, true);
 
     if (dados.formandos.length === 0) {
+      bloquearPresencas(false);
       tbodyPresencas.innerHTML =
         '<tr class="linha-vazia"><td colspan="3" style="text-align: center; padding: 20px; color: #64748b;">Esta turma ainda não tem formandos associados.</td></tr>';
       return;
@@ -197,6 +207,8 @@ async function carregarPresencas(aulaId) {
         </tr>`
       )
       .join("");
+    // Já há presenças registadas para esta aula: mostra-as bloqueadas.
+    bloquearPresencas(dados.formandos.some(({ presenca }) => presenca));
   } catch (error) {
     showToast(error.message || "Erro ao carregar as presenças.", "error");
   }
@@ -206,7 +218,11 @@ if (selectTurmaUc) {
   selectTurmaUc.addEventListener("change", () => carregarAulas(selectTurmaUc.value));
   selectAula.addEventListener("change", () => carregarPresencas(selectAula.value));
 
-  document.getElementById("btn-guardar-presencas").addEventListener("click", async () => {
+  document.getElementById("btn-editar-presencas").addEventListener("click", () => {
+    if (confirm("Editar as presenças já confirmadas desta aula?")) bloquearPresencas(false);
+  });
+
+  btnGuardarPresencas.addEventListener("click", async () => {
     if (!aulaSelecionada) return;
     const presencas = [...tbodyPresencas.querySelectorAll("tr[data-formando]")]
       .map((linha) => {

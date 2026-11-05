@@ -14,6 +14,21 @@ const btnHoje = document.getElementById("btn-semana-hoje");
 let semanaAtual = inicioDaSemana(new Date());
 let blocosPorChave = new Map(); // "YYYY-MM-DD|hora" -> bloco
 
+// Seleção de vários horários (clicar ou arrastar). Chave "YYYY-MM-DD|hora" -> célula.
+const selecionadas = new Map();
+let arrastar = null; // null = parado; true = a juntar células; false = a tirar células da seleção
+let origem = null; // célula onde começou o arrasto (o arrasto seleciona o retângulo até à célula atual)
+let baseSelecao = new Set(); // o que já estava selecionado quando o arrasto começou
+const celulasLivres = new Map(); // chave -> célula, só as que se podem selecionar (sem aula)
+const acoes = {
+  texto: document.getElementById("agenda-selecao-texto"),
+  motivo: document.getElementById("agenda-motivo"),
+  livre: document.getElementById("btn-marcar-livre"),
+  bloqueado: document.getElementById("btn-marcar-bloqueado"),
+  limpar: document.getElementById("btn-limpar-blocos"),
+  cancelar: document.getElementById("btn-cancelar-selecao"),
+};
+
 function chave(dataISO, hora) {
   return `${dataISO}|${hora}`;
 }
@@ -34,7 +49,9 @@ async function carregarSemana() {
       const dataISO = bloco.data.slice(0, 10);
       blocosPorChave.set(chave(dataISO, bloco.horaInicio), bloco);
     });
+    selecionadas.clear();
     desenharGrelha(dias);
+    atualizarAcoes();
   } catch (error) {
     showToast(error.message || "Erro ao carregar a disponibilidade.", "error");
   }
@@ -42,6 +59,7 @@ async function carregarSemana() {
 
 function desenharGrelha(dias) {
   grid.innerHTML = "";
+  celulasLivres.clear();
 
   // Cabeçalho: canto vazio + 7 dias
   const canto = document.createElement("div");
@@ -69,7 +87,7 @@ function desenharGrelha(dias) {
     labelHora.textContent = `${String(hora).padStart(2, "0")}:00`;
     grid.appendChild(labelHora);
 
-    dias.forEach((dia) => {
+    dias.forEach((dia, coluna) => {
       const dataISO = formatarDataISO(dia);
       const bloco = blocosPorChave.get(chave(dataISO, hora));
       const celula = document.createElement("div");
@@ -87,7 +105,34 @@ function desenharGrelha(dias) {
         celula.textContent = "Livre";
       }
 
-      celula.addEventListener("click", () => alternarBloco(dataISO, hora, bloco));
+      const k = chave(dataISO, hora);
+      celula.dataset.chave = k;
+      if (bloco && bloco.aula) {
+        celula.addEventListener("mousedown", () =>
+          showToast("Este bloco já tem uma aula agendada, não pode ser alterado aqui.", "error")
+        );
+      } else {
+        celula.tabIndex = 0;
+        celula.dataset.coluna = coluna;
+        celula.dataset.hora = hora;
+        celulasLivres.set(k, celula);
+        celula.addEventListener("mousedown", (e) => {
+          e.preventDefault(); // evita selecionar texto ao arrastar
+          arrastar = !selecionadas.has(k);
+          origem = celula;
+          baseSelecao = new Set(selecionadas.keys());
+          selecionarRetangulo(celula);
+        });
+        celula.addEventListener("mouseenter", () => {
+          if (arrastar !== null) selecionarRetangulo(celula);
+        });
+        celula.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            definirSelecao(k, celula, !selecionadas.has(k));
+          }
+        });
+      }
       grid.appendChild(celula);
     });
   }
@@ -134,33 +179,85 @@ async function bloquearDiaInteiro(dataISO, diaLabel) {
   carregarSemana();
 }
 
-async function alternarBloco(dataISO, hora, blocoAtual) {
-  if (blocoAtual && blocoAtual.aula) {
-    showToast("Este bloco já tem uma aula agendada — não pode ser alterado aqui.", "error");
+function definirSelecao(k, celula, selecionar) {
+  if (selecionar) selecionadas.set(k, celula);
+  else selecionadas.delete(k);
+  celula.classList.toggle("selecionada", selecionar);
+  atualizarAcoes();
+}
+
+// Seleciona (ou tira da seleção) todas as células do retângulo entre a origem do arrasto e a célula atual.
+function selecionarRetangulo(atual) {
+  const c1 = Math.min(origem.dataset.coluna, atual.dataset.coluna);
+  const c2 = Math.max(origem.dataset.coluna, atual.dataset.coluna);
+  const h1 = Math.min(origem.dataset.hora, atual.dataset.hora);
+  const h2 = Math.max(origem.dataset.hora, atual.dataset.hora);
+  celulasLivres.forEach((celula, k) => {
+    const dentro =
+      celula.dataset.coluna >= c1 && celula.dataset.coluna <= c2 && Number(celula.dataset.hora) >= h1 && Number(celula.dataset.hora) <= h2;
+    const selecionar = arrastar ? baseSelecao.has(k) || dentro : baseSelecao.has(k) && !dentro;
+    if (selecionar) selecionadas.set(k, celula);
+    else selecionadas.delete(k);
+    celula.classList.toggle("selecionada", selecionar);
+  });
+  atualizarAcoes();
+}
+
+function atualizarAcoes() {
+  if (!acoes.texto) return;
+  const n = selecionadas.size;
+  acoes.texto.textContent = n === 0 ? "Nenhum horário selecionado" : `${n} horário(s) selecionado(s)`;
+  [acoes.livre, acoes.bloqueado, acoes.limpar, acoes.cancelar].forEach((b) => (b.disabled = n === 0));
+}
+
+document.addEventListener("mouseup", () => {
+  arrastar = null;
+  origem = null;
+});
+
+// Aplica "LIVRE", "BLOQUEADO" ou "LIMPAR" (apaga o bloco) a todos os horários selecionados.
+async function aplicarSelecao(acao) {
+  const motivo = acoes.motivo.value.trim();
+  const pedidos = [];
+  selecionadas.forEach((_, k) => {
+    const [dataISO, hora] = k.split("|");
+    const bloco = blocosPorChave.get(k);
+    if (acao === "LIMPAR") {
+      if (bloco) pedidos.push(api(`/disponibilidade/${bloco.id}`, { method: "DELETE" }));
+    } else {
+      pedidos.push(
+        api("/disponibilidade", {
+          method: "POST",
+          body: { data: dataISO, horaInicio: Number(hora), estado: acao, ...(acao === "BLOQUEADO" ? { motivo } : {}) },
+        })
+      );
+    }
+  });
+
+  if (pedidos.length === 0) {
+    showToast("Os horários selecionados já estão por definir.", "error");
     return;
   }
 
-  try {
-    if (!blocoAtual) {
-      // Por definir -> Livre
-      await api("/disponibilidade", { method: "POST", body: { data: dataISO, horaInicio: hora, estado: "LIVRE" } });
-    } else if (blocoAtual.estado === "LIVRE") {
-      // Livre -> Bloqueado (com motivo opcional)
-      const motivo = prompt("Motivo do bloqueio (opcional, ex.: Almoço, Jantar):", blocoAtual.motivo || "");
-      if (motivo === null) return; // cancelado — não bloquear o bloco
-      await api("/disponibilidade", {
-        method: "POST",
-        body: { data: dataISO, horaInicio: hora, estado: "BLOQUEADO", motivo },
-      });
-    } else {
-      // Bloqueado -> por definir (apaga o bloco)
-      await api(`/disponibilidade/${blocoAtual.id}`, { method: "DELETE" });
-    }
-    carregarSemana();
-  } catch (error) {
-    showToast(error.message || "Erro ao atualizar o bloco.", "error");
+  const resultados = await Promise.allSettled(pedidos);
+  const falhas = resultados.filter((r) => r.status === "rejected").length;
+  if (falhas === 0) {
+    showToast(`${resultados.length} horário(s) atualizado(s).`, "success");
+  } else {
+    showToast(`${resultados.length - falhas} atualizado(s), ${falhas} falharam. Tenta outra vez.`, "error");
   }
+  acoes.motivo.value = "";
+  carregarSemana();
 }
+
+acoes.livre?.addEventListener("click", () => aplicarSelecao("LIVRE"));
+acoes.bloqueado?.addEventListener("click", () => aplicarSelecao("BLOQUEADO"));
+acoes.limpar?.addEventListener("click", () => aplicarSelecao("LIMPAR"));
+acoes.cancelar?.addEventListener("click", () => {
+  selecionadas.forEach((celula) => celula.classList.remove("selecionada"));
+  selecionadas.clear();
+  atualizarAcoes();
+});
 
 if (btnAnterior) {
   btnAnterior.addEventListener("click", () => {

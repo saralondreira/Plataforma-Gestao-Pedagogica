@@ -23,8 +23,8 @@ const entrar = async (email) => (await request(app).post("/api/v1/auth/login").s
 describe("Dados de demonstração (seed)", () => {
   test("criam a turma completa e todas as contas entram com a palavra-passe de demo", async () => {
     const r = await semear();
-    expect(await prisma.user.count()).toBe(10); // 1 coordenador + 3 formadores + 6 formandos
-    expect(await prisma.aula.count()).toBe(12);
+    expect(await prisma.user.count()).toBe(12); // 1 coordenador + 3 formadores + 8 formandos (6 + 2 na segunda turma)
+    expect(await prisma.aula.count()).toBe(13); // 12 da primeira turma + 1 da segunda
     expect(r.turma.mediadorId).toBe(r.formadores[0].id);
 
     for (const u of [r.coordenador, ...r.formadores, ...r.formandos]) {
@@ -32,16 +32,23 @@ describe("Dados de demonstração (seed)", () => {
     }
   });
 
+  test("a mesma UC de Backend está em duas turmas, com formadores diferentes", async () => {
+    await semear();
+    const associacoes = await prisma.turmaUc.findMany({ where: { uc: { abreviatura: "UC00605" } }, include: { turma: true } });
+    expect(associacoes.map((a) => a.turma.codigo).sort()).toEqual(["TPSI-DEMO", "TPSI-DEMO-B"]);
+    expect(new Set(associacoes.map((a) => a.formadorId)).size).toBe(2);
+  });
+
   test("mostram a coordenação os três semáforos e um formando em risco", async () => {
     const r = await semear();
     const token = await entrar(r.coordenador.email);
     const res = await request(app).get("/api/v1/painel/resumo").set({ Authorization: `Bearer ${token}` });
 
-    expect(res.body.data.conformidade).toMatchObject({ total: 3, vermelho: 2 });
+    expect(res.body.data.conformidade).toMatchObject({ total: 4, vermelho: 2 }); // 3 UCs da primeira turma + a UC de Backend da segunda;
     expect(res.body.data.formandosEmRisco.map((f) => f.nome)).toEqual(["Rui Costa"]);
 
     const detalhe = await request(app).get("/api/v1/painel/conformidade").set({ Authorization: `Bearer ${token}` });
-    const porUc = Object.fromEntries(detalhe.body.data.ucs.map((u) => [u.uc, u.estado]));
+    const porUc = Object.fromEntries(detalhe.body.data.ucs.filter((u) => u.turma === "TPSI-DEMO").map((u) => [u.uc, u.estado]));
     expect(porUc.UC00605).toBe("VERMELHO"); // sumário em falta e sem documentos
     expect(porUc.UC00614).toBe("VERMELHO"); // sumário rejeitado
     expect(porUc.UC00604).toBe("VERDE");

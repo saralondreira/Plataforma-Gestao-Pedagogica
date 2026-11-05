@@ -86,7 +86,7 @@ async function carregarDaUc() {
 }
 
 async function preencherUcs(lista) {
-  selUc.innerHTML = lista.map((t) => `<option value="${t.id}">${escapeHtml(t.uc.abreviatura)} — ${escapeHtml(t.uc.nome)}${role === "FORMADOR" ? ` (${escapeHtml(t.turma.codigo)})` : ""}</option>`).join("");
+  selUc.innerHTML = lista.map((t) => `<option value="${t.id}">${role === "FORMADOR" ? `${escapeHtml(t.turma.codigo)} — ` : ""}${escapeHtml(t.uc.abreviatura)} ${escapeHtml(t.uc.nome)}</option>`).join("");
   await carregarDaUc();
 }
 
