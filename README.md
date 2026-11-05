@@ -70,7 +70,7 @@ Este projeto nasce da necessidade de modernizar os processos administrativos em 
   /prisma                     # schema.prisma (18 modelos) e migrations/ (10)
   /src                        # app.js, server.js, routes/ controllers/ services/ middleware/ lib/ docs/
   /scripts                    # seed-demo.js, criar-coordenador.js, testar-email.js
-  /tests                      # unit/ e integration/ (279 testes)
+  /tests                      # unit/ e integration/ (292 testes)
   RGPD.md                     # Checklist de proteção de dados
 /Docs                         # ARQUITETURA.md e diagramas
 ```

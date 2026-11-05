@@ -96,6 +96,15 @@
                 <button class="btn-card" id="btn-semana-hoje" style="margin-left: auto">Hoje</button>
               </div>
 
+              <div class="agenda-acoes" id="agenda-acoes">
+                <span id="agenda-selecao-texto">Nenhum horário selecionado</span>
+                <input type="text" id="agenda-motivo" placeholder="Motivo do bloqueio (opcional, ex.: Almoço)" maxlength="100">
+                <button type="button" class="btn-card" id="btn-marcar-livre" disabled>Marcar livre</button>
+                <button type="button" class="btn-card" id="btn-marcar-bloqueado" disabled>Bloquear</button>
+                <button type="button" class="btn-card" id="btn-limpar-blocos" disabled>Limpar</button>
+                <button type="button" class="btn-card" id="btn-cancelar-selecao" disabled>Cancelar seleção</button>
+              </div>
+
               <div class="agenda-grid-wrap">
                 <div class="agenda-grid" id="agenda-grid"></div>
               </div>
@@ -107,7 +116,8 @@
                 <span><span class="ponto" style="background:#fff;border:1px solid #e2e8f0;"></span>Por definir</span>
               </div>
               <p class="section-subtitle" style="margin-top: 10px;">
-                Clica numa célula para alternar: por definir → Livre → Bloqueado → por definir outra vez.
+                Clica ou arrasta sobre os horários para selecionar vários de uma vez, e depois escolhe
+                <strong>Marcar livre</strong>, <strong>Bloquear</strong> ou <strong>Limpar</strong> (volta a "por definir").
               </p>
             </div>
           </div>

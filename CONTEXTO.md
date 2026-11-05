@@ -16,7 +16,7 @@ Projeto final que junta três Unidades de Competência: UC00604 (Programação W
 - **Testes:** Jest (unitários) + Supertest (integração), base de dados de teste dedicada.
 - **Documentação da API:** OpenAPI/Swagger em `/api-docs` (gerado via `swagger-jsdoc` a partir de anotações nas rotas).
 - **Ícones:** Phosphor Icons (versão fixa, com SRI) · **Fonte:** Inter
-- **Estado (2026-10-28):** 18 tabelas, 10 migrações, 114 rotas (todas no Swagger), 29 páginas, 30 suites / 279 testes a passar. Detalhe das alterações em `CHANGELOG.md` e `PLANEAMENTO.md`.
+- **Estado (2026-11-05):** 18 tabelas, 10 migrações, 119 rotas (todas no Swagger), 29 páginas, 31 suites / 292 testes a passar. Detalhe das alterações em `CHANGELOG.md` e `PLANEAMENTO.md`.
 
 > O projeto usou inicialmente Firebase (Auth + Firestore + Storage) para a fase 2, mas foi totalmente substituído por esta stack própria — ver "Histórico resumido" abaixo. Não há Firebase em nenhuma parte do código atual.
 

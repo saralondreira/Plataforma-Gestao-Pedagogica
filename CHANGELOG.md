@@ -4,6 +4,15 @@
 
 ## 2026-10-22
 
+### Adicionado e corrigido: gestão de formandos, agenda, presenças, rodapé e demonstração (2026-11-05)
+- **Gestão de formandos (CRUD):** a coordenação cria, edita (nome, email, turma), desativa, reativa e repõe a palavra-passe de um formando (`POST /formandos`, `PATCH /formandos/:id`, `DELETE /formandos/:id`, `PATCH /formandos/:id/reativar`, `PATCH /formandos/:id/password`). Desativar não apaga (mantém notas, presenças e entregas); criar com o email de um formando desativado reativa a conta; repor a palavra-passe invalida as sessões abertas. Novo `tests/integration/formandosCrud.test.js`.
+- **Agenda do formador:** seleção de vários horários, a clicar ou a arrastar um retângulo, e uma barra para marcar livre, bloquear (com motivo) ou limpar.
+- **Assiduidade:** as presenças confirmadas ficam bloqueadas (só leitura) até o formador clicar em "Editar presenças". O bloqueio é só na página.
+- **Turma ao lado da UC:** o título das presenças e a lista de UCs dos Documentos mostram a turma ao princípio.
+- **Rodapé:** passou a ter 32 px, fixo no fundo; o menu lateral da coordenação passou a ter scroll próprio, em vez de esticar a página; corrigido o `&copy:` em 4 páginas.
+- **Dados de demonstração:** segunda turma (TPSI-DEMO-B) com a mesma UC de Backend, dada por outra formadora, e dois formandos novos (`formando7` e `formando8`).
+- **Estado:** 119 rotas, 31 suites / 292 testes a passar.
+
 ### Alterado: relatório e PPT com a estrutura do relatório de setembro (2026-11-01)
 - O Trabalho de Projeto usa agora a capa, o cabeçalho (logótipo do IEFP), o rodapé (logótipos de financiamento e número de página) e a secção do relatório de setembro; a capa leva o júri e a data com local, o índice e o corpo numeram-se a partir de 1 (53 páginas).
 - Travessões ("—") retirados do relatório, do PPT e dos títulos dos diagramas; PPT (46 slides) com os diagramas atualizados e rodapés "Cap. N: ...".
