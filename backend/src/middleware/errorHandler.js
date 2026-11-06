@@ -36,6 +36,14 @@ function errorHandler(err, req, res, next) {
     });
   }
 
+  // Rede de segurança: a base de dados recusou apagar ou alterar um registo ligado a outros
+  // (chave estrangeira). É um conflito do pedido, não uma falha do servidor.
+  if (err.code === "P2003" || err.code === "P2014") {
+    return res.status(409).json({
+      error: { code: "REGISTO_EM_USO", message: "Não é possível apagar este registo porque tem dados associados.", statusCode: 409 },
+    });
+  }
+
   console.error(err);
   return res.status(500).json({
     error: { code: "INTERNAL_ERROR", message: "Erro interno do servidor.", statusCode: 500 },

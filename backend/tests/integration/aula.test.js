@@ -155,6 +155,23 @@ describe("Aulas", () => {
     expect(reagendarRes.status).toBe(201);
   });
 
+  test("cancelar uma aula com presenças registadas devolve 409 AULA_COM_REGISTOS e a aula fica", async () => {
+    const { coordenador, turmaUc, bloco } = await prepararCenario();
+    const { user: formando } = await criarUtilizadorAutenticado(app, { role: "FORMANDO" });
+
+    const criarRes = await request(app)
+      .post("/api/v1/aulas")
+      .set("Authorization", `Bearer ${coordenador.token}`)
+      .send({ turmaUcId: turmaUc.id, disponibilidadeId: bloco.id, modalidade: "PRESENCIAL" });
+    const aulaId = criarRes.body.data.id;
+    await prisma.presenca.create({ data: { aulaId, formandoId: formando.id, estado: "PRESENTE" } });
+
+    const res = await request(app).delete(`/api/v1/aulas/${aulaId}`).set("Authorization", `Bearer ${coordenador.token}`);
+    expect(res.status).toBe(409);
+    expect(res.body.error.code).toBe("AULA_COM_REGISTOS");
+    expect(await prisma.aula.findUnique({ where: { id: aulaId } })).not.toBeNull();
+  });
+
   test("não deixa agendar numa associação Turma/UC desativada", async () => {
     const { coordenador, turmaUc, bloco } = await prepararCenario();
 

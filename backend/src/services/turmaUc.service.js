@@ -180,6 +180,24 @@ async function substituirFormador(id, novoFormadorId, { cancelarSemBloco = false
     );
   }
 
+  // Aulas que seriam canceladas mas já têm presenças, sumário ou justificações: não se apagam (perdia-se o
+  // histórico e a base de dados recusava com um erro genérico).
+  if (semBloco.length > 0) {
+    const ids = semBloco.map((p) => p.aula.id);
+    const [presencas, sumarios, justificacoes] = await Promise.all([
+      prisma.presenca.count({ where: { aulaId: { in: ids } } }),
+      prisma.sumario.count({ where: { aulaId: { in: ids } } }),
+      prisma.justificacao.count({ where: { aulaId: { in: ids } } }),
+    ]);
+    if (presencas + sumarios + justificacoes > 0) {
+      throw new AppError(
+        409,
+        "AULA_COM_REGISTOS",
+        "Há aulas futuras sem bloco livre do novo formador que já têm presenças, sumário ou justificações registados e não podem ser canceladas. Pede ao novo formador que marque essas horas como livres."
+      );
+    }
+  }
+
   const resultado = await prisma.$transaction(async (tx) => {
     // Se a agenda mudou entretanto (alguém agendou ou cancelou aulas desta UC), recusa em vez de
     // trocar o formador com base numa lista desatualizada.

@@ -388,6 +388,18 @@ describe("Substituir formador com aulas futuras", () => {
     expect(depois.body.data).toHaveLength(1);
   });
 
+  test("cancelarSemBloco não apaga aulas que já têm presenças: 409 AULA_COM_REGISTOS e nada muda", async () => {
+    const c = await cenario();
+    const { user: formando } = await criarUtilizadorAutenticado(app, { role: "FORMANDO" });
+    const aulas = await prisma.aula.findMany({ where: { turmaUcId: c.turmaUc.id } });
+    for (const a of aulas) await prisma.presenca.create({ data: { aulaId: a.id, formandoId: formando.id, estado: "PRESENTE" } });
+
+    const res = await request(app).patch(url(c)).set(c.auth(c.coordenador)).send({ formadorId: c.novo.user.id, cancelarSemBloco: true });
+    expect(res.status).toBe(409);
+    expect(res.body.error.code).toBe("AULA_COM_REGISTOS");
+    expect(await prisma.aula.count({ where: { turmaUcId: c.turmaUc.id } })).toBe(aulas.length);
+  });
+
   test("recusa o mesmo formador (422) e formador a tentar (403)", async () => {
     const c = await cenario();
     const igual = await request(app).patch(url(c)).set(c.auth(c.coordenador)).send({ formadorId: c.formador.user.id });

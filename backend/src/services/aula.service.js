@@ -447,6 +447,22 @@ async function relatorioHorasPorFormador(de, ate) {
 
 async function cancelar(id) {
   const aula = await obterOuFalhar(id);
+
+  // Presenças, sumário e justificações ficam ligados à aula: apagá-la perdia esse histórico
+  // (e a base de dados recusava, com um erro genérico). Diz-se claramente porquê.
+  const [presencas, sumarios, justificacoes] = await Promise.all([
+    prisma.presenca.count({ where: { aulaId: id } }),
+    prisma.sumario.count({ where: { aulaId: id } }),
+    prisma.justificacao.count({ where: { aulaId: id } }),
+  ]);
+  if (presencas + sumarios + justificacoes > 0) {
+    throw new AppError(
+      409,
+      "AULA_COM_REGISTOS",
+      "Esta aula já tem presenças, sumário ou justificações registados e não pode ser cancelada."
+    );
+  }
+
   await prisma.aula.delete({ where: { id } });
 
   const hoje = hojeEmLisboa();

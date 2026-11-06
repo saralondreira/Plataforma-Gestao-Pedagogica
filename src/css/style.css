@@ -1114,6 +1114,24 @@ select.badge.yellow {
     background-color: #ffffff;
 }
 
+/* Select do formador na lista de UCs da turma: claro, como os outros campos. */
+select.select-formador-tuc {
+    width: 100%;
+    min-width: 180px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color-scheme: light;
+}
+
+select.select-formador-tuc:disabled {
+    opacity: 0.6;
+}
+
 #new-estado option[value="em-curso"] {
     color: #2563eb;
     font-weight: 600;

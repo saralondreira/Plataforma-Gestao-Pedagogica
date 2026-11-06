@@ -57,9 +57,9 @@ async function semear(db = prisma) {
   }
 
   const catalogo = [
-    { abreviatura: "UC00604", nome: "Desenvolvimento Frontend", cargaHoraria: 50, formador: fFrontend, hora: 9 },
-    { abreviatura: "UC00605", nome: "Desenvolvimento Backend", cargaHoraria: 50, formador: fBackend, hora: 10 },
-    { abreviatura: "UC00614", nome: "Integração e Deploy", cargaHoraria: 25, formador: fMedia, hora: 11 },
+    { abreviatura: "UC00604", nome: "Desenvolvimento Frontend", cargaHoraria: 50, formador: fFrontend, hora: 8 },
+    { abreviatura: "UC00605", nome: "Desenvolvimento Backend", cargaHoraria: 50, formador: fBackend, hora: 9 },
+    { abreviatura: "UC00614", nome: "Integração e Deploy", cargaHoraria: 25, formador: fMedia, hora: 10 },
   ];
   const ucs = [];
   for (const c of catalogo) {
@@ -83,8 +83,8 @@ async function semear(db = prisma) {
     data: { codigo: "TPSI-DEMO-B", designacao: "Segunda turma (demo)", dataInicio: dia(-7), estado: "EM_CURSO", idCursoIEFP: "IEFP-2026-002" },
   });
   const turmaUcB = await db.turmaUc.create({ data: { turmaId: turmaB.id, ucId: backend.uc.id, formadorId: fFrontend.id } });
-  const blocoB = await db.disponibilidade.create({ data: { formadorId: fFrontend.id, data: dia(4), horaInicio: 14, estado: "LIVRE" } });
-  await db.aula.create({ data: { turmaUcId: turmaUcB.id, disponibilidadeId: blocoB.id, data: dia(4), horaInicio: 14, duracaoHoras: 1, modalidade: "PRESENCIAL" } });
+  const blocoB = await db.disponibilidade.create({ data: { formadorId: fFrontend.id, data: dia(4), horaInicio: 8, estado: "LIVRE" } });
+  await db.aula.create({ data: { turmaUcId: turmaUcB.id, disponibilidadeId: blocoB.id, data: dia(4), horaInicio: 8, duracaoHoras: 1, modalidade: "PRESENCIAL" } });
   await criarUser("Joana Pires", EMAIL("formando7"), "FORMANDO", { turmaId: turmaB.id });
   await criarUser("Marco Dias", EMAIL("formando8"), "FORMANDO", { turmaId: turmaB.id });
 

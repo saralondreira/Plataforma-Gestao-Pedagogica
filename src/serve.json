@@ -1,0 +1,6 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/pages/:nome", "destination": "/pages/:nome.html" }
+  ]
+}
